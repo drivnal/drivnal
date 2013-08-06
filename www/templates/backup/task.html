@@ -1,0 +1,34 @@
+<%
+  var title = ''
+  var typeIcon = '';
+  if (type === 'create_snapshot') {
+    title = 'Creating New Snapshot';
+    typeIcon = 'icon-time';
+  }
+  else if (type === 'restore_object') {
+    title = 'Restoring Files';
+    typeIcon = 'icon-download-alt';
+  }
+  else if (type === 'move_volume') {
+    title = 'Moving Volume';
+    typeIcon = 'icon-move';
+  }
+
+%>
+<div class="item button red-tooltip <%= state %>">
+  <div class="title"><%= formatTime(time) %></div>
+  <i class="task-type-icon <%= typeIcon %>"></i>
+  <% if (state === 'failed') { %>
+    <i class="task-failed-icon icon-warning-sign"></i>
+  <% } %>
+  <i class="toggle-info icon-chevron-down no-select"></i>
+  <i class="icon icon-remove no-select"></i>
+  <i class="icon icon-stop no-select"></i>
+</div>
+<div class="info">
+  <span class="task-title"><%= title %></span><br>
+  Volume: <%= volume_name %><br>
+  Time: <%= formatTime(time) %><br>
+  State: <%= state.charAt(0).toUpperCase() + state.slice(1) %><br>
+  <span class="task-id">ID: <%= id %></span>
+</div>

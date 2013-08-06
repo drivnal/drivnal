@@ -1,0 +1,295 @@
+(function() {
+  'use strict';
+  if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+      /*jshint eqeqeq:false, bitwise:false */
+      if (this === null) {
+        throw new TypeError();
+      }
+      var t = Object(this);
+      var len = t.length >>> 0;
+      if (len === 0) {
+        return -1;
+      }
+      var n = 0;
+      if (arguments.length > 1) {
+        n = Number(arguments[1]);
+        if (n != n) { // shortcut for verifying if it's NaN
+          n = 0;
+        } else if (n !== 0 && n != Infinity && n != -Infinity) {
+          n = (n > 0 || -1) * Math.floor(Math.abs(n));
+        }
+      }
+      if (n >= len) {
+        return -1;
+      }
+      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+      for (; k < len; k++) {
+        if (k in t && t[k] === searchElement) {
+          return k;
+        }
+      }
+      return -1;
+    };
+  }
+
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+      if (typeof this !== 'function') {
+        // closest thing possible to the ECMAScript 5 internal
+        // IsCallable function
+        throw new TypeError('Function.prototype.bind - what is ' +
+          'trying to be bound is not callable');
+      }
+
+      var aArgs = Array.prototype.slice.call(arguments, 1),
+          fToBind = this,
+          NOP = function () {},
+          Bound = function () {
+            return fToBind.apply(this instanceof NOP && oThis ? this : oThis,
+              aArgs.concat(Array.prototype.slice.call(arguments)));
+          };
+
+      NOP.prototype = this.prototype;
+      Bound.prototype = new NOP();
+
+      return Bound;
+    };
+  }
+}());
+
+require.config({
+  paths: {
+    backbone: 'vendor/backbone/backbone',
+    bootstrap: 'vendor/bootstrap/bootstrap',
+    d3: 'vendor/d3/d3',
+    googleAnalytics: 'vendor/google-analytics/google-analytics.min',
+    jquery: 'vendor/jquery/jquery',
+    jqueryUi: 'vendor/jquery-ui/jquery-ui',
+    less: 'vendor/less/less',
+    text: 'vendor/require-text/text',
+    underscore: 'vendor/underscore/underscore',
+    initialize: 'init/testing'
+  },
+  shim: {
+    backbone: [
+      'less'
+    ],
+    bootstrap: [
+      'jquery'
+    ],
+    jqueryUi: [
+      'jquery'
+    ],
+    d3: {
+      exports: 'd3'
+    },
+    googleAnalytics: {
+      exports: '_gaq'
+    }
+  }
+});
+
+require([
+  'jquery',
+  'underscore',
+  'backbone',
+  'views/header/header',
+  'routers/main',
+  'initialize'
+], function($, _, Backbone, HeaderView, mainRouter, initialize) {
+  'use strict';
+
+  initialize();
+
+  window.placeholder = function() {
+    if (window.hasPlaceholder) {
+      return;
+    }
+    else if (window.hasPlaceholder === undefined) {
+      var testInput = document.createElement('input');
+      if('placeholder' in testInput) {
+        window.hasPlaceholder = true;
+        return;
+      }
+      else {
+        window.hasPlaceholder = false;
+      }
+    }
+    $(this).focus(function() {
+      if ($(this).val() === $(this).attr('placeholder')) {
+        $(this).val('').removeClass('placeholder');
+      }
+    }).blur(function() {
+      if ($(this).val() === $(this).attr('placeholder') ||
+          $(this).val() === '') {
+        $(this).val($(this).attr('placeholder')).addClass('placeholder');
+      }
+    }).blur().parents('form').submit(function() {
+      $(this).find('input[placeholder]').each(function() {
+        if($(this).val() === $(this).attr('placeholder')) {
+          $(this).val('');
+        }
+      });
+    }).addClass('placeholder').val($(this).attr('placeholder'));
+  };
+
+  window.formatTime = function(time, short) {
+    var abbrev = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var date = new Date(0);
+    var curDate = new Date();
+    time = time * 1000;
+    date.setUTCMilliseconds(parseInt(time, 10));
+    var month = abbrev[date.getMonth()];
+    var day = date.getDate().toString();
+    var year = date.getFullYear().toString();
+    var hours = date.getHours();
+    var meridiem;
+    if (hours > 12) {
+      hours = (hours - 12).toString();
+      meridiem = 'pm';
+    }
+    else {
+      hours = hours.toString();
+      meridiem = 'am';
+    }
+    if (hours === '0') {
+      hours = '12';
+    }
+    var minutes = date.getMinutes().toString();
+    if (minutes.length < 2) {
+      minutes = '0' + minutes;
+    }
+    if (short) {
+      if (curDate.getDate() === date.getDate() &&
+          curDate.getMonth() === date.getMonth() &&
+          curDate.getFullYear() === date.getFullYear()) {
+        time = hours + ':' + minutes + ' ' + meridiem;
+      }
+      else {
+        time = month + ' ' + day;
+        if (curDate.getFullYear() !== date.getFullYear()) {
+          time += ' ' + year;
+        }
+      }
+    }
+    else {
+      time = month + ' ' + day + ' ' + year + ' ' +
+        hours + ':' + minutes + ' ' + meridiem;
+    }
+
+    return time;
+  };
+
+  window.formatSize = function(bytes, decimals) {
+    if (decimals === undefined) {
+      decimals = 1;
+    }
+    if (bytes < 1024) {
+      bytes = bytes + ' bytes';
+    }
+    else if (bytes < 1048576) {
+      bytes = Math.round(bytes / 1024).toFixed(decimals) + ' kB';
+    }
+    else if (bytes < 1073741824) {
+      bytes = (bytes / 1048576).toFixed(decimals) + ' MB';
+    }
+    else if (bytes < 1099511627776) {
+      bytes = (bytes / 1073741824).toFixed(decimals) + ' GB';
+    }
+    else {
+      bytes = (bytes / 1099511627776).toFixed(decimals) + ' TB';
+    }
+
+    return bytes;
+  };
+
+  window.reverseFormatSize = function(input) {
+    var i;
+    var inputChar;
+    var inputSplit = input.split('');
+    var bytes;
+    var size = '';
+    var unit = '';
+    var onSize = true;
+    var alpha = 'abcdefghijklmnopqrstuvwxyz';
+    var byteUnits = ['', 'b', 'byte'];
+    var kilobyteUnits = ['kb', 'kbyte', 'kilobyte'];
+    var megabyteUnits = ['mb', 'mbyte', 'megabyte'];
+    var gigabyteUnits = ['gb', 'gbyte', 'gigabyte'];
+    var terabyteUnits = ['tb', 'tbyte', 'terabyte'];
+    var bitUnits = ['bit'];
+    var kilobitUnits = ['kbit', 'kilobit'];
+    var megabitUnits = ['mbit', 'megabit'];
+    var gigabitUnits = ['gbit', 'gigabit'];
+    var terabitUnits = ['tbit', 'terabit'];
+
+    for (i = 0; i < inputSplit.length; i++) {
+      inputChar = inputSplit[i];
+      if (onSize) {
+        if (inputChar !== ' ' && (!isNaN(inputChar) || inputChar === '.')) {
+          size += inputChar;
+          continue;
+        }
+        else if (inputChar === ',') {
+          continue;
+        }
+        onSize = false;
+      }
+
+      if (alpha.indexOf(inputChar.toLowerCase()) !== -1) {
+        unit += inputChar.toLowerCase();
+      }
+    }
+
+    size = parseFloat(size);
+    if (isNaN(size)) {
+      return null;
+    }
+    unit = unit.replace('sec', '').replace('ss', '').replace('s', '');
+
+    if ($.inArray(unit, byteUnits) !== -1) {
+      bytes = parseInt(size, 10);
+    }
+    else if ($.inArray(unit, kilobyteUnits) !== -1) {
+      bytes = parseInt(size * 1024, 10);
+    }
+    else if ($.inArray(unit, megabyteUnits) !== -1) {
+      bytes = parseInt(size * 1048576, 10);
+    }
+    else if ($.inArray(unit, gigabyteUnits) !== -1) {
+      bytes = parseInt(size * 1073741824, 10);
+    }
+    else if ($.inArray(unit, terabyteUnits) !== -1) {
+      bytes = parseInt(size * 1099511627776, 10);
+    }
+    else if ($.inArray(unit, bitUnits) !== -1) {
+      bytes = parseInt(size * 0.125, 10);
+    }
+    else if ($.inArray(unit, kilobitUnits) !== -1) {
+      bytes = parseInt(size * 128, 10);
+    }
+    else if ($.inArray(unit, megabitUnits) !== -1) {
+      bytes = parseInt(size * 131072, 10);
+    }
+    else if ($.inArray(unit, gigabitUnits) !== -1) {
+      bytes = parseInt(size * 134217728, 10);
+    }
+    else if ($.inArray(unit, terabitUnits) !== -1) {
+      bytes = parseInt(size * 137438953472, 10);
+    }
+    else {
+      bytes = null;
+    }
+
+    return bytes;
+  };
+
+  $(document).on('dblclick mousedown', '.no-select', false);
+
+  var headerView = new HeaderView();
+  $('body').prepend(headerView.render().el);
+
+  mainRouter.initialize();
+});

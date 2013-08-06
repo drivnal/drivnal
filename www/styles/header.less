@@ -1,0 +1,52 @@
+.navbar {
+  margin: 0;
+}
+
+.navbar .brand {
+  padding: 2px 22px 0 22px;
+}
+
+.navbar .brand span {
+  font-size: 22px;
+  display: inline-block;
+  margin-top: 13px;
+}
+
+.navbar .brand-img {
+  background-image: @brand-uri;
+  background-repeat: no-repeat;
+  background-size: 200px 72px;
+  display: inline-block;
+  float: left;
+  width: 200px;
+  height: 72px;
+  line-height: 72px;
+  margin: 2px 0 0 0;
+}
+
+.navbar .navbar-inner {
+  border-bottom: @navbar-border;
+  background-color: #212121;
+  background-image: none;
+  min-height: 80px;
+  border-radius: 0;
+}
+
+.navbar .nav {
+  padding-left: 10px;
+}
+
+.navbar .nav > li > a {
+  font-size: 1.2em;
+  padding: 30px 40px 30px 40px;
+}
+
+.navbar .nav .active a,
+.navbar .nav .active a:focus, {
+  background-image: none;
+  background-color: #1a1a1a;
+}
+
+.navbar .nav .active a:hover, {
+  background-color: @navbar-nav-active-hover-bg;
+}

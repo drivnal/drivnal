@@ -1,0 +1,16 @@
+<%
+var isDir = false;
+if (type && type.indexOf('directory') !== -1) {
+  isDir = true;
+}
+%>
+<td class="select-col">
+  <div class="select">
+    <div class="select-inner"></div>
+  </div>
+</td>
+<td class="title-col">
+  <span class="<%= isDir ? 'dir' : 'file' %>-name"><%= id %></span>
+</td>
+<td class="size-col"><%= isDir ? '' : formatSize(size) %></td>
+<td class="modified-col"><%= isDir ? '' : formatTime(time, true) %></td>

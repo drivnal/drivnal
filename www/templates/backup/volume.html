@@ -1,0 +1,49 @@
+<div class="volume">
+  <div class="item button no-select">
+    <i class="icon-cog open-settings"></i>
+    <div class="remove-volume-container red-tooltip">
+      <i class="icon-trash remove-volume"></i>
+    </div>
+    <svg class="usage-meter">
+      <g>
+        <path class="running-background"></path>
+        <path class="background"></path>
+        <path class="foreground"></path>
+      </g>
+    </svg>
+    <div class="info">
+      <span class="title-name">
+        <%= name || 'New Backup Volume' %>
+      </span></br>
+      <span class="title-source-path">
+        <%= source_path || '</br>' %>
+      </span>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-name"></div>
+
+    <div class="setting-source-path"></div>
+    <div class="setting-path"></div>
+    <div class="setting-excludes"></div>
+
+    <div class="setting-schedule"></div>
+    <div class="setting-min-free-space"></div>
+    <div class="setting-bandwidth-limit"></div>
+
+    <div class="error">
+      Failed to save volume settings. Check log for more information.
+    </div>
+
+    <table>
+      <tr>
+        <td class="cancel-box">
+          <button class="cancel" type="button">Cancel</button>
+        </td>
+        <td class="save-box">
+          <button class="save" type="button">Save</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

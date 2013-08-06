@@ -1,0 +1,12 @@
+<i class="left-icon <%= icon %> icon-white"></i>
+<i class="right-icon icon-folder-open open-path-select" title="Browse For Path"></i>
+<% if (removable) { %>
+  <i class="right-icon-two icon-trash path-remove" title="Remove"></i>
+<% } %>
+<div class="setting">
+  <input type="text" name="<%= name %>" value="<%= value %>" title="<%= title %>" placeholder="<%= title %>">
+  <div class="loading"><i class="icon-refresh icon-white"></i>Loading...</div>
+  <div class="path-select">
+    <div class="path-list"></div>
+  </div>
+</div>

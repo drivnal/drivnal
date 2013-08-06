@@ -1,0 +1,355 @@
+define([
+  'jquery',
+  'underscore',
+  'backbone',
+  'collections/backup/task',
+  'views/backup/item',
+  'text!templates/backup/itemList.html'
+], function($, _, Backbone, TaskCollection, ItemView, itemListTemplate) {
+  'use strict';
+  var ItemListView = Backbone.View.extend({
+    template: _.template(itemListTemplate),
+    collectionClass: null,
+    viewClass: ItemView,
+    title: 'Items',
+    removeTitle: 'Remove Select Items',
+    selectable: false,
+    defaultOpen: false,
+    events: {},
+    defaultEvents: {
+      'click .list-title': 'onClickTitle',
+      'click .remove-selected': 'onRemoveSelected'
+    },
+    initialize: function() {
+      $.extend(this.events, this.defaultEvents);
+      this.collection = new this.collectionClass();
+      this.listenTo(this.collection, 'reset', this.onReset);
+      this.views = [];
+      this.removing = [];
+      this.notification = false;
+    },
+    render: function() {
+      this.$el.html(this.template({
+        title: this.title,
+        removeTitle: this.removeTitle
+      }));
+
+      if (!this.defaultOpen) {
+        this.$('.item-list-box').addClass('closed');
+        this.$('.item-list').hide();
+        this.$('.item-list').css('padding-right', '1px');
+      }
+
+      return this;
+    },
+    updateSize: function() {
+      this.trigger('updateSize');
+    },
+    update: function(notification) {
+      if (!this.collection.getVolume()) {
+        this.collection.reset();
+        return;
+      }
+
+      if (notification) {
+        this.notification = true;
+      }
+
+      this.collection.fetch({
+        reset: true,
+        success: function() {
+          this.notification = false;
+        }.bind(this),
+        error: function() {
+          this.notification = false;
+          this.collection.reset();
+          // TODO Show error message
+        }.bind(this)
+      });
+    },
+    showItems: function(complete) {
+      if (this.isItems()) {
+        return;
+      }
+      this.trigger('open');
+
+      this.$('.item-list-box').removeClass('closed');
+      this.updateSize();
+      this.$('.item-list').slideDown(300, function() {
+        // Padding must change to fix error with scroll bar
+        this.$('.item-list').css('padding-right', '0');
+        if (complete) {
+          complete();
+        }
+      }.bind(this));
+    },
+    hideItems: function(complete) {
+      if (!this.isItems()) {
+        return;
+      }
+
+      this.$('.item-list-box').addClass('closed');
+      this.resetRemove();
+      this.updateSize();
+      this.$('.item-list').slideUp(300, function() {
+        // Padding must change to fix error with scroll bar
+        this.$('.item-list').css('padding-right', '1px');
+        if (complete) {
+          complete();
+        }
+      }.bind(this));
+    },
+    isItems: function() {
+      return !this.$('.item-list-box').hasClass('closed');
+    },
+    showRemove: function(complete) {
+      if (this.isRemove()) {
+        return;
+      }
+
+      this.$('.remove-selected').slideDown({
+        duration: 100,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+          if (complete) {
+            complete();
+          }
+        }.bind(this)
+      });
+    },
+    hideRemove: function(complete) {
+      if (!this.isRemove()) {
+        return;
+      }
+
+      this.$('.remove-selected').slideUp({
+        duration: 100,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+          if (complete) {
+            complete();
+          }
+        }.bind(this)
+      });
+    },
+    isRemove: function() {
+      return this.$('.remove-selected').is(':visible');
+    },
+    removeItem: function(view) {
+      view.$el.slideUp({
+        duration: 250,
+        complete: function() {
+          view.remove();
+        }.bind(this)
+      });
+    },
+    addNotification: function() {
+      var count = parseInt(this.$('.notification').text(), 10);
+
+      if (isNaN(count)) {
+        count = 1;
+      }
+      else {
+        count += 1;
+      }
+
+      if (count < 10) {
+        if (this.$('.notification').hasClass('many')) {
+          this.$('.notification').removeClass('many');
+        }
+        if (!this.$('.notification').hasClass('one')) {
+          this.$('.notification').addClass('one');
+        }
+      }
+      else {
+        if (this.$('.notification').hasClass('one')) {
+          this.$('.notification').removeClass('one');
+        }
+        if (!this.$('.notification').hasClass('many')) {
+          this.$('.notification').addClass('many');
+        }
+      }
+
+      this.$('.notification').text(count.toString());
+
+      if (!this.$('.notification').is(':visible')) {
+        this.$('.notification').fadeIn(250);
+      }
+
+      this.$('.notification').addClass('flash');
+      setTimeout(function() {
+        this.$('.notification').removeClass('flash');
+      }.bind(this), 100);
+    },
+    clearNotification: function() {
+      this.$('.notification').text('');
+      this.$('.notification').fadeOut(250);
+    },
+    onReset: function(collection) {
+      var i;
+      var modelView;
+      var attr;
+      var modified;
+      var currentModels = [];
+      var newModels = [];
+
+      for (i = 0; i < this.views.length; i++) {
+        currentModels.push(this.views[i].model.get('id'));
+      }
+
+      for (i = 0; i < collection.models.length; i++) {
+        newModels.push(collection.models[i].get('id'));
+      }
+
+      // Remove elements that no longer exists
+      for (i = 0; i < this.views.length; i++) {
+        if (newModels.indexOf(this.views[i].model.get('id')) === -1) {
+          // If view is selected trigger change to remove selection
+          if (this.views[i].getSelect()) {
+            this.trigger('change', null);
+          }
+
+          // Remove item from dom and array
+          this.removeItem(this.views[i]);
+          this.views.splice(i, 1);
+          i -= 1;
+        }
+      }
+
+      // Add new elements
+      for (i = 0; i < collection.models.length; i++) {
+        if (currentModels.indexOf(collection.models[i].get('id')) !== -1) {
+          continue;
+        }
+
+        if (this.notification && !this.isItems()) {
+          this.addNotification();
+        }
+
+        modelView = new this.viewClass({model: collection.models[i]});
+        this.views.splice(i, 0, modelView);
+        this.listenTo(modelView, 'select', this.onSelect);
+        this.listenTo(modelView, 'remove', this.onRemove);
+        modelView.render().$el.hide();
+
+        if (i === 0) {
+          this.$('.item-list').prepend(modelView.el);
+        }
+        else {
+          this.views[i - 1].$el.after(modelView.el);
+        }
+
+        modelView.$el.slideDown(250);
+      }
+
+      // Save orig scroll position
+      var scrollPos = this.$('.item-list').scrollTop();
+
+      // Check for modified data
+      for (i = 0; i < collection.models.length; i++) {
+        modified = false;
+
+        // Check each attr for modified data
+        for (attr in collection.models[i].attributes) {
+          if (collection.models[i].get(attr) !==
+              this.views[i].model.get(attr)) {
+            modified = true;
+            break;
+          }
+        }
+
+        if (!modified) {
+          continue;
+        }
+
+        // If data was modified updated attributes and render
+        this.views[i].model.set(collection.models[i].attributes);
+        this.views[i].render();
+      }
+
+      // Restore orig scroll position
+      if (this.$('.item-list').scrollTop() !== scrollPos) {
+        this.$('.item-list').scrollTop(scrollPos);
+      }
+    },
+    onClickTitle: function() {
+      if (this.isItems()) {
+        return;
+      }
+      this.clearNotification();
+      this.showItems();
+    },
+    resetSelected: function() {
+      this.currentItem.setSelect(false);
+      this.currentItem = null;
+      this.trigger('change', null);
+    },
+    resetRemove: function() {
+      for (var i = 0; i < this.removing.length; i++) {
+        if (this.currentItem === this.removing[i]) {
+          this.resetSelected();
+        }
+        this.removing[i].setRemove(false);
+      }
+      this.removing = [];
+      this.hideRemove();
+    },
+    onSelect: function(view) {
+      if (!this.selectable || this.currentItem === view) {
+        return;
+      }
+      if (this.currentItem) {
+        this.currentItem.setSelect(false);
+      }
+      this.currentItem = view;
+      this.currentItem.setSelect(true);
+      this.trigger('change', this.currentItem.model.get('id'));
+    },
+    onRemove: function(snapshotView) {
+      var i;
+
+      if (snapshotView.getRemove()) {
+        for (i = 0; i < this.removing.length; i++) {
+          if (this.removing[i] === snapshotView) {
+            this.removing.splice(i, 1);
+          }
+        }
+        snapshotView.setRemove(false);
+      }
+      else {
+        this.removing.push(snapshotView);
+        snapshotView.setRemove(true);
+      }
+
+      if (this.removing.length) {
+        this.showRemove();
+      }
+      else {
+        this.hideRemove();
+      }
+    },
+    onNewSnapshot: function() {
+      if (!this.collection.getVolume()) {
+        return;
+      }
+      this.collection.create({
+        volume: this.collection.getVolume()
+      });
+    },
+    onRemoveSelected: function() {
+      _.each(this.removing, function(view) {
+        view.model.destroy({
+          success: function() {
+            view.remove();
+          }
+        });
+      });
+      this.resetRemove();
+      this.updateSize();
+    }
+  });
+
+  return ItemListView;
+});

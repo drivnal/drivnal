@@ -1,0 +1,200 @@
+body {
+  margin: 0;
+  height: 100%;
+  min-width: @page-min-width;
+  overflow-y: scroll;
+  color: @default-fg;
+  background-color: @default-bg;
+  background-image: @background-uri;
+  font-family: arial, sans-serif;
+}
+
+::-moz-selection {
+  background-color: @selection-bg;
+  text-shadow: none;
+}
+::selection {
+  background-color: @selection-bg;
+  text-shadow: none;
+}
+
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"] {
+  color: @input-fg;
+  background-color: @input-bg;
+  border: @input-border;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  .clear-border-radius;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: @placeholder-fg;
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: @placeholder-fg;
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: @placeholder-fg;
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: @placeholder-fg;
+}
+.placeholder {
+  color: @placeholder-fg !important;
+}
+
+a,
+a:focus,
+a:hover,
+a:active {
+  outline: 0;
+  text-decoration: none;
+}
+
+button,
+.button {
+  color: @button-fg;
+  background-color: @button-bg;
+  border: none;
+}
+button:hover,
+.button:hover {
+  background-color: @button-hover-bg;
+}
+button:active,
+.button:active {
+  background-color: @button-active-bg;
+}
+button:disabled,
+.button.disabled {
+  background-color: @button-disabled-bg;
+}
+button:focus {
+  outline: 0;
+}
+.button {
+  cursor: pointer;
+  border: none;
+}
+
+.container-fluid {
+  padding: 0;
+}
+.row-fluid .span3 {
+  width: 24%;
+  margin: 0;
+}
+.row-fluid .span4 {
+  width: 38%;
+  margin: 0;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  background-image: @glyphicons-halflings-uri;
+}
+
+.icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:focus > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > li > a:focus > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:focus > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"],
+.dropdown-submenu:focus > a > [class*=" icon-"] {
+  background-image: @glyphicons-halflings-white-uri;
+}
+
+.backup .red-tooltip .tooltip-inner, {
+  background-color: @red-tooltip-bg;
+}
+.backup .red-tooltip .tooltip-arrow {
+  border-top-color: @red-tooltip-bg;
+}
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+}
+.ui-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 1.2em;
+  height: 1.2em;
+  cursor: default;
+}
+.ui-slider .ui-slider-range {
+  position: absolute;
+  z-index: 1;
+  font-size: .7em;
+  display: block;
+  border: 0;
+  background-position: 0 0;
+}
+.ui-slider.ui-state-disabled .ui-slider-handle,
+.ui-slider.ui-state-disabled .ui-slider-range {
+  filter: inherit;
+}
+.ui-slider-horizontal {
+  height: .8em;
+}
+.ui-slider-horizontal .ui-slider-handle {
+  top: -.3em;
+  margin-left: -.6em;
+}
+.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 100%;
+}
+.ui-slider-horizontal .ui-slider-range-min {
+  left: 0;
+}
+.ui-slider-horizontal .ui-slider-range-max {
+  right: 0;
+}
+.ui-slider-vertical {
+  width: .8em;
+  height: 100px;
+}
+.ui-slider-vertical .ui-slider-handle {
+  left: -.3em;
+  margin-left: 0;
+  margin-bottom: -.6em;
+}
+.ui-slider-vertical .ui-slider-range {
+  left: 0;
+  width: 100%;
+}
+.ui-slider-vertical .ui-slider-range-min {
+  bottom: 0;
+}
+.ui-slider-vertical .ui-slider-range-max {
+  top: 0;
+}

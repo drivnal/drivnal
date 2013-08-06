@@ -1,0 +1,650 @@
+.backup .volume .item {
+  margin: 10px 10px 0 10px;
+  padding: 10px;
+  background-color: @inactive-volume-bg;
+}
+
+.backup .volume .item:hover {
+  background-color: @button-hover-bg;
+}
+
+.backup .item:active {
+  background-color: @button-active-bg;
+}
+
+.backup .current-volume .item {
+  background-color: @button-bg;
+  margin: 10px 10px 0 10px;
+}
+
+.backup .volume .info {
+  margin-left: 45px;
+}
+
+.backup .volume.new-volume .item {
+  margin: 10px 10px 0 10px;
+}
+
+.backup .volume .usage-meter {
+  float: left;
+}
+
+.backup .volume .open-settings,
+.backup .volume .remove-volume {
+  float: right;
+  display: none;
+}
+
+.backup .volume .open-settings {
+  margin: -3px -3px 0 0;
+}
+
+.backup .volume .remove-volume {
+  margin: -3px 1px 0 0;
+}
+
+.backup .volume .settings {
+  margin: 0 10px 0 10px;
+  background-color: @box-bg;
+  border: @box-border;
+  padding: 5px;
+  background-image: @background2-uri;
+  display: none;
+  overflow-y: hidden;
+}
+
+.backup .volume .settings .left-icon {
+  margin-top: 6px;
+  position: absolute;
+}
+
+.backup .volume .settings .right-icon {
+  margin-top: 6px;
+  right: 20px;
+  position: absolute;
+}
+
+.backup .volume .settings .right-icon-two {
+  margin-top: 6px;
+  right: 40px;
+  position: absolute;
+  display: none;
+}
+
+.backup .volume .settings .setting {
+  margin-bottom: 10px;
+  min-height: 27px;
+  padding-left: 20px;
+}
+
+.backup .volume .settings input {
+  width: 100%;
+  height: 27px;
+  margin: 0;
+  .transition(border, 0.2s);
+}
+
+.backup .volume .settings .setting-error {
+  margin-top: -13px;
+  position: absolute;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  font-size: 0.7em;
+  padding: 0 2px 0 2px;
+  line-height: 1.5em;
+  background-color: @error-bg;
+  font-weight: bold;
+  .transition(background-color, 0.2s);
+}
+
+.backup .volume .settings .setting-error.flash {
+  background-color: @default-bg;
+}
+
+.backup .volume .settings input.input-error {
+  border-color: @error-bg;
+}
+.backup .volume .settings input.input-error.flash {
+  border-color: @default-bg;
+}
+
+.backup .volume .settings .slider-box {
+  width: 100%;
+  padding-top: 8px;
+}
+
+.backup .volume .settings .slider-box input {
+  width: 89px;
+  float: left;
+  margin-top: -8px;
+  .transition(width, 0.3s);
+}
+
+.backup .volume .settings .slider-box .slider {
+  margin-left: 101px;
+  margin-right: 11px;
+  width: auto;
+  background-color: @input-bg;
+  .transition(margin-left, 0.3s);
+}
+
+.backup .volume .settings .slider-box .slider a {
+  border: @input-border;
+  background-color: @slider-bg;
+  border-radius: 100%;
+}
+
+.backup .volume .settings .error {
+  display: none;
+  padding: 3px;
+  margin-bottom: 5px;
+  border: @error-box-border;
+  background-color: @error-box-bg;
+}
+
+.backup .volume .settings table {
+  width: 100%;
+}
+
+.backup .volume .settings table td {
+  width: 50%;
+}
+
+.backup .volume .settings .cancel-box {
+  padding-right: 2px;
+}
+
+.backup .volume .settings .save-box {
+  padding-left: 2px;
+}
+
+.backup .volume .settings button {
+  width: 100%;
+  display: inline-block;
+}
+
+.backup .volume .usage-meter {
+  width: 40px;
+  height: 40px;
+}
+
+.backup .volume .usage-meter .foreground {
+  fill: @meter-fg;
+}
+
+.backup .volume .usage-meter .background {
+  fill: @meter-bg;
+}
+
+.backup .volume.storage-alert .usage-meter .foreground {
+  fill: @meter-alert-fg;
+}
+
+.backup .volume.storage-alert .usage-meter .background {
+  fill: @meter-alert-bg;
+}
+
+.backup .volume .usage-meter .running-background {
+  fill: @meter-running-bg;
+}
+
+.backup .backup-volumes .dropdown-menu {
+  border: none;
+  float: none;
+  position: static;
+  display: inline;
+}
+
+.backup .new-snapshot {
+  margin: 10px;
+  padding: 10px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.backup .setting .loading {
+  font-size: 0.8em;
+  position: absolute;
+  right: 18px;
+  margin: -25px 0 0 0;
+  padding: 3px 4px 4px 19px;
+  border: @loading-border;
+  line-height: normal;
+  display: none;
+  background-color: @loading-bg;
+}
+
+.backup .setting .loading i {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+}
+
+.backup .path-select {
+  border-left: @input-border;
+  border-right: @input-border;
+  border-bottom: @input-border;
+  background-color: @input-bg;
+  display: none;
+}
+
+.backup .path-select .path-list {
+  height: 132px;
+  overflow-y: scroll;
+}
+
+.backup .path-select .path-list .path {
+  padding: 1px 0 1px 5px;
+  cursor: pointer;
+}
+
+.backup .path-select .path-list .path:hover {
+  background-color: @path-select-hover-bg;
+}
+
+.backup .path-select .path-list .path:hover span {
+  text-decoration: underline;
+}
+
+.backup .item-list-box {
+  border: @box-border;
+  margin: 10px;
+  height: 100%;
+  background-image: @background2-uri;
+}
+
+.backup .item-list-box .list-title {
+  padding: 5px;
+  background-color: @button-bg;
+  text-align: center;
+  cursor: default;
+}
+
+.backup .item-list-box .list-title span {
+  display: block;
+}
+
+.backup .item-list-box .list-title i {
+  margin: -18px 2px 0 0;
+  float: right;
+  display: none;
+}
+
+.backup .item-list-box.closed .list-title i {
+  display: block;
+}
+
+.backup .item-list-box .item-list {
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  list-style-type: none;
+}
+
+.backup .item-list-box.closed .list-title {
+  cursor: pointer;
+}
+
+.backup .item-list-box.closed .list-title:hover {
+  background-color: @button-hover-bg;
+}
+
+.backup .item-list-box.closed .list-title:active {
+  background-color: @button-active-bg;
+}
+
+.backup .item-list-box .list-title .notification {
+  margin: -21px -1px 0 0;
+  background-color: @notification-bg;
+  text-align: center;
+  float: right;
+  display: none;
+}
+
+.backup .item-list-box .list-title:hover .notification {
+  background-color: @notification-hover-bg;
+}
+
+.backup .item-list-box .list-title:active .notification {
+  background-color: @notification-active-bg;
+}
+
+.backup .item-list-box .list-title .notification.flash {
+  background-color: @notification-flash-bg;
+}
+
+.backup .item-list-box .list-title .notification.one {
+  padding: 1px 8px 1px 8px;
+}
+
+.backup .item-list-box .list-title .notification.many {
+  padding: 1px 4px 1px 4px;
+}
+
+.backup .item-list-box .remove-selected {
+  padding: 5px;
+  background-color: @remove-bg;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+}
+
+.backup .item-list-box .remove-selected:hover {
+  background-color: @remove-hover-bg;
+}
+
+.backup .item-list-box .remove-selected:active {
+  background-color: @remove-active-bg;
+}
+
+.backup .item-box {
+  margin: 2px;
+}
+
+.backup .item-box .item {
+  cursor: pointer;
+}
+
+.backup .item-box .title {
+  text-align: center;
+  padding: 4px;
+}
+
+.backup .item-box.selected .item {
+  background-color: @button-active-bg;
+}
+
+.backup .item-box .item.pending {
+  background-color: @item-pending-bg;
+}
+
+.backup .item-box .item.pending:hover {
+  background-color: @item-pending-hover-bg;
+}
+
+.backup .item-box.selected .item.pending {
+  background-color: @item-pending-active-bg;
+}
+
+.backup .item-box .item.aborting {
+  background-color: @item-aborting-bg;
+}
+
+.backup .item-box .item.aborting:hover {
+  background-color: @item-aborting-hover-bg;
+}
+
+.backup .item-box.selected .item.aborting {
+  background-color: @item-aborting-active-bg;
+}
+
+.backup .item-box .item.failed,
+.backup .item-box .item.aborted {
+  background-color: @item-failed-bg;
+}
+
+.backup .item-box .item.failed:hover,
+.backup .item-box .item.aborted:hover {
+  background-color: @item-failed-hover-bg;
+}
+
+.backup .item-box.selected .item.failed,
+.backup .item-box.selected .item.aborted {
+  background-color: @item-failed-active-bg;
+}
+
+.backup .item-box .item.removing {
+  background-color: @item-removing-bg;
+}
+
+.backup .item-box .item.removing:hover {
+  background-color: @item-removing-hover-bg;
+}
+
+.backup .item-box.selected .item.removing {
+  background-color: @item-removing-active-bg;
+}
+
+.backup .item-box .task-type-icon {
+  margin-top: -21px;
+  margin-left: 8px;
+  float: left;
+}
+
+.backup .item-box .task-failed-icon {
+  margin-top: -21px;
+  margin-left: 26px;
+  float: left;
+}
+
+.backup .item-box .toggle-info {
+  margin-top: -21px;
+  margin-right: 20px;
+  float: right;
+  display: none;
+}
+
+.backup .item-box .icon {
+  margin-top: -21px;
+  margin-right: 5px;
+  float: right;
+  display: none;
+}
+
+.backup .item-box .task-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.backup .item-box .task-id {
+  margin: -3px 0 -3px 0;
+  color: @item-id-fg;
+  font-size: 0.7em;
+  font-weight: bold;
+  line-height: 12px;
+}
+
+.backup .item-box .info {
+  color: @lighter-fg;
+  background-color: @box-bg;
+  border: @box-border;
+  padding: 5px;
+  display: none;
+}
+
+.backup .object-list {
+  margin: 5px 0 0 0;
+  padding: 0 5px 0 5px;
+}
+
+.backup .object-list-box {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.backup .object-list table {
+  width: 100%;
+}
+
+.backup .object-list colgroup {
+  width: 100%;
+}
+
+.backup .object-list thead {
+  height: 0px;
+  top: 105px;
+  position: absolute;
+}
+
+.backup .object-list tr {
+  width: inherit;
+}
+
+.backup .object-list .select-col-group,
+.backup .object-list .select-header,
+.backup .object-list .select-col {
+  width: 20px;
+  min-width: 20px;
+  max-width: 20px;
+}
+
+.backup .object-list .title-col-group,
+.backup .object-list .title-header,
+.backup .object-list .title-col {
+  width: auto;
+  min-width: 120px;
+  max-width: none;
+}
+
+.backup .object-list .size-col-group,
+.backup .object-list .size-header,
+.backup .object-list .size-col {
+  width: 70px;
+  min-width: 70px;
+  max-width: none;
+}
+
+.backup .object-list .modified-col-group,
+.backup .object-list .modified-header,
+.backup .object-list .modified-col {
+  width: 110px;
+  min-width: 110px;
+  max-width: none;
+}
+
+.backup .object-list .title-title,
+.backup .object-list .size-title,
+.backup .object-list .modified-title {
+  font-size: 11px;
+  font-weight: bold;
+  text-align: left;
+  color: rgb(122, 121, 124);
+}
+
+.backup .object-list .object-row {
+  cursor: default;
+  color: @darker-fg;
+}
+
+.backup .object-list .object-row:hover,
+.backup .object-list .object-row.selected {
+  background-color: @object-selected-bg;
+}
+
+.backup .object-list .select-col {
+  border-bottom: @object-border;
+  width: 20px;
+  max-width: 20px;
+  padding: 5px 0px 3px 5px;
+}
+
+.backup .object-list .select {
+  width: 11px;
+  height: 11px;
+  border: @object-border;
+}
+
+.backup .object-list .select.selected .select-inner {
+  width: 15px;
+  height: 15px;
+  background-position: -4px -6px;
+  background-image: @checkmark-uri;
+}
+
+.backup .object-list .title-col,
+.backup .object-list .size-col,
+.backup .object-list .modified-col {
+  border-bottom: @object-border;
+}
+
+.backup .dir-name:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.backup .object-list-path {
+  padding: 0 5px 0 5px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.backup .object-path,
+.backup .object-path div {
+  display: inline-block;
+}
+
+.backup .object-path .name {
+  color: @object-path-fg;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.backup .object-path .name.last {
+  cursor: default;
+}
+
+.backup .object-path .last {
+  font-weight: bold;
+}
+
+.backup .object-path .seperator {
+  width: 4px;
+  height: 7px;
+  background-image: @path-seperator-uri;
+  opacity: 0.55;
+  margin: 0 4px 0 4px;
+}
+
+.backup .object-drop {
+  .width-calc(~'38% - 7px');
+  min-width: @object-drop-min-width;
+  margin-top: 6px;
+  position: absolute;
+  border: @object-drop-border;
+  position: absolute;
+  background-color: @object-drop-bg;
+  z-index: 5;
+}
+
+.backup .object-drop.hover {
+  background-color: @object-drop-hover-bg;
+}
+
+.backup .object-drop .float {
+  float: left;
+  height: 50%;
+  margin-bottom: -27px;
+}
+
+.backup .object-drop .text {
+  color: #474747;
+  width: 150px;
+  border: @object-drop-text-border;
+  text-align: center;
+  font-weight: bold;
+  padding: 15px 0 15px 0;
+  background-color: @object-drop-text-bg;
+  margin: 0 auto;
+  position: relative;
+  clear: both;
+}
+
+.backup.drag-box {
+  color: @drag-box-fg;
+  font-size: 0.9em;
+  font-weight: bold;
+  position: absolute;
+  padding: 3px 3px 3px 10px;
+  border-style: solid;
+  border-width: 1px;
+  pointer-events: none;
+  background-color: @drag-box-bg;
+  box-shadow: @drag-box-shadow;
+  padding: 7px 7px 7px 12px;
+  cursor: pointer;
+  z-index: 10;
+}

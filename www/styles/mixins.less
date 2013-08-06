@@ -1,0 +1,56 @@
+.top-gradient(@solid, @start, @stop) {
+  background-color: @solid;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@{start}',
+    endColorstr='@{stop}', GradientType=0);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%,
+    from(@start), to(@stop));
+  background-image: -webkit-linear-gradient(top, @start, @stop);
+  background-image: -moz-linear-gradient(top, @start, @stop);
+  background-image: -ms-linear-gradient(top, @start, @stop);
+  background-image: -o-linear-gradient(top, @start, @stop);
+  background-image: linear-gradient(top, @start, @stop);
+}
+
+.bottom-gradient(@solid, @start, @stop) {
+  background-color: @solid;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@{stop}',
+    endColorstr='@{start}', GradientType=0);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%,
+    from(@stop), to(@start));
+  background-image: -webkit-linear-gradient(bottom, @start, @stop);
+  background-image: -moz-linear-gradient(bottom, @start, @stop);
+  background-image: -ms-linear-gradient(bottom, @start, @stop);
+  background-image: -o-linear-gradient(bottom, @start, @stop);
+  background-image: linear-gradient(bottom, @start, @stop);
+}
+
+.transition(@property, @duration) {
+  -webkit-transition: @property @duration;
+  -moz-transition: @property @duration;
+  -o-transition: @property @duration;
+  transition: @property @duration;
+}
+
+.width-calc(@func) {
+  width: -webkit-calc(@func);
+  width: -moz-calc(@func);
+  width: -o-calc(@func);
+  width: calc(@func);
+}
+
+.clear-border-radius {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.clear-box-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.clear-gradient {
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
