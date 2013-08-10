@@ -84,6 +84,8 @@ class Server:
         self._setup_app()
         self._setup_static()
 
+        logger.info('Starting server...')
+
         if self.config.debug == 'true':
             self._start_debug()
         else:
