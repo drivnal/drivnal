@@ -10,6 +10,12 @@ def event_get(volume_id, last_event):
     client = Client()
     volume = client.get_volume(volume_id)
 
+    if not volume:
+        return utils.jsonify({
+            'error': VOLUME_NOT_FOUND,
+            'error_msg': VOLUME_NOT_FOUND_MSG,
+        }), 404
+
     if not last_event:
         events = [
             {
@@ -20,7 +26,7 @@ def event_get(volume_id, last_event):
         ]
         return utils.jsonify(events)
 
-    for i in xrange(int(5 / 0.3)):
+    for i in xrange(int(10 / 0.3)):
         events = []
 
         for event in volume.get_events(last_event):

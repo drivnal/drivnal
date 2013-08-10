@@ -11,6 +11,13 @@ import time
 def task_get(volume_id):
     client = Client()
     volume = client.get_volume(volume_id)
+
+    if not volume:
+        return utils.jsonify({
+            'error': VOLUME_NOT_FOUND,
+            'error_msg': VOLUME_NOT_FOUND_MSG,
+        }), 404
+
     tasks = []
 
     for task in reversed(volume.get_tasks()):
@@ -29,6 +36,13 @@ def task_get(volume_id):
 def task_put(volume_id, task_id):
     client = Client()
     volume = client.get_volume(volume_id)
+
+    if not volume:
+        return utils.jsonify({
+            'error': VOLUME_NOT_FOUND,
+            'error_msg': VOLUME_NOT_FOUND_MSG,
+        }), 404
+
     task = Task(id=task_id.encode())
 
     if 'abort' in flask.request.json and flask.request.json['abort']:

@@ -61,3 +61,11 @@ WEEKDAY_UNITS = {
     'sun': 6,
     'su': 6,
 }
+
+VOLUME_NOT_FOUND = 'volume_not_found'
+VOLUME_NOT_FOUND_MSG = 'Volume not found'
+
+SNAPSHOT_NOT_FOUND = 'snapshot_not_found'
+SNAPSHOT_NOT_FOUND_MSG = 'Snapshot not found'
+
+PATH_NOT_FOUND = 'path_not_found'

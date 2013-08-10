@@ -5,19 +5,41 @@ import drivnal.utils as utils
 import flask
 
 @server.app.route('/object/<volume_id>/<snapshot_id>', methods=['GET'])
-@server.app.route('/object/<volume_id>/<snapshot_id>/<path:path>', methods=['GET'])
+@server.app.route('/object/<volume_id>/<snapshot_id>/<path:path>',
+    methods=['GET'])
 def object_get(volume_id, snapshot_id, path=None):
     client = Client()
     volume = client.get_volume(volume_id)
+
+    if not volume:
+        return utils.jsonify({
+            'error': VOLUME_NOT_FOUND,
+            'error_msg': VOLUME_NOT_FOUND_MSG,
+        }), 404
 
     if snapshot_id == 'origin':
         bucket = volume.origin
     else:
         bucket = volume.get_snapshot(int(snapshot_id))
 
+    if not bucket:
+        return utils.jsonify({
+            'error': SNAPSHOT_NOT_FOUND,
+            'error_msg': SNAPSHOT_NOT_FOUND_MSG,
+        }), 404
+
     objects_dict = {}
     objects_name = []
-    for object in bucket.get_objects(path):
+
+    try:
+        bucket_objects = bucket.get_objects(path)
+    except OSError, error:
+        return utils.jsonify({
+            'error': PATH_NOT_FOUND,
+            'error_msg': error.strerror,
+        }), 404
+
+    for object in bucket_objects:
         objects_dict[object.name] = {
             'id': object.name,
             'type': object.type,

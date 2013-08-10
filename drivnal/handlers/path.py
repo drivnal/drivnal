@@ -11,9 +11,6 @@ def path_get(path=None):
     path = '/' + (path or '')
     paths = []
 
-    if not os.path.isdir(path):
-        flask.abort(404)
-
     if path != '/':
         paths.append({
             'name': '..',
@@ -23,7 +20,10 @@ def path_get(path=None):
     try:
         path_list = os.listdir(path)
     except OSError:
-        path_list = []
+        return utils.jsonify({
+            'error': PATH_NOT_FOUND,
+            'error_msg': error.strerror,
+        }), 404
 
     for name in sorted(path_list):
         full_path = os.path.join(path, name)
