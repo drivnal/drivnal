@@ -198,7 +198,11 @@ class CreateSnapshot(Task):
             for exclude in excludes:
                 args.append('--exclude=%s' % exclude)
 
-        args.append(source_path + os.sep)
+        rsync_source_path = source_path
+        if rsync_source_path[-1] != os.sep:
+            rsync_source_path += os.sep
+
+        args.append(rsync_source_path)
         args.append(destination_path_temp)
 
         for path in [destination_path, destination_path_temp,

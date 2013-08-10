@@ -88,10 +88,18 @@ class MoveVolume(Task):
             log_path = os.path.join(source_path,
                 'copy_volume_%s.log' % int(time.time()))
 
+            rsync_source_path = source_path
+            if rsync_source_path[-1] != os.sep:
+                rsync_source_path += os.sep
+
+            rsync_destination_path = destination_path
+            if rsync_destination_path[-1] != os.sep:
+                rsync_destination_path += os.sep
+
             args = ['rsync', '--archive', '--hard-links', '--acls',
                 '--quiet', '--xattrs',  '--progress', '--super',
                 '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
-                source_path + os.sep, destination_path + os.sep]
+                rsync_source_path, rsync_destination_path]
 
             process = subprocess.Popen(args)
             return_code = None
