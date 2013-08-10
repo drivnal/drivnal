@@ -23,6 +23,7 @@ sha256sums=("CHANGE_ME")
 backup=(
     "etc/${pkgname}.conf"
     "var/lib/${pkgname}/${pkgname}.db"
+    "var/log/${pkgname}.log"
 )
 
 build() {
