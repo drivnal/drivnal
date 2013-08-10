@@ -7,7 +7,8 @@ define([
   'use strict';
   var BackupRouter = Backbone.Router.extend({
     routes: {
-      '': 'backups'
+      '': 'backups',
+      'no_events': 'backupsNoEvents'
     },
     initialize: function(data) {
       this.data = data;
@@ -24,6 +25,10 @@ define([
         $(this.data.element).html(this.data.view.render().el);
         $(this.data.element).fadeIn(400);
       }.bind(this));
+    },
+    backupsNoEvents: function() {
+      this.backups();
+      this.data.view.disableEvents();
     }
   });
 

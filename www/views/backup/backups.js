@@ -58,6 +58,18 @@ define([
       $(window).unbind('resize.backups');
       Backbone.View.prototype.remove.call(this);
     },
+    enableEvents: function() {
+      this.eventsDisabled = false;
+      if (this.events) {
+        this.events.start((this.onEvent).bind(this));
+      }
+    },
+    disableEvents: function() {
+      this.eventsDisabled = true;
+      if (this.events) {
+        this.stop();
+      }
+    },
     onEvent: function(eventType) {
       if (eventType === 'volumes_updated') {
         this.volumes.update();
@@ -114,7 +126,9 @@ define([
       this.tasks.update();
 
       this.events.setVolume(volume);
-      this.events.start((this.onEvent).bind(this));
+      if (!this.eventsDisabled) {
+        this.events.start((this.onEvent).bind(this));
+      }
 
       this.past.collection.setVolume(volume);
       this.past.collection.setSnapshot(null);
