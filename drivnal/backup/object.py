@@ -29,8 +29,9 @@ class Object:
     def get_objects(path):
         objects = []
 
-        for name in os.listdir(path):
-            object_path = os.path.join(path, name)
-            objects.append(Object(object_path))
+        if path:
+            for name in os.listdir(path):
+                object_path = os.path.join(path, name)
+                objects.append(Object(object_path))
 
         return objects
