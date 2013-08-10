@@ -8,7 +8,7 @@ define([
   var BackupRouter = Backbone.Router.extend({
     routes: {
       '': 'backups',
-      'no_events': 'backupsNoEvents'
+      '_no_events': 'backupsNoEvents'
     },
     initialize: function(data) {
       this.data = data;
