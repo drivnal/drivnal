@@ -12,7 +12,7 @@ setup(
     license='AGPL3',
     data_files=[
         ('/etc', ['data/etc/drivnal.conf']),
-        ('/etc/systemd/system', ['data/systemd/drivnald.service']),
+        ('/etc/systemd/system', ['data/systemd/drivnal.service']),
         ('/var/lib/drivnal', ['data/var/drivnal.db']),
         ('/var/log', ['data/var/log/drivnal.log']),
         ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
