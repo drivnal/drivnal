@@ -6,6 +6,8 @@ import os
 import copy
 import logging
 
+logger = logging.getLogger(APP_NAME)
+
 class Client:
     def __init__(self):
         pass
@@ -24,14 +26,14 @@ class Client:
                 return volume
 
     def create_volume(self, path):
-        logging.debug('Creating volume.')
+        logger.debug('Creating volume.')
 
         if not os.path.isdir(path):
             os.mkdir(path)
         volume = Volume(self, path)
 
         self.volumes.append(volume)
-        logging.debug('Adding volume path to config. %r' % {
+        logger.debug('Adding volume path to config. %r' % {
             'volume_id': volume.id,
         })
         self.commit()
@@ -39,7 +41,7 @@ class Client:
         return volume
 
     def remove_volume(self, volume):
-        logging.debug('Removing volume. %r' % {
+        logger.debug('Removing volume. %r' % {
             'volume_id': volume.id,
         })
 
@@ -47,7 +49,7 @@ class Client:
         self.commit()
 
     def load(self):
-        logging.debug('Loading client database.')
+        logger.debug('Loading client database.')
         self.volumes = []
 
         for i, volume_path in enumerate(
@@ -56,19 +58,19 @@ class Client:
             try:
                 volume_path = os.path.normpath(volume_path)
             except AttributeError:
-                logging.error('Failed to normalize volume path. %r' % {
+                logger.error('Failed to normalize volume path. %r' % {
                     'volume_num': i,
                 })
             try:
                 volume = Volume(self, volume_path)
                 self.volumes.append(volume)
             except IOError:
-                logging.debug('Failed to load volume. %r' % {
+                logger.debug('Failed to load volume. %r' % {
                     'volume_num': i,
                 })
 
     def commit(self):
-        logging.debug('Writing client database.')
+        logger.debug('Writing client database.')
 
         server.app_db.remove('system', 'volumes')
         for volume in self.volumes:

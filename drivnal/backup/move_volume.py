@@ -9,6 +9,8 @@ import logging
 import shutil
 import subprocess
 
+logger = logging.getLogger(APP_NAME)
+
 class MoveVolume(Task):
     def __init__(self, *kargs, **kwargs):
         Task.__init__(self, *kargs, **kwargs)
@@ -21,7 +23,7 @@ class MoveVolume(Task):
     def _abort_process(self, process):
         for i in xrange(10):
             process.terminate()
-            logging.debug('Terminating volume move process. %r' % {
+            logger.debug('Terminating volume move process. %r' % {
                 'volume_id': self.volume_id,
                 'pid': process.pid,
             })
@@ -32,7 +34,7 @@ class MoveVolume(Task):
         if process.poll() is None:
             for i in xrange(30):
                 process.kill()
-                logging.debug('Killing volume move process. %r' % {
+                logger.debug('Killing volume move process. %r' % {
                     'volume_id': self.volume_id,
                     'pid': process.pid,
                 })
@@ -41,12 +43,12 @@ class MoveVolume(Task):
                     break
 
         if process.poll() is None:
-            logging.error('Failed to abort volume move process. %r' % {
+            logger.error('Failed to abort volume move process. %r' % {
                 'volume_id': self.volume_id,
                 'pid': process.pid,
             })
 
-        logging.warning('Volume move aborted. %r' % {
+        logger.warning('Volume move aborted. %r' % {
             'volume_id': self.volume_id,
         })
 
@@ -58,7 +60,7 @@ class MoveVolume(Task):
         destination_path = self.volume.path
 
         if self._get_mount(source_path) == self._get_mount(destination_path):
-            logging.info('Moving volume. %r' % {
+            logger.info('Moving volume. %r' % {
                 'volume_id': self.volume_id,
             })
 
@@ -79,7 +81,7 @@ class MoveVolume(Task):
                 time.sleep(0.1)
 
         else:
-            logging.info('Copying volume. %r' % {
+            logger.info('Copying volume. %r' % {
                 'volume_id': self.volume_id,
             })
 
@@ -100,7 +102,7 @@ class MoveVolume(Task):
                     return
                 time.sleep(0.1)
 
-            logging.debug('Removing previous copy of volume. %r' % {
+            logger.debug('Removing previous copy of volume. %r' % {
                 'volume_id': self.volume_id,
             })
 
@@ -112,7 +114,7 @@ class MoveVolume(Task):
                     else:
                         shutil.rmtree(path)
                 except Exception:
-                    logging.debug('Failed to delete path while removing ' +
+                    logger.debug('Failed to delete path while removing ' +
                         'previous volume files. %r' % {
                             'volume_id': self.volume_id,
                         })
@@ -124,7 +126,7 @@ class MoveVolume(Task):
                     'volume_id': self.id,
                 })
         else:
-            logging.debug('Volume move complete, committing config. %r' % {
+            logger.debug('Volume move complete, committing config. %r' % {
                 'volume_id': self.volume_id,
             })
             self.volume.client.commit()

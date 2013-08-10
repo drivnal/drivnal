@@ -4,6 +4,8 @@ import logging
 import time
 import uuid
 
+logger = logging.getLogger(APP_NAME)
+
 _STR_DATABASE_VARIABLES = ['volume_id', 'type']
 _INT_DATABASE_VARIABLES = ['time']
 
@@ -46,7 +48,7 @@ class Event:
         events_dict = {}
         events_time = []
 
-        logging.debug('Getting events for volume. %r' % {
+        logger.debug('Getting events for volume. %r' % {
             'volume_id': volume.id,
         })
 

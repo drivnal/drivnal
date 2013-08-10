@@ -6,6 +6,7 @@ import logging
 import time
 import uuid
 
+logger = logging.getLogger(APP_NAME)
 task_threads = {}
 
 _STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
@@ -59,7 +60,7 @@ class Task:
         return self.__dict__[name]
 
     def abort(self):
-        logging.debug('Aborting task. %r' % {
+        logger.debug('Aborting task. %r' % {
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
@@ -67,7 +68,7 @@ class Task:
         Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
     def aborted(self):
-        logging.debug('Task aborted. %r' % {
+        logger.debug('Task aborted. %r' % {
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
@@ -76,7 +77,7 @@ class Task:
         Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
     def remove(self):
-        logging.debug('Removing task. %r' % {
+        logger.debug('Removing task. %r' % {
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
@@ -95,7 +96,7 @@ class Task:
                 self.state = ABORTED
             self.thread = None
         except:
-            logging.exception('Task failed. %r' % {
+            logger.exception('Task failed. %r' % {
                 'volume_id': self.volume_id,
                 'task_id': self.id,
             })
@@ -118,13 +119,13 @@ class Task:
         if task.state not in [PENDING, ABORTING]:
             return
 
-        logging.debug('Updating task state. %r' % {
+        logger.debug('Updating task state. %r' % {
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
 
         if not self.thread.is_alive():
-            logging.warning('Task failed, thread ended unexpectable. %r' % {
+            logger.warning('Task failed, thread ended unexpectable. %r' % {
                 'volume_id': self.volume_id,
                 'task_id': self.id,
             })
@@ -136,7 +137,7 @@ class Task:
         tasks_dict = {}
         tasks_time = []
 
-        logging.debug('Getting tasks for volume. %r' % {
+        logger.debug('Getting tasks for volume. %r' % {
             'volume_id': volume.id,
         })
 

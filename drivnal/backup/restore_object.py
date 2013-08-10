@@ -5,6 +5,8 @@ import time
 import logging
 import subprocess
 
+logger = logging.getLogger(APP_NAME)
+
 class RestoreObject(Task):
     def __init__(self, *kargs, **kwargs):
         Task.__init__(self, *kargs, **kwargs)
@@ -13,7 +15,7 @@ class RestoreObject(Task):
     def _abort_process(self, process):
         for i in xrange(10):
             process.terminate()
-            logging.debug('Terminating restore process. %r' % {
+            logger.debug('Terminating restore process. %r' % {
                 'volume_id': self.volume_id,
                 'pid': process.pid,
             })
@@ -24,7 +26,7 @@ class RestoreObject(Task):
         if process.poll() is None:
             for i in xrange(30):
                 process.kill()
-                logging.debug('Killing restore process. %r' % {
+                logger.debug('Killing restore process. %r' % {
                     'volume_id': self.volume_id,
                     'pid': process.pid,
                 })
@@ -33,7 +35,7 @@ class RestoreObject(Task):
                     break
 
         if process.poll() is None:
-            logging.error('Failed to abort restore process. %r' % {
+            logger.error('Failed to abort restore process. %r' % {
                 'volume_id': self.volume_id,
                 'pid': process.pid,
             })
@@ -41,7 +43,7 @@ class RestoreObject(Task):
         self.aborted()
 
     def run(self, objects, destination_path):
-        logging.info('Restoring objects. %r' % {
+        logger.info('Restoring objects. %r' % {
             'volume_id': self.volume_id,
         })
 

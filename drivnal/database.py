@@ -3,9 +3,11 @@ import logging
 import anydbm
 import copy
 
+logger = logging.getLogger(APP_NAME)
+
 class Database():
     def __init__(self, db_path):
-        logging.debug('Opening database...')
+        logger.debug('Opening database...')
         self._db = anydbm.open(db_path, 'c')
 
     def __del__(self):
@@ -29,7 +31,7 @@ class Database():
         return items
 
     def sync(self):
-        logging.debug('Syncing database...')
+        logger.debug('Syncing database...')
         self._db.sync()
 
     def get(self, column_family, row=None, column=None):

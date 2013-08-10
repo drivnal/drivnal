@@ -8,6 +8,8 @@ import shlex
 import datetime
 import logging
 
+logger = logging.getLogger(APP_NAME)
+
 class Snapshot(Bucket):
     def __init__(self, volume, id):
         if id[-7:] == '.failed':
@@ -38,7 +40,7 @@ class Snapshot(Bucket):
         self.received = None
         self.speed = None
 
-        logging.debug('Parsing log file for snapshot. %r' % {
+        logger.debug('Parsing log file for snapshot. %r' % {
             'volume_id': self.volume.id,
             'snapshot_id': self.id,
         })
@@ -58,7 +60,7 @@ class Snapshot(Bucket):
                             '%Y/%m/%dT%H:%M:%S')
                         start_time = int(time.mktime(epoch.timetuple()))
                     else:
-                        logging.warning('Failed to get snapshot start ' + \
+                        logger.warning('Failed to get snapshot start ' + \
                             'time from log, line split length invalid. %r' % {
                                 'volume_id': self.volume.id,
                                 'snapshot_id': self.id,
@@ -66,7 +68,7 @@ class Snapshot(Bucket):
                             })
 
                 except ValueError:
-                    logging.warning('Failed to get snapshot start ' + \
+                    logger.warning('Failed to get snapshot start ' + \
                         'time from log, value error. %r' % {
                             'volume_id': self.volume.id,
                             'snapshot_id': self.id,
@@ -105,7 +107,7 @@ class Snapshot(Bucket):
                         try:
                             self.sent = utils.format_bytes(line_split[4])
                         except ValueError:
-                            logging.warning('Failed to get sent bytes ' + \
+                            logger.warning('Failed to get sent bytes ' + \
                                 'from snapshot log, value error. %r' % {
                                     'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
@@ -115,7 +117,7 @@ class Snapshot(Bucket):
                         try:
                             self.received = utils.format_bytes(line_split[7])
                         except ValueError:
-                            logging.warning('Failed to get received bytes ' + \
+                            logger.warning('Failed to get received bytes ' + \
                                 'from snapshot log, value error. %r' % {
                                     'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
@@ -126,14 +128,14 @@ class Snapshot(Bucket):
                             self.speed = utils.format_bytes(
                                 line_split[9]) + '/sec'
                         except ValueError:
-                            logging.warning('Failed to get transfer speed ' + \
+                            logger.warning('Failed to get transfer speed ' + \
                                 'from snapshot log, value error. %r' % {
                                     'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
         except IOError:
-            logging.debug('Failed to read log file for ' + \
+            logger.debug('Failed to read log file for ' + \
                 'snapshot, IOError. %r' % {
                     'volume_id': self.volume.id,
                     'snapshot_id': self.id,

@@ -14,12 +14,14 @@ import uuid
 import shutil
 import logging
 
+logger = logging.getLogger(APP_NAME)
+
 class Volume:
     def __init__(self, client, path):
         try:
             config_path = os.path.join(path, CONF_FILENAME)
         except AttributeError:
-            logging.error('Failed to join volume config path. %r' % {
+            logger.error('Failed to join volume config path. %r' % {
                 'volume_id': self.id,
             })
             raise
@@ -32,7 +34,7 @@ class Volume:
 
         if not self.id:
             self.id = uuid.uuid1().hex
-            logging.debug('Generated and setting volume uuid. %r' % {
+            logger.debug('Generated and setting volume uuid. %r' % {
                 'volume_id': self.id,
             })
             self.commit()
@@ -80,7 +82,7 @@ class Volume:
                 return snapshot
 
     def create_snapshot(self):
-        logging.debug('Creating snapshot. %r' % {
+        logger.debug('Creating snapshot. %r' % {
             'volume_id': self.id,
         })
 
@@ -96,7 +98,7 @@ class Volume:
                     'volume_id': self.id,
                 })
 
-        logging.debug('Starting snapshot task. %r' % {
+        logger.debug('Starting snapshot task. %r' % {
             'volume_id': self.id,
         })
 
@@ -106,7 +108,7 @@ class Volume:
         return task
 
     def remove_snapshot(self, snapshot, keep_log=False):
-        logging.info('Removing snapshot. %r' % {
+        logger.info('Removing snapshot. %r' % {
             'volume_id': self.id,
             'snapshot_id': snapshot.id,
         })
@@ -114,7 +116,7 @@ class Volume:
         self.snapshots.index(snapshot)
 
         if not keep_log:
-            logging.debug('Removing snapshot log file. %r' % {
+            logger.debug('Removing snapshot log file. %r' % {
                 'volume_id': self.id,
                 'snapshot_id': snapshot.id,
             })
@@ -122,7 +124,7 @@ class Volume:
             if os.path.isfile(snapshot.log_path):
                 os.remove(snapshot.log_path)
 
-        logging.debug('Removing snapshot directory. %r' % {
+        logger.debug('Removing snapshot directory. %r' % {
             'volume_id': self.id,
             'snapshot_id': snapshot.id,
         })
@@ -153,7 +155,7 @@ class Volume:
         return Event.get_events(self, last_time)
 
     def restore_object(self, objects, destination_path):
-        logging.debug('Starting restore object task. %r' % {
+        logger.debug('Starting restore object task. %r' % {
             'volume_id': self.id,
         })
 
@@ -163,7 +165,7 @@ class Volume:
         return task
 
     def load(self):
-        logging.debug('Reading volume config.')
+        logger.debug('Reading volume config.')
 
         try:
             self.config.read()
@@ -177,7 +179,7 @@ class Volume:
             try:
                 self.source_path = os.path.normpath(self.source_path)
             except AttributeError:
-                logging.error('Failed to normalize volume source path. %r' % {
+                logger.error('Failed to normalize volume source path. %r' % {
                     'volume_id': self.id,
                 })
         self.excludes = self.config.excludes or []
@@ -185,7 +187,7 @@ class Volume:
             try:
                 self.excludes[i] = os.path.normpath(exclude)
             except AttributeError:
-                logging.error('Failed to normalize volume exclude path. %r' % {
+                logger.error('Failed to normalize volume exclude path. %r' % {
                     'volume_id': self.id,
                     'exclude_num': i,
                 })
@@ -196,7 +198,7 @@ class Volume:
             try:
                 min_free_space = float(self.config.min_free_space)
             except ValueError:
-                logging.warning(
+                logger.warning(
                     'Config option min_free_space is invalid. %r' % {
                         'volume_id': self.id,
                     })
@@ -207,7 +209,7 @@ class Volume:
             try:
                 bandwidth_limit = int(self.config.bandwidth_limit)
             except ValueError:
-                logging.warning(
+                logger.warning(
                     'Config option bandwidth_limit is invalid. %r' % {
                         'volume_id': self.id,
                     })
@@ -218,7 +220,7 @@ class Volume:
             try:
                 max_prune = float(self.config.max_prune)
             except ValueError:
-                logging.warning('Config option max_prune is invalid. %r' % {
+                logger.warning('Config option max_prune is invalid. %r' % {
                     'volume_id': self.id,
                 })
         self.max_prune = max_prune
@@ -228,7 +230,7 @@ class Volume:
             try:
                 max_retry = int(self.config.max_retry)
             except ValueError:
-                logging.warning('Config option max_retry is invalid. %r' % {
+                logger.warning('Config option max_retry is invalid. %r' % {
                     'volume_id': self.id,
                 })
         self.max_retry = max_retry
@@ -236,7 +238,7 @@ class Volume:
         self.origin = Origin(self)
 
     def load_snapshots(self):
-        logging.debug('Loading snapshots. %r' % {
+        logger.debug('Loading snapshots. %r' % {
             'volume_id': self.id,
         })
 
@@ -253,7 +255,7 @@ class Volume:
             self.snapshots.append(Snapshot(self, name))
 
     def _move_volume(self):
-        logging.debug('Starting move volume task. %r' % {
+        logger.debug('Starting move volume task. %r' % {
             'volume_id': self.id,
         })
 
@@ -265,7 +267,7 @@ class Volume:
     def commit(self):
         retry_config_commit = False
 
-        logging.debug('Writing volume config. %r' % {
+        logger.debug('Writing volume config. %r' % {
             'volume_id': self.id,
         })
 
@@ -284,7 +286,7 @@ class Volume:
             # If volume has already been moved write will need
             # to be done after move
             if self.orig_path != self.path:
-                logging.debug('Failed to commit config to original ' + \
+                logger.debug('Failed to commit config to original ' + \
                     'volume path in a volume move, retying to new path ' +
                     'after volume is moved. %r' % {
                         'volume_id': self.id,

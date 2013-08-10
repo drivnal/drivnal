@@ -2,6 +2,8 @@ from drivnal.constants import *
 import os
 import logging
 
+logger = logging.getLogger(APP_NAME)
+
 class Config:
     def __init__(self, path):
         self._config_path = path
@@ -24,7 +26,7 @@ class Config:
         self._state = state
 
     def read(self):
-        logging.debug('Reading config.')
+        logger.debug('Reading config.')
 
         with open(self._config_path) as config:
             for line in config:
@@ -48,21 +50,21 @@ class Config:
                             value[:] = [x for x in value if x != '']
 
                     except ValueError:
-                        logging.warning('Ignoring invalid line. %r' % {
+                        logger.warning('Ignoring invalid line. %r' % {
                             'line': line,
                         })
                         continue
                     setattr(self, name, value)
 
                 else:
-                    logging.warning('Ignoring invalid line. %r' % {
+                    logger.warning('Ignoring invalid line. %r' % {
                         'line': line,
                     })
 
         self.set_state(SAVED)
 
     def write(self):
-        logging.debug('Writing config.')
+        logger.debug('Writing config.')
 
         with open(self._config_path, 'w') as config:
             for name in sorted(vars(self).keys()):

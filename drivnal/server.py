@@ -1,9 +1,12 @@
 import os
 import flask
 import cherrypy.wsgiserver
+import logging
 from constants import *
 from database import Database
 from werkzeug import SharedDataMiddleware
+
+logger = None
 
 class Server:
     def __init__(self):
@@ -13,22 +16,39 @@ class Server:
         self.app_db = None
 
     def _setup_app(self):
+        self.app = flask.Flask(APP_NAME)
+
+        global logger
+        logger = self.app.logger
+
         from backup.config import Config
         self.config = Config(self.conf_path)
         self.config.read()
 
-        db_path = self.config.db_path
-        if not db_path:
-            db_path = DEFAULT_DB_PATH
+        if self.config.log_path:
+            handler = logging.FileHandler(self.config.log_path)
+        else:
+            handler = logging.StreamHandler()
 
-        self.app = flask.Flask(APP_NAME)
-        self.app_db = Database(db_path)
+        if self.config.log_debug == 'true':
+            logger.setLevel(logging.DEBUG)
+            handler.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.INFO)
+            handler.setLevel(logging.INFO)
+
+        handler.setFormatter(logging.Formatter(
+            '[%(asctime)s][%(levelname)s][%(module)s][%(lineno)d] ' +
+            '%(message)s'))
+
+        logger.addHandler(handler)
+
+        self.app_db = Database(self.config.db_path or DEFAULT_DB_PATH)
+
         import handlers
 
     def _setup_static(self):
-        www_path = self.config.www_path
-        if not www_path:
-            www_path = DEFAULT_WWW_PATH
+        www_path = self.config.www_path or DEFAULT_WWW_PATH
 
         self.app.wsgi_app = SharedDataMiddleware(self.app.wsgi_app, {
             '/': os.path.normpath(www_path),
@@ -64,7 +84,7 @@ class Server:
         self._setup_app()
         self._setup_static()
 
-        if self.config.debug:
+        if self.config.debug == 'true':
             self._start_debug()
         else:
             self._start()

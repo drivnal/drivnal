@@ -8,6 +8,8 @@ import shlex
 import logging
 import subprocess
 
+logger = logging.getLogger(APP_NAME)
+
 class CreateSnapshot(Task):
     def __init__(self, *kargs, **kwargs):
         Task.__init__(self, *kargs, **kwargs)
@@ -19,7 +21,7 @@ class CreateSnapshot(Task):
             float(path_stat.f_blocks))
 
     def _check_no_space_error(self, path, log_path):
-        logging.debug('Checking for no space error on %r.' % self.volume.name)
+        logger.debug('Checking for no space error on %r.' % self.volume.name)
 
         with open(log_path) as log:
             # Get last kilobyte of file
@@ -47,7 +49,7 @@ class CreateSnapshot(Task):
                         file_stat = os.stat(file_path)
                         return (no_space_error, file_stat.st_size)
                     except OSError:
-                        logging.warning('Failed to get size of file, ' + \
+                        logger.warning('Failed to get size of file, ' + \
                             'that caused no space error. %r' % {
                                 'volume_id': self.volume_id,
                                 'snapshot_id': self.snapshot_id,
@@ -62,11 +64,11 @@ class CreateSnapshot(Task):
         if snapshot:
             self.volume.remove_snapshot(snapshot)
         else:
-            logging.debug('Failed to remove snapshot, snapshot id does ' + \
+            logger.debug('Failed to remove snapshot, snapshot id does ' + \
                 'not exists.')
 
     def _prune_snapshot(self, snapshot):
-        logging.info('Volume low on space, auto removing snapshot. %r' % {
+        logger.info('Volume low on space, auto removing snapshot. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
             'removing_snapshot_id': snapshot.id,
@@ -81,7 +83,7 @@ class CreateSnapshot(Task):
             (self.orig_snapshot_count - snapshot_count))
         orig_free_space = self.volume.get_space_free()
 
-        logging.debug('Pruning snapshots. %r' % {
+        logger.debug('Pruning snapshots. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
         })
@@ -116,7 +118,7 @@ class CreateSnapshot(Task):
     def _abort_process(self, process):
         for i in xrange(10):
             process.terminate()
-            logging.debug('Terminating snapshot process. %r' % {
+            logger.debug('Terminating snapshot process. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
                 'pid': process.pid,
@@ -128,7 +130,7 @@ class CreateSnapshot(Task):
         if process.poll() is None:
             for i in xrange(30):
                 process.kill()
-                logging.debug('Killing snapshot process. %r' % {
+                logger.debug('Killing snapshot process. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
                     'pid': process.pid,
@@ -138,13 +140,13 @@ class CreateSnapshot(Task):
                     break
 
         if process.poll() is None:
-            logging.error('Failed to abort snapshot process. %r' % {
+            logger.error('Failed to abort snapshot process. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
                 'pid': process.pid,
             })
 
-        logging.warning('Snapshot aborted, removing aborted snapshot. %r' % {
+        logger.warning('Snapshot aborted, removing aborted snapshot. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
         })
@@ -163,7 +165,7 @@ class CreateSnapshot(Task):
             destination_path = os.path.join(
                 self.volume.path, str(self.snapshot_id))
         except AttributeError:
-            logging.error('Failed to join snapshot destination path. %r' % {
+            logger.error('Failed to join snapshot destination path. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
             })
@@ -173,7 +175,7 @@ class CreateSnapshot(Task):
         max_retry = self.volume.max_retry or DEFAULT_MAX_RETRY
         last_snapshot = self.volume.get_last_snapshot()
 
-        logging.info('Creating snapshot. %r' % {
+        logger.info('Creating snapshot. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
             'task_id': self.id,
@@ -225,7 +227,7 @@ class CreateSnapshot(Task):
                 time.sleep(0.1)
 
             if return_code != 0:
-                logging.debug('Command returned non-zero exit status. %r' % {
+                logger.debug('Command returned non-zero exit status. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
                     'task_id': self.id,
@@ -239,7 +241,7 @@ class CreateSnapshot(Task):
                 if no_space_error and i <= max_retry:
                     # If prune was able to free up space try again
                     if self.prune_snapshots():
-                        logging.warning('Snapshot did not have required ' + \
+                        logger.warning('Snapshot did not have required ' + \
                             'free space, retrying snapshot. %r' % {
                                 'volume_id': self.volume_id,
                                 'snapshot_id': self.snapshot_id,
@@ -250,7 +252,7 @@ class CreateSnapshot(Task):
                 try:
                     os.rename(destination_path_temp, destination_path_failed)
                 except OSError:
-                    logging.error('Unable to rename failed snapshot. %r' % {
+                    logger.error('Unable to rename failed snapshot. %r' % {
                         'volume_id': self.volume_id,
                         'snapshot_id': self.snapshot_id,
                         'task_id': self.id,
