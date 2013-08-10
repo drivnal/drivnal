@@ -1,6 +1,7 @@
 from drivnal.constants import *
 from drivnal.exceptions import *
 from task import Task
+import os
 import time
 import logging
 import subprocess
@@ -47,9 +48,13 @@ class RestoreObject(Task):
             'volume_id': self.volume_id,
         })
 
+        log_path = os.path.join(self.volume.path,
+            'restore_%s.log' % int(time.time()))
+
         for obj in objects:
             args = ['rsync', '--archive', '--hard-links', '--acls',
                 '--quiet', '--xattrs',  '--progress', '--super',
+                '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
                 obj.path, destination_path]
 
             process = subprocess.Popen(args)

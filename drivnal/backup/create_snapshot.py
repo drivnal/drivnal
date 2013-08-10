@@ -171,7 +171,8 @@ class CreateSnapshot(Task):
             })
         destination_path_temp = destination_path + '.temp'
         destination_path_failed = destination_path + '.failed'
-        log_path = destination_path + '.log'
+        log_path = os.path.join(
+                self.volume.path, 'snapshot_%s.log' % self.snapshot_id)
         max_retry = self.volume.max_retry or DEFAULT_MAX_RETRY
         last_snapshot = self.volume.get_last_snapshot()
 
