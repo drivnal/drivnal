@@ -60,6 +60,11 @@ class Server:
                 return fd.read()
 
     def _start_debug(self):
+        if self.config.scheduler != 'false':
+            from backup.scheduler import Scheduler
+            scheduler = Scheduler()
+            scheduler.start()
+
         try:
             self.app.run(host=self.config.bind_addr,
                 port=int(self.config.port), threaded=True)
@@ -67,9 +72,10 @@ class Server:
             self.app_db.sync()
 
     def _start(self):
-        from backup.scheduler import Scheduler
-        scheduler = Scheduler()
-        scheduler.start()
+        if self.config.scheduler != 'false':
+            from backup.scheduler import Scheduler
+            scheduler = Scheduler()
+            scheduler.start()
 
         server = cherrypy.wsgiserver.CherryPyWSGIServer(
             (self.config.bind_addr, int(self.config.port)), self.app)
