@@ -19,7 +19,7 @@ def path_get(path=None):
 
     try:
         path_list = os.listdir(path)
-    except OSError:
+    except OSError, error:
         return utils.jsonify({
             'error': PATH_NOT_FOUND,
             'error_msg': error.strerror,
