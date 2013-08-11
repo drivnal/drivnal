@@ -60,6 +60,7 @@ class Server:
                 return fd.read()
 
     def _start_debug(self):
+        scheduler = None
         if self.config.scheduler != 'false':
             from scheduler import Scheduler
             scheduler = Scheduler()
@@ -69,9 +70,12 @@ class Server:
             self.app.run(host=self.config.bind_addr,
                 port=int(self.config.port), threaded=True)
         finally:
+            if scheduler:
+                scheduler.stop()
             self.app_db.sync()
 
     def _start(self):
+        scheduler = None
         if self.config.scheduler != 'false':
             from scheduler import Scheduler
             scheduler = Scheduler()
@@ -82,7 +86,8 @@ class Server:
         try:
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
-            scheduler.stop()
+            if scheduler:
+                scheduler.stop()
             server.stop()
             self.app_db.sync()
 
