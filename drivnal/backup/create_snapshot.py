@@ -194,6 +194,11 @@ class CreateSnapshot(Task):
         if last_snapshot:
             args.append('--link-dest=%s' % last_snapshot.path)
 
+        # If volume is a subdirectory of source path exclude path
+        if os.path.commonprefix(
+                [rsync_source_path, self.volume.path]) == rsync_source_path:
+            excludes.append(self.volume.path.replace(rsync_source_path, '', 1))
+
         if excludes:
             for exclude in excludes:
                 args.append('--exclude=%s' % exclude)
