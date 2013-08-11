@@ -199,6 +199,11 @@ class CreateSnapshot(Task):
             rsync_source_path += os.sep
 
         if rsync_source_path == os.sep:
+            logger.debug('Auto excluding default paths for root backup. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.snapshot_id,
+                'task_id': self.id,
+            })
             for exclude in DEFAULT_ROOT_EXCLUDES:
                 if exclude in excludes:
                     continue
@@ -207,6 +212,11 @@ class CreateSnapshot(Task):
         # If volume is a subdirectory of source path exclude path
         if os.path.commonprefix(
                 [rsync_source_path, self.volume.path]) == rsync_source_path:
+            logger.debug('Auto excluding volume path from snapshot. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.snapshot_id,
+                'task_id': self.id,
+            })
             excludes.append(self.volume.path.replace(rsync_source_path, '', 1))
 
         if excludes:
