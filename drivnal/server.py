@@ -25,23 +25,24 @@ class Server:
         self.config = Config(self.conf_path)
         self.config.read()
 
-        if self.config.log_path:
-            handler = logging.FileHandler(self.config.log_path)
-        else:
-            handler = logging.StreamHandler()
-
         if self.config.log_debug == 'true':
-            logger.setLevel(logging.DEBUG)
-            handler.setLevel(logging.DEBUG)
+            self.log_level = logging.DEBUG
         else:
-            logger.setLevel(logging.INFO)
-            handler.setLevel(logging.INFO)
+            self.log_level = logging.INFO
 
-        handler.setFormatter(logging.Formatter(
+        if self.config.log_path:
+            self.log_handler = logging.FileHandler(self.config.log_path)
+        else:
+            self.log_handler = logging.StreamHandler()
+
+        logger.setLevel(self.log_level)
+        self.log_handler.setLevel(self.log_level)
+
+        self.log_handler.setFormatter(logging.Formatter(
             '[%(asctime)s][%(levelname)s][%(module)s][%(lineno)d] ' +
             '%(message)s'))
 
-        logger.addHandler(handler)
+        logger.addHandler(self.log_handler)
 
         self.app_db = Database(self.config.db_path or DEFAULT_DB_PATH)
 
@@ -65,6 +66,11 @@ class Server:
             from scheduler import Scheduler
             scheduler = Scheduler()
             scheduler.start()
+
+        # App.run server uses werkzeug logger
+        werkzeug_logger = logging.getLogger('werkzeug')
+        werkzeug_logger.setLevel(self.log_level)
+        werkzeug_logger.addHandler(self.log_handler)
 
         try:
             self.app.run(host=self.config.bind_addr,
