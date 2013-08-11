@@ -1,7 +1,7 @@
 from drivnal.constants import *
-from drivnal.backup import Client
-from drivnal import server
+from drivnal.client import Client
 import drivnal.utils as utils
+from drivnal import server
 import flask
 
 @server.app.route('/object/<volume_id>/<snapshot_id>', methods=['GET'])

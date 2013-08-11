@@ -1,4 +1,4 @@
-from drivnal.constants import *
+from constants import *
 from object import Object
 import os
 import logging

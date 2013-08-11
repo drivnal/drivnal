@@ -1,7 +1,9 @@
 from drivnal.constants import *
-from drivnal.backup import Client, Task, Object
-from drivnal import server
+from drivnal.client import Client
+from drivnal.task import Task
+from drivnal.object import Object
 import drivnal.utils as utils
+from drivnal import server
 import flask
 import time
 import os

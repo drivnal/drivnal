@@ -21,7 +21,7 @@ class Server:
         global logger
         logger = self.app.logger
 
-        from backup.config import Config
+        from config import Config
         self.config = Config(self.conf_path)
         self.config.read()
 
@@ -61,7 +61,7 @@ class Server:
 
     def _start_debug(self):
         if self.config.scheduler != 'false':
-            from backup.scheduler import Scheduler
+            from scheduler import Scheduler
             scheduler = Scheduler()
             scheduler.start()
 
@@ -73,7 +73,7 @@ class Server:
 
     def _start(self):
         if self.config.scheduler != 'false':
-            from backup.scheduler import Scheduler
+            from scheduler import Scheduler
             scheduler = Scheduler()
             scheduler.start()
 

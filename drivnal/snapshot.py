@@ -1,7 +1,7 @@
-from drivnal.constants import *
+from constants import *
 from bucket import Bucket
 from object import Object
-import drivnal.utils as utils
+import utils
 import os
 import time
 import shlex

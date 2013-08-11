@@ -1,7 +1,7 @@
-from drivnal.constants import *
-from drivnal import server
+from constants import *
 from config import Config
 from volume import Volume
+from drivnal import server
 import os
 import copy
 import logging

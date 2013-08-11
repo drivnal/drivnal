@@ -1,4 +1,4 @@
-from drivnal.constants import *
+from constants import *
 from client import Client
 import time
 import logging

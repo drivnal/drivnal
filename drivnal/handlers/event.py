@@ -1,7 +1,7 @@
 from drivnal.constants import *
-from drivnal.backup import Client
-from drivnal import server
+from drivnal.client import Client
 import drivnal.utils as utils
+from drivnal import server
 import time
 import uuid
 

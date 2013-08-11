@@ -8,7 +8,7 @@ setup(
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
     keywords='backup, snapshot, web interface, rsync',
-    packages=['drivnal', 'drivnal.backup', 'drivnal.handlers'],
+    packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
     data_files=[
         ('/etc', ['data/etc/drivnal.conf']),

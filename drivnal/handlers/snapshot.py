@@ -1,7 +1,8 @@
 from drivnal.constants import *
-from drivnal.backup import Client, Task
-from drivnal import server
+from drivnal.client import Client
+from drivnal.task import Task
 import drivnal.utils as utils
+from drivnal import server
 import time
 
 @server.app.route('/snapshot/<volume_id>', methods=['GET'])

@@ -1,4 +1,4 @@
-from drivnal.constants import *
+from constants import *
 from bucket import Bucket
 import logging
 

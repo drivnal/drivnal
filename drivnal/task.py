@@ -1,6 +1,6 @@
-from drivnal.constants import *
-from drivnal import server
+from constants import *
 from event import Event
+from drivnal import server
 import threading
 import logging
 import time

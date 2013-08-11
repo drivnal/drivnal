@@ -1,4 +1,4 @@
-from drivnal.constants import *
+from constants import *
 from drivnal import server
 import logging
 import time
