@@ -72,6 +72,7 @@ class Server:
         finally:
             logger.info('Stopping server...')
             if scheduler:
+                self.app_db.sync()
                 scheduler.stop()
             self.app_db.sync()
 
@@ -88,6 +89,7 @@ class Server:
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
             logger.info('Stopping server...')
+            self.app_db.sync()
             if scheduler:
                 scheduler.stop()
             server.stop()

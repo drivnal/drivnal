@@ -11,7 +11,7 @@ class Database():
         self._db = anydbm.open(db_path, 'c')
 
     def __del__(self):
-        self.sync()
+        self._db.sync()
 
     def _get_prefix(self, prefix):
         prefix_len = len(prefix)
