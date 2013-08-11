@@ -13,6 +13,9 @@ define([
   var ObjectListView = Backbone.View.extend({
     className: 'object-list',
     template: _.template(objectListTemplate),
+    events: {
+      'click .select-header .select.selected': 'clearSelected'
+    },
     initialize: function() {
       this.views = [];
       this.selected = [];
@@ -61,6 +64,16 @@ define([
         }.bind(this)
       });
     },
+    clearSelected: function() {
+      for (var i = 0; i < this.selected.length; i++) {
+        this.selected[i].setSelect(null);
+      }
+      this.selected = [];
+
+      if (this.$('.select-header .select').hasClass('selected')) {
+        this.$('.select-header .select').removeClass('selected');
+      }
+    },
     onReset: function(collection) {
       var i;
       var objectView;
@@ -88,10 +101,7 @@ define([
       }
 
       if (!key) {
-        for (i = 0; i < this.selected.length; i++) {
-          this.selected[i].setSelect(null);
-        }
-        this.selected = [];
+        this.clearSelected();
         this.selected.push(objectView);
         objectView.setSelect('full');
       }
@@ -119,6 +129,17 @@ define([
       else if (objectView.getSelect() && key === 'ctrl') {
         this.selected.splice(this.selected.indexOf(objectView), 1);
         objectView.setSelect(null);
+      }
+
+      if (this.selected.length) {
+        if (!this.$('.select-header .select').hasClass('selected')) {
+          this.$('.select-header .select').addClass('selected');
+        }
+      }
+      else {
+        if (this.$('.select-header .select').hasClass('selected')) {
+          this.$('.select-header .select').removeClass('selected');
+        }
       }
     },
     onDrag: function(objectView) {
