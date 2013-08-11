@@ -5838,6 +5838,23 @@ button:focus {
   min-width: 20px;
   max-width: 20px;
 }
+.backup .object-list .select-header {
+  padding-left: 5px;
+}
+.backup .object-list .select-header .select {
+  width: 11px;
+  height: 11px;
+  border: solid 1px #808080;
+}
+.backup .object-list .select-header .select.selected:hover {
+  border: solid 1px #606060;
+}
+.backup .object-list .select-header .select.selected .select-inner {
+  width: 15px;
+  height: 15px;
+  background-position: -5px -6px;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVAQMAAACT2TfVAAAABlBMVEXd3d10dHThX6XJAAAAAXRSTlMAQObYZgAAABFJREFUCNdjYCASMP+DYCIAAFCqAgPY2xgtAAAAAElFTkSuQmCC');
+}
 .backup .object-list .title-col-group,
 .backup .object-list .title-header,
 .backup .object-list .title-col {
@@ -5885,6 +5902,9 @@ button:focus {
   width: 11px;
   height: 11px;
   border: solid 1px #808080;
+}
+.backup .object-list .select:hover {
+  border: solid 1px #606060;
 }
 .backup .object-list .select.selected .select-inner {
   width: 15px;
