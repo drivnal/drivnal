@@ -70,6 +70,7 @@ class Server:
             self.app.run(host=self.config.bind_addr,
                 port=int(self.config.port), threaded=True)
         finally:
+            logger.info('Stopping server...')
             if scheduler:
                 scheduler.stop()
             self.app_db.sync()
@@ -86,6 +87,7 @@ class Server:
         try:
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
+            logger.info('Stopping server...')
             if scheduler:
                 scheduler.stop()
             server.stop()
