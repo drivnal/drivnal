@@ -16,5 +16,5 @@ print '# \\__,_/_/  /_/ |___/_/ /_/\\__,_/_/     #'
 print '#                                       #'
 print '#########################################'
 
-drivnal.server.conf_path = './tools/vagrant.conf'
+drivnal.server.conf_path = './tools/vagrant_drivnal.conf'
 drivnal.server.start()
