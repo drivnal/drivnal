@@ -20,6 +20,9 @@ VOLUMES_UPDATED = 'volumes_updated'
 SNAPSHOTS_UPDATED = 'snapshots_updated'
 TASKS_UPDATED = 'tasks_updated'
 
+SNAPSHOT_DIR = 'snapshots'
+LOG_DIR = 'logs'
+
 DEFAULT_MIN_FREE_SPACE = 0.1
 DEFAULT_MAX_PRUNE = 0.8
 DEFAULT_MAX_RETRY = 3

@@ -49,7 +49,7 @@ class RestoreObject(Task):
         })
 
         log_path = os.path.join(self.volume.path,
-            'restore_%s.log' % int(time.time()))
+            LOG_DIR, 'restore_%s.log' % int(time.time()))
 
         for obj in objects:
             args = ['rsync', '--archive', '--hard-links', '--acls',

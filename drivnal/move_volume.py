@@ -85,7 +85,7 @@ class MoveVolume(Task):
                 'volume_id': self.volume_id,
             })
 
-            log_path = os.path.join(source_path,
+            log_path = os.path.join(source_path, LOG_DIR,
                 'copy_volume_%s.log' % int(time.time()))
 
             rsync_source_path = source_path

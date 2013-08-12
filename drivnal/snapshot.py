@@ -22,9 +22,9 @@ class Snapshot(Bucket):
             self.id = int(id)
             self.state = COMPLETE
         self.volume = volume
-        self.path = os.path.join(self.volume.path, id)
-        self.log_path = os.path.join(
-            self.volume.path, 'snapshot_%s.log' % self.id)
+        self.path = os.path.join(self.volume.path, SNAPSHOT_DIR, id)
+        self.log_path = os.path.join(self.volume.path,
+            LOG_DIR, 'snapshot_%s.log' % self.id)
         self.parse_log_file()
 
     def __getattr__(self, name):

@@ -162,8 +162,8 @@ class CreateSnapshot(Task):
         excludes = self.volume.excludes
         source_path = self.volume.source_path
         try:
-            destination_path = os.path.join(
-                self.volume.path, str(self.snapshot_id))
+            destination_path = os.path.join(self.volume.path,
+                SNAPSHOT_DIR, str(self.snapshot_id))
         except AttributeError:
             logger.error('Failed to join snapshot destination path. %r' % {
                 'volume_id': self.volume_id,
@@ -171,8 +171,8 @@ class CreateSnapshot(Task):
             })
         destination_path_temp = destination_path + '.temp'
         destination_path_failed = destination_path + '.failed'
-        log_path = os.path.join(
-                self.volume.path, 'snapshot_%s.log' % self.snapshot_id)
+        log_path = os.path.join(self.volume.path,
+            LOG_DIR, 'snapshot_%s.log' % self.snapshot_id)
         max_retry = self.volume.max_retry or DEFAULT_MAX_RETRY
         last_snapshot = self.volume.get_last_snapshot()
 
@@ -183,6 +183,25 @@ class CreateSnapshot(Task):
         })
 
         Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
+
+        snapshots_path = os.path.join(self.volume.path, SNAPSHOT_DIR)
+        logs_path = os.path.join(self.volume.path, LOG_DIR)
+
+        if not os.path.isdir(snapshots_path):
+            logger.debug('Creating volume snapshots directory. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.snapshot_id,
+                'task_id': self.id,
+            })
+            os.mkdir(snapshots_path)
+
+        if not os.path.isdir(logs_path):
+            logger.debug('Creating volume logs directory. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.snapshot_id,
+                'task_id': self.id,
+            })
+            os.mkdir(logs_path)
 
         args = ['rsync', '--archive', '--delete', '--hard-links',
             '--acls', '--quiet', '--xattrs',  '--progress', '--super',

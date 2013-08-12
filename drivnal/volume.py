@@ -242,10 +242,15 @@ class Volume:
             'volume_id': self.id,
         })
 
+        snapshots_path = os.path.join(self.path, SNAPSHOT_DIR)
         snapshot_names = []
         self.snapshots = []
-        for name in os.listdir(self.path):
-            if not os.path.isdir(os.path.join(self.path, name)) or \
+
+        if not os.path.isdir(snapshots_path):
+            return
+
+        for name in os.listdir(snapshots_path):
+            if not os.path.isdir(os.path.join(snapshots_path, name)) or \
                     not name.replace('.temp', '').replace(
                         '.failed', '').isdigit() or len(name) < 6:
                 continue
