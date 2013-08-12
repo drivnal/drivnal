@@ -15,7 +15,7 @@ define([
   var VolumeSliderScheduleView = VolumeSliderView.extend({
     name: 'name',
     title: 'Schedule',
-    icon: 'icon-user',
+    icon: 'icon-time',
     sliderOptions: {
       min: 0,
       max: 119
