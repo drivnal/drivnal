@@ -1,0 +1,10 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "precise64"
+  config.vm.provision :shell, :path => "tools/vagrant_provision.sh"
+  config.vm.network :forwarded_port, host: 6500, guest: 6500
+end

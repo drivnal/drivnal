@@ -7,5 +7,6 @@ Icon?
 ehthumbs.db
 Thumbs.db
 *.pyc
+/.vagrant
 /drivnal.db
 /www/node_modules
