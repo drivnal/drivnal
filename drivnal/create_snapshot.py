@@ -168,6 +168,7 @@ class CreateSnapshot(Task):
             logger.error('Failed to join snapshot destination path. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
+                'task_id': self.id,
             })
         destination_path_temp = destination_path + '.temp'
         destination_path_failed = destination_path + '.failed'
