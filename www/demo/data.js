@@ -11,7 +11,9 @@ define([], function() {
       path: '/media/backup',
       source_path: '/home/ubuntu',
       percent_used: 0.3112,
-      excludes: [],
+      excludes: [
+        '.cache'
+      ],
       schedule: '1day',
       min_free_space: 0.1,
       bandwidth_limit: 0,
@@ -22,29 +24,38 @@ define([], function() {
   var snapshots = {
     '8c567322429008ac4b718b8bde034935': [
       {
+        id: 1374098900,
+        received: '32.00 bytes',
+        runtime: '11 Seconds',
+        sent: '8.43 MB',
+        speed: '31.45 MB/sec',
+        state: 'complete',
+        volume: '5001c61fef3685f4482c06f41b333fbd'
+      },
+      {
+        id: 1374089700,
+        received: '32.00 bytes',
+        runtime: '23 Seconds',
+        sent: '4.12 MB',
+        speed: '32.23 MB/sec',
+        state: 'complete',
+        volume: '8c567322429008ac4b718b8bde034935'
+      },
+      {
         id: 1374086000,
         received: '32.00 bytes',
-        runtime: '10 Seconds',
-        sent: '4.12 MB',
-        speed: '32.10 MB/sec',
-        state: 'complete',
-        volume: '8c567322429008ac4b718b8bde034935'
-      },
-      {
-        id: 1374085900,
-        received: '32.00 bytes',
-        runtime: '10 Seconds',
+        runtime: '43 Seconds',
         sent: '32.12 MB',
-        speed: '29.10 MB/sec',
+        speed: '29.74 MB/sec',
         state: 'complete',
         volume: '8c567322429008ac4b718b8bde034935'
       },
       {
-        id: 1374085800,
+        id: 1374082000,
         received: '32.00 bytes',
-        runtime: '10 Seconds',
+        runtime: '58 Seconds',
         sent: '52.12 MB',
-        speed: '28.10 MB/sec',
+        speed: '28.24 MB/sec',
         state: 'complete',
         volume: '8c567322429008ac4b718b8bde034935'
       }
@@ -53,6 +64,30 @@ define([], function() {
 
   var tasks = {
     '8c567322429008ac4b718b8bde034935': [
+      {
+        id: '0416887b31107aaeb57aacad9e3e3709',
+        type: 'create_snapshot',
+        state: 'complete',
+        time: 1374098800
+      },
+      {
+        id: 'b5777fa269d9d7305803e8d97dd41ec3',
+        type: 'restore_object',
+        state: 'complete',
+        time: 1374095900
+      },
+      {
+        id: '7bc477103d73265de2ad5787fe771768',
+        type: 'move_volume',
+        state: 'complete',
+        time: 1374093700
+      },
+      {
+        id: 'ee8261f956bd78fe75c24175b4490f0e',
+        type: 'restore_object',
+        state: 'complete',
+        time: 1374089600
+      },
       {
         id: 'c82ca35899199359d530035dac141cd6',
         type: 'create_snapshot',
