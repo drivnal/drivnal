@@ -7,7 +7,6 @@ define([
   'use strict';
   var ItemView = Backbone.View.extend({
     tagName: 'li',
-    className: 'item-box',
     iconTooltip: 'Click again to cancel',
     events: {
       'mouseover': 'onMouseOver',
@@ -43,11 +42,11 @@ define([
     },
     setSelect: function(state) {
       if (state && !this.selected) {
-        this.$el.addClass('selected');
+        this.$('.item-box').addClass('selected');
         this.selected = true;
       }
       else if (this.selected) {
-        this.$el.removeClass('selected');
+        this.$('.item-box').removeClass('selected');
         this.selected = false;
       }
     },
@@ -59,14 +58,14 @@ define([
         this.$('.remove').removeClass('icon-remove');
         this.$('.remove').addClass('icon-plus');
         this.$('.remove').show();
-        this.$('.item').addClass('removing');
+        this.$('.item-box').addClass('removing');
         this.removing = true;
       }
       else if (!state && this.removing) {
         this.$('.remove').removeClass('icon-plus');
         this.$('.remove').addClass('icon-remove');
         this.$('.remove').hide();
-        this.$('.item').removeClass('removing');
+        this.$('.item-box').removeClass('removing');
         this.removing = false;
       }
     },
