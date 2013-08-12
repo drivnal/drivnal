@@ -69,10 +69,7 @@ define([
         this.selected[i].setSelect(null);
       }
       this.selected = [];
-
-      if (this.$('.select-header .select').hasClass('selected')) {
-        this.$('.select-header .select').removeClass('selected');
-      }
+      this.$('.select-header .select').removeClass('selected');
     },
     onReset: function(collection) {
       var i;
@@ -83,6 +80,7 @@ define([
       }
       this.views = [];
       this.selected = [];
+      this.$('.select-header .select').removeClass('selected');
       for (i = 0; i < collection.models.length; i++) {
         objectView = new ObjectView({model: collection.models[i]});
         this.views.push(objectView);
@@ -132,14 +130,10 @@ define([
       }
 
       if (this.selected.length) {
-        if (!this.$('.select-header .select').hasClass('selected')) {
-          this.$('.select-header .select').addClass('selected');
-        }
+        this.$('.select-header .select').addClass('selected');
       }
       else {
-        if (this.$('.select-header .select').hasClass('selected')) {
-          this.$('.select-header .select').removeClass('selected');
-        }
+        this.$('.select-header .select').removeClass('selected');
       }
     },
     onDrag: function(objectView) {
