@@ -30,6 +30,8 @@ class Task:
             self.volume_id = volume.id
             self.volume = volume
 
+        self.update()
+
     def __setattr__(self, name, value):
         if name == 'thread':
             task_threads[self.id] = value
@@ -89,6 +91,9 @@ class Task:
 
     def _run(self, *args, **kwargs):
         try:
+            # 0 second tasks causes error
+            time.sleep(1)
+
             self.run(*args, **kwargs)
             if self.state == PENDING:
                 self.state = COMPLETE
@@ -116,7 +121,7 @@ class Task:
         self.thread.start()
 
     def update(self):
-        if task.state not in [PENDING, ABORTING]:
+        if self.state not in [PENDING, ABORTING]:
             return
 
         logger.debug('Updating task state. %r' % {
@@ -124,12 +129,33 @@ class Task:
             'task_id': self.id,
         })
 
-        if not self.thread.is_alive():
+        if not self.thread or not self.thread.is_alive():
             logger.warning('Task failed, thread ended unexpectable. %r' % {
                 'volume_id': self.volume_id,
                 'task_id': self.id,
             })
             self.state = FAILED
+
+    @staticmethod
+    def _validate(data):
+        if 'time' not in data or not data['time']:
+            return False
+
+        try:
+            data_time = int(data['time'])
+        except ValueError:
+            return False
+
+        if 'type' not in data or not data['type']:
+            return False
+
+        if 'volume_id' not in data or not data['volume_id']:
+            return False
+
+        if 'state' not in data or not data['state']:
+            return False
+
+        return True
 
     @staticmethod
     def _get_tasks(volume, type, states=[]):
@@ -144,7 +170,18 @@ class Task:
         tasks_query = server.app_db.get('tasks')
         for task_id in tasks_query:
             task = tasks_query[task_id]
+
+            # Remove broken events
+            if not Task._validate(task):
+                logger.debug('Removing broken task from database. %r' % {
+                    'volume_id': volume.id,
+                    'task_id': task_id,
+                })
+                server.app_db.remove('tasks', task_id)
+                continue
+
             task['time'] = int(task['time'])
+
             if type and task['type'] != type:
                 continue
             if task['volume_id'] != volume.id:
@@ -153,8 +190,13 @@ class Task:
                 continue
             if not states and not task['state']:
                 continue
-            tasks_dict[task['time']] = Task(id=task_id)
-            tasks_time.append(task['time'])
+
+            # Task update occurs here recheck state
+            task = Task(id=task_id)
+            if states and task.state not in states:
+                continue
+            tasks_dict[task.time] = task
+            tasks_time.append(task.time)
 
         for task_time in sorted(tasks_time):
             tasks.append(tasks_dict[task_time])

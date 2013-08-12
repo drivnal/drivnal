@@ -43,6 +43,24 @@ class Event:
         return self.__dict__[name]
 
     @staticmethod
+    def _validate(data):
+        if 'time' not in data or not data['time']:
+            return False
+
+        try:
+            data_time = int(data['time'])
+        except ValueError:
+            return False
+
+        if 'type' not in data or not data['type']:
+            return False
+
+        if 'volume_id' not in data or not data['volume_id']:
+            return False
+
+        return True
+
+    @staticmethod
     def get_events(volume, last_time):
         events = []
         events_dict = {}
@@ -55,6 +73,16 @@ class Event:
         events_query = server.app_db.get('events')
         for event_id in events_query:
             event = events_query[event_id]
+
+            # Remove broken events
+            if not Event._validate(event):
+                logger.debug('Removing broken event from database. %r' % {
+                    'volume_id': volume.id,
+                    'event_id': event_id,
+                })
+                server.app_db.remove('events', event_id)
+                continue
+
             event['time'] = int(event['time'])
 
             if event['time'] <= last_time:
