@@ -5576,6 +5576,9 @@ button:focus {
   width: 100%;
   display: inline-block;
 }
+.backup .volume .title-source-path {
+  font-size: 0.9em;
+}
 .backup .volume .usage-meter {
   width: 40px;
   height: 40px;
