@@ -145,7 +145,7 @@ define([
         type: 'snapshots_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
-    }, 10000);
+    }, 12000);
 
     setTimeout(function() {
       request.success({});
@@ -247,8 +247,8 @@ define([
         task = null;
       }
 
-      if (task) {
-        task.state = 'aborted';
+      if (task && task.state !== 'aborting') {
+        task.state = 'aborting';
 
         demoData.events[volumeId].push({
           id: uuid(),
@@ -256,15 +256,25 @@ define([
           time: Math.round(new Date().getTime() / 1000)
         });
 
-        if (task.type === 'create_snapshot') {
-          demoData.volumes[volumeId].snapshot_pending = false;
+        setTimeout(function() {
+          task.state = 'aborted';
 
           demoData.events[volumeId].push({
             id: uuid(),
-            type: 'volumes_updated',
+            type: 'tasks_updated',
             time: Math.round(new Date().getTime() / 1000)
           });
-        }
+
+          if (task.type === 'create_snapshot') {
+            demoData.volumes[volumeId].snapshot_pending = false;
+
+            demoData.events[volumeId].push({
+              id: uuid(),
+              type: 'volumes_updated',
+              time: Math.round(new Date().getTime() / 1000)
+            });
+          }
+        }, 3000);
       }
     }
 
@@ -318,7 +328,7 @@ define([
         type: 'tasks_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
-    }, 10000);
+    }, 12000);
 
     setTimeout(function() {
       request.success({});
