@@ -27,6 +27,7 @@ define([
       this.views = [];
       this.removing = [];
       this.notification = false;
+      this.currentVolume = null;
     },
     render: function() {
       this.$el.html(this.template({
@@ -46,6 +47,11 @@ define([
       this.trigger('updateSize');
     },
     update: function(notification) {
+      if (this.collection.getVolume() !== this.currentVolume) {
+        this.currentVolume = this.collection.getVolume();
+        this.clearNotification();
+      }
+
       if (!this.collection.getVolume()) {
         this.collection.reset();
         return;
