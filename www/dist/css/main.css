@@ -5731,43 +5731,43 @@ button:focus {
 .backup .item-box.selected .item {
   background-color: #3893d6;
 }
-.backup .item-box .item.pending {
+.backup .item-box.pending .item {
   background-color: #018f23;
 }
-.backup .item-box .item.pending:hover {
+.backup .item-box.pending .item:hover {
   background-color: #01691a;
 }
-.backup .item-box.selected .item.pending {
+.backup .item-box.pending.selected .item {
   background-color: #17a138;
 }
-.backup .item-box .item.aborting {
+.backup .item-box.aborting .item {
   background-color: #4e4e4e;
 }
-.backup .item-box .item.aborting:hover {
+.backup .item-box.aborting .item:hover {
   background-color: #3c3c3c;
 }
-.backup .item-box.selected .item.aborting {
+.backup .item-box.aborting.selected .item {
   background-color: #686868;
 }
-.backup .item-box .item.failed,
-.backup .item-box .item.aborted {
+.backup .item-box.failed .item,
+.backup .item-box.aborted .item {
   background-color: #f53205;
 }
-.backup .item-box .item.failed:hover,
-.backup .item-box .item.aborted:hover {
+.backup .item-box.failed .item:hover,
+.backup .item-box.aborted .item:hover {
   background-color: #c72904;
 }
-.backup .item-box.selected .item.failed,
-.backup .item-box.selected .item.aborted {
+.backup .item-box.failed.selected .item,
+.backup .item-box.aborted.selected .item {
   background-color: #ff6f4f;
 }
-.backup .item-box .item.removing {
+.backup .item-box.removing .item {
   background-color: #d30907;
 }
-.backup .item-box .item.removing:hover {
+.backup .item-box.removing .item:hover {
   background-color: #960605;
 }
-.backup .item-box.selected .item.removing {
+.backup .item-box.selected.removing .item {
   background-color: #fc2e2c;
 }
 .backup .item-box .task-type-icon {
@@ -5806,9 +5806,36 @@ button:focus {
 .backup .item-box .info {
   color: #ffffff;
   background-color: rgba(0, 114, 230, 0.55);
-  border: 1px solid #0072e6;
+  border-left: 1px solid #0072e6;
+  border-right: 1px solid #0072e6;
+  border-bottom: 1px solid #0072e6;
   padding: 5px;
   display: none;
+}
+.backup .item-box.pending .info {
+  background-color: rgba(1, 143, 35, 0.5);
+  border-left: 1px solid #018f23;
+  border-right: 1px solid #018f23;
+  border-bottom: 1px solid #018f23;
+}
+.backup .item-box.aborting .info {
+  background-color: rgba(78, 78, 78, 0.5);
+  border-left: 1px solid #4e4e4e;
+  border-right: 1px solid #4e4e4e;
+  border-bottom: 1px solid #4e4e4e;
+}
+.backup .item-box.failed .info,
+.backup .item-box.aborted .info {
+  background-color: rgba(245, 50, 5, 0.5);
+  border-left: 1px solid #f53205;
+  border-right: 1px solid #f53205;
+  border-bottom: 1px solid #f53205;
+}
+.backup .item-box.removing .info {
+  background-color: rgba(211, 9, 7, 0.5);
+  border-left: 1px solid #d30907;
+  border-right: 1px solid #d30907;
+  border-bottom: 1px solid #d30907;
 }
 .backup .object-list {
   margin: 5px 0 0 0;
