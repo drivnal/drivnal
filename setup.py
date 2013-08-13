@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='drivnal',
-    version='0.1.0',
+    version='0.1.1',
     description='Linux backup utility with web interface',
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
