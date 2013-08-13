@@ -8,5 +8,6 @@ ehthumbs.db
 Thumbs.db
 *.pyc
 /.vagrant
+/build
 /drivnal.db
 /www/node_modules
