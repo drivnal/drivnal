@@ -37,8 +37,8 @@ define([
       this.listenTo(this.tasks, 'open', this.tasksOpen);
 
       this.listenTo(this.past, 'restoreObjects', this.restoreObjects);
-
       this.listenTo(this.past, 'updateSize', this.updateSize);
+      this.listenTo(this.origin, 'updateSize', this.updateSize);
 
       this.$('.volumes-box').html(this.volumes.render().el);
       this.$('.snapshots-box').html(this.snapshots.render().el);
@@ -91,7 +91,7 @@ define([
     updateSize: function() {
       var innerHeight = $(window).height();
       var listHeight = innerHeight - this.volumes.$el.outerHeight() - 186;
-      var headerWidth = this.past.$('.object-list-box').width() - 227;
+      var objectWidth = this.past.$('.object-list-box').width() - 200;
 
       if (this.snapshots.isItems()) {
         if (this.snapshots.isRemove()) {
@@ -112,8 +112,8 @@ define([
       this.origin.$('.object-list-box').height(innerHeight - 137);
       this.$('.object-drop').height(innerHeight - 99);
 
-      this.past.$('.object-list-box thead .title-header').width(headerWidth);
-      this.origin.$('.object-list-box thead .title-header').width(headerWidth);
+      this.$('.object-list-box .title-header').width(objectWidth);
+      this.$('.object-list-box .title-col').width(objectWidth);
 
       this.past.pathList.onResize();
       this.origin.pathList.onResize();

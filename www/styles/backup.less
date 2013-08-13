@@ -568,16 +568,20 @@
 }
 
 .backup .object-list .modified-col-group,
-.backup .object-list .modified-header,
 .backup .object-list .modified-col {
   width: 110px;
   min-width: 110px;
   max-width: none;
 }
 
+.backup .object-list .modified-header {
+  width: 95px;
+}
+
 .backup .object-list .title-title,
 .backup .object-list .size-title,
 .backup .object-list .modified-title {
+  width: inherit;
   font-size: 11px;
   font-weight: bold;
   text-align: left;
@@ -587,6 +591,7 @@
 .backup .object-list .object-row {
   cursor: default;
   color: @darker-fg;
+  font-size: 13px;
 }
 
 .backup .object-list .object-row:hover,
@@ -621,7 +626,13 @@
 .backup .object-list .title-col,
 .backup .object-list .size-col,
 .backup .object-list .modified-col {
+  overflow-x: hidden;
   border-bottom: @object-border;
+}
+
+.backup .object-list .title-col span {
+  width: inherit;
+  display: block;
 }
 
 .backup .dir-name:hover {

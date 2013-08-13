@@ -64,6 +64,9 @@ define([
         }.bind(this)
       });
     },
+    updateSize: function() {
+      this.trigger('updateSize');
+    },
     clearSelected: function() {
       for (var i = 0; i < this.selected.length; i++) {
         this.selected[i].setSelect(null);
@@ -89,6 +92,7 @@ define([
         this.listenTo(objectView, 'open', this.onOpen);
         this.$('tbody').append(objectView.render().el);
       }
+      this.updateSize();
     },
     onSelect: function(objectView, key) {
       var i;
@@ -148,7 +152,7 @@ define([
 
       var objectDropView = new ObjectDropView();
       this.origin.$el.parent().prepend(objectDropView.render().el);
-      this.trigger('updateSize');
+      this.updateSize();
 
       if (objectView.getSelect() && this.selected.length > 1) {
         selectedObjects = this.selected.slice(0);
