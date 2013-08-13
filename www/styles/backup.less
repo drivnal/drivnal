@@ -263,9 +263,11 @@
 
 .backup .item-list-box .list-title {
   padding: 5px;
+  color: @button-fg;
   background-color: @button-bg;
   text-align: center;
   cursor: default;
+  font-size: 15px;
 }
 
 .backup .item-list-box .list-title span {
@@ -630,12 +632,27 @@
   border-bottom: @object-border;
 }
 
-.backup .object-list .title-col span {
-  width: inherit;
-  display: block;
+.backup .object-list .title-col .title-col-box {
+  overflow-x: hidden;
 }
 
-.backup .dir-name:hover {
+.backup .object-list .title-col-box {
+  background-repeat: no-repeat;
+  padding-left: 22px;
+  background-position: 0 2px;
+  background-size: 17px 17px;
+  white-space: nowrap;
+}
+
+.backup .object-list .file-name {
+  background-image: @file-icon-uri;
+}
+
+.backup .object-list .dir-name {
+  background-image: @dir-icon-uri;
+}
+
+.backup .object-list .dir-name span:hover {
   text-decoration: underline;
   cursor: pointer;
 }

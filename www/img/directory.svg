@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="12"
+   height="12"
+   viewBox="0 0 12 12"
+   id="svg6684"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="directory.svg">
+  <defs
+     id="defs6686" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="31.678384"
+     inkscape:cx="3.9595829"
+     inkscape:cy="5.1381866"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1031"
+     inkscape:window-height="765"
+     inkscape:window-x="534"
+     inkscape:window-y="180"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata6689">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="http://glyphicons.com/license/">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-288.28571,-245.86218)">
+    <g
+       transform="translate(-125.71429,95.36218)"
+       id="folder-close"
+       style="fill:#525252;fill-opacity:1">
+      <rect
+         style="fill:#525252;fill-opacity:1"
+         id="rect344"
+         height="8"
+         width="12"
+         y="154"
+         x="414" />
+      <path
+         style="fill:#525252;fill-opacity:1"
+         inkscape:connector-curvature="0"
+         id="path346"
+         d="m 421,152 c 0,-0.5 -0.5,-1 -1,-1 h -3 c -0.5,0 -1,0.5 -1,1 h -2 v 1 h 12 v -1 h -5 z" />
+    </g>
+  </g>
+</svg>

@@ -51,7 +51,7 @@ define([
       }
     },
     onClick: function(evt) {
-      if ($(evt.target).hasClass('dir-name')) {
+      if ($(evt.target).parent().hasClass('dir-name')) {
         this.trigger('open', this);
       }
       else {

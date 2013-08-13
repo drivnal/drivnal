@@ -10,7 +10,9 @@ if (type && type.indexOf('directory') !== -1) {
   </div>
 </td>
 <td class="title-col">
-  <span class="<%= isDir ? 'dir' : 'file' %>-name"><%= id %></span>
+  <div class="title-col-box <%= isDir ? 'dir' : 'file' %>-name">
+    <span class=><%= id %></span>
+  </div>
 </td>
 <td class="size-col"><%= isDir ? '' : formatSize(size) %></td>
 <td class="modified-col"><%= isDir ? '' : formatTime(time, true) %></td>

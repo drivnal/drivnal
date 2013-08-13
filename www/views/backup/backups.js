@@ -113,7 +113,7 @@ define([
       this.$('.object-drop').height(innerHeight - 99);
 
       this.$('.object-list-box .title-header').width(objectWidth);
-      this.$('.object-list-box .title-col').width(objectWidth);
+      this.$('.object-list-box .title-col-box').width(objectWidth - 22);
 
       this.past.pathList.onResize();
       this.origin.pathList.onResize();
