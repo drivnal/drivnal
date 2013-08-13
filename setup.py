@@ -1,15 +1,20 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='drivnal',
     version='0.1.1',
-    description='Linux backup utility with web interface',
+    description='Simple snapshot backups',
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
+    download_url='https://github.com/drivnal/drivnal/archive/0.1.1.tar.gz',
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
+    install_requires=[
+        'flask',
+        'cherrypy>=3.2.0',
+    ],
     data_files=[
         ('/etc', ['data/etc/drivnal.conf']),
         ('/etc/systemd/system', ['data/systemd/drivnal.service']),
@@ -21,8 +26,10 @@ setup(
         ('/usr/share/drivnal/www/css', ['www/dist/css/main.css']),
         ('/usr/share/drivnal/www/js', ['www/dist/js/main.js']),
         ('/usr/share/drivnal/www/js', ['www/dist/js/require.min.js']),
-        ('bin', ['data/bin/drivnal']),
     ],
+    entry_points={
+        'console_scripts': ['drivnal = drivnal.__main__:drivnal_daemon'],
+    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
