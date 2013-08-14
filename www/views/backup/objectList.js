@@ -120,7 +120,9 @@ define([
           end = temp;
         }
         for (i = start; i < end; i++) {
-          this.selected.push(this.views[i]);
+          if (!this.views[i].getSelect()) {
+            this.selected.push(this.views[i]);
+          }
           this.views[i].setSelect('full');
         }
       }
