@@ -1,4 +1,5 @@
 from constants import *
+import threading
 import logging
 import anydbm
 import copy
@@ -9,6 +10,7 @@ class Database():
     def __init__(self, db_path):
         logger.debug('Opening database...')
         self._db = anydbm.open(db_path, 'c')
+        self._sync_lock = False
 
     def __del__(self):
         self._db.sync()
@@ -30,9 +32,20 @@ class Database():
 
         return items
 
+    def _async_sync(self):
+        if self._sync_lock:
+            return
+        threading.Thread(target=self.sync).start()
+
     def sync(self):
+        if self._sync_lock:
+            return
+        self._sync_lock = True
+
         logger.debug('Syncing database...')
         self._db.sync()
+
+        self._sync_lock = False
 
     def get(self, column_family, row=None, column=None):
         if not row and column:
@@ -59,6 +72,7 @@ class Database():
 
     def set(self, column_family, row, column, value):
         self._db['%s-%s-%s' % (column_family, row, column)] = value
+        self._async_sync()
 
     def remove(self, column_family, row=None, column=None):
         if not row and column:
