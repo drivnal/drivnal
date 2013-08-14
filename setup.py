@@ -7,7 +7,7 @@ setup(
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
-    download_url='https://github.com/drivnal/drivnal/archive/0.1.1.tar.gz',
+    download_url='https://github.com/drivnal/drivnal/archive/0.1.2.tar.gz',
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
