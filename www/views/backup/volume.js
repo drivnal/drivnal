@@ -366,6 +366,7 @@ define([
       var i;
       var error = false;
       var excludes = [];
+      var origSourcePath = this.model.get('source_path');
 
       for (i = 0; i < this.excludeViews.length; i++) {
         if (this.excludeViews[i].getSetting()) {
@@ -400,6 +401,11 @@ define([
         success: function() {
           this.hideSettings(function() {
             this.trigger('update');
+
+            // If source path changed update origin
+            if (origSourcePath !== this.sourePathView.getSetting()) {
+              this.trigger('updateOrigin');
+            }
           }.bind(this));
         }.bind(this),
         error: function() {

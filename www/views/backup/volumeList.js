@@ -37,8 +37,8 @@ define([
         }.bind(this)
       });
     },
-    triggerRunning: function(state) {
-      this.trigger('running', state);
+    triggerUpdateOrigin: function() {
+      this.trigger('updateOrigin');
     },
     createVolume: function() {
       this.collection.add({});
@@ -71,6 +71,7 @@ define([
       this.listenTo(volumeView, 'select', this.select);
       this.listenTo(volumeView, 'update', this.update);
       this.listenTo(volumeView, 'updateSize', this.updateSize);
+      this.listenTo(volumeView, 'updateOrigin', this.triggerUpdateOrigin);
       volumeView.render();
 
       // If adding a new volume select it

@@ -27,6 +27,7 @@ define([
       this.listenTo(this.volumes, 'changeVolume', this.changeVolume);
       this.listenTo(this.volumes, 'updateSize', this.updateSize);
       this.listenTo(this.volumes, 'newSnapshot', this.newSnapshot);
+      this.listenTo(this.volumes, 'updateOrigin', this.updateOrigin);
 
       this.listenTo(this.snapshots, 'change', this.changeSnapshot);
       this.listenTo(this.snapshots, 'remove', this.deleteSnapshots);
@@ -117,6 +118,9 @@ define([
 
       this.past.pathList.onResize();
       this.origin.pathList.onResize();
+    },
+    updateOrigin: function() {
+      this.origin.update();
     },
     changeVolume: function(volume) {
       this.snapshots.collection.setVolume(volume);
