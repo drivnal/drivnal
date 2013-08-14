@@ -4,7 +4,7 @@ Description=Drivnal Daemon
 [Service]
 Type=forking
 PIDFile=/var/run/drivnal.pid
-ExecStart=/usr/bin/drivnal --daemon --pidfile /var/run/drivnal.pid
+ExecStart=%PREFIX%/bin/drivnal --daemon --pidfile /var/run/drivnal.pid
 
 [Install]
 WantedBy=multi-user.target

@@ -1,4 +1,28 @@
 from setuptools import setup
+import os
+import sys
+import shlex
+import shutil
+import fileinput
+
+PATCH_DIR = 'build'
+
+prefix = sys.prefix
+for arg in sys.argv:
+    if arg.startswith('--prefix'):
+        prefix = os.path.normpath(shlex.split(arg)[0].split('=')[-1])
+
+if not os.path.exists('build'):
+    os.mkdir('build')
+
+shutil.copy('data/systemd/drivnal.service', '%s/drivnal.service' % PATCH_DIR)
+shutil.copy('data/init/drivnal.conf', '%s/drivnal.conf' % PATCH_DIR)
+
+for file_name in ['%s/drivnal.service' % PATCH_DIR,
+        '%s/drivnal.conf' % PATCH_DIR]:
+    for line in fileinput.input(file_name, inplace=True):
+        line = line.replace('%PREFIX%', prefix)
+        print line.rstrip('\n')
 
 setup(
     name='drivnal',
@@ -18,8 +42,8 @@ setup(
     ],
     data_files=[
         ('/etc', ['data/etc/drivnal.conf']),
-        ('/etc/systemd/system', ['data/systemd/drivnal.service']),
-        ('/etc/init', ['data/init/drivnal.conf']),
+        ('/etc/systemd/system', ['%s/drivnal.service' % PATCH_DIR]),
+        ('/etc/init', ['%s/drivnal.conf' % PATCH_DIR]),
         ('/var/lib/drivnal', ['data/var/drivnal.db']),
         ('/var/log', ['data/var/log/drivnal.log']),
         ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
