@@ -55,6 +55,10 @@ define([
       this.setStorage(this.model.get('percent_used'));
       this.setRunning(this.model.get('snapshot_pending'));
 
+      this.$('.usage-meter').tooltip({
+        title: 'Volume is 0% full'
+      });
+
       this.nameView = new VolumeSettingName({
         value: this.model.get('name')
       });
@@ -136,6 +140,10 @@ define([
           this.$('.volume').removeClass('storage-alert');
         }
       }
+
+      this.$('.usage-meter').tooltip({
+        title: 'Volume is ' + Math.round(percent * 100).toString() + '% full'
+      });
     },
     setRunning: function(state) {
       if (this.getRunning() === state) {
