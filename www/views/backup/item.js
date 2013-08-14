@@ -93,6 +93,7 @@ define([
       }
       else if ($(evt.target).hasClass('icon')) {
         if (this.getIconType() === 'remove') {
+          this.$('.icon-remove').roll(400);
           this.trigger('remove', this);
         }
         else if (this.getIconType() === 'cancel') {
