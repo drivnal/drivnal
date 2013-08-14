@@ -145,6 +145,25 @@ define([
         title: 'Volume is ' + Math.round(percent * 100).toString() + '% full'
       });
     },
+    rollStorage: function() {
+      var twoPi = 2 * Math.PI;
+
+      var arc = function(percent) {
+        this.$('.usage-meter .background').attr(
+          'd', this.storageArc.endAngle(twoPi));
+        this.$('.usage-meter .foreground').attr(
+          'd', this.storageArc.endAngle(twoPi * percent * -1));
+
+        setTimeout(function() {
+          percent += 0.01;
+          if (percent <= this.model.get('percent_used')) {
+            arc(percent);
+          }
+        }.bind(this), 3);
+      }.bind(this);
+
+      arc(0);
+    },
     setRunning: function(state) {
       if (this.getRunning() === state) {
         return;
