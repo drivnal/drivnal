@@ -27,11 +27,12 @@ backup=(
 )
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python2 setup.py build
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python2 setup.py build
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python2 setup.py install --root="${pkgdir}" --prefix=/usr
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python2 setup.py install --root="${pkgdir}" --prefix=/usr
+    rm -rf "${pkgdir}/etc/init"
 }

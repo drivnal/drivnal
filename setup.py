@@ -18,6 +18,7 @@ setup(
     data_files=[
         ('/etc', ['data/etc/drivnal.conf']),
         ('/etc/systemd/system', ['data/systemd/drivnal.service']),
+        ('/etc/init', ['data/init/drivnal.conf']),
         ('/var/lib/drivnal', ['data/var/drivnal.db']),
         ('/var/log', ['data/var/log/drivnal.log']),
         ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
