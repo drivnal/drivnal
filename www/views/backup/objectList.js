@@ -14,7 +14,7 @@ define([
     className: 'object-list',
     template: _.template(objectListTemplate),
     events: {
-      'click .select-header .select.selected': 'clearSelected'
+      'click .select-header .select': 'globalSelect'
     },
     initialize: function() {
       this.views = [];
@@ -67,12 +67,21 @@ define([
     updateSize: function() {
       this.trigger('updateSize');
     },
-    clearSelected: function() {
-      for (var i = 0; i < this.selected.length; i++) {
-        this.selected[i].setSelect(null);
+    globalSelect: function() {
+      if (this.selected.length) {
+        for (var i = 0; i < this.selected.length; i++) {
+          this.selected[i].setSelect(null);
+        }
+        this.selected = [];
+        this.$('.select-header .select').removeClass('selected');
       }
-      this.selected = [];
-      this.$('.select-header .select').removeClass('selected');
+      else if (this.views.length) {
+        for (var i = 0; i < this.views.length; i++) {
+          this.views[i].setSelect('full');
+          this.selected.push(this.views[i]);
+        }
+        this.$('.select-header .select').addClass('selected');
+      }
     },
     onReset: function(collection) {
       var i;
