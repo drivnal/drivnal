@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='drivnal',
-    version='0.1.1',
+    version='0.1.2',
     description='Simple snapshot backups',
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
