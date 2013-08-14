@@ -6006,13 +6006,13 @@ button:focus {
   margin: 0 4px 0 4px;
 }
 .backup .object-drop {
-  width: -webkit-calc(38% - 7px);
-  width: -moz-calc(38% - 7px);
-  width: -o-calc(38% - 7px);
-  width: calc(38% - 7px);
+  width: -webkit-calc(38% - 6px);
+  width: -moz-calc(38% - 6px);
+  width: -o-calc(38% - 6px);
+  width: calc(38% - 6px);
   min-width: 449px;
   margin-top: 6px;
-  border: 3px dashed #474747;
+  border: 2px dashed #474747;
   position: absolute;
   background-color: rgba(0, 114, 230, 0.12);
   z-index: 5;
@@ -6036,6 +6036,7 @@ button:focus {
   margin: 0 auto;
   position: relative;
   clear: both;
+  border-radius: 5px;
 }
 .backup.drag-box {
   color: #474747;
