@@ -254,6 +254,8 @@ define([
       this.$('.remove-volume').show();
       this.$('.settings i').hide();
 
+      this.$('.open-settings').roll(450);
+
       this.$('.settings').slideDown({
         duration: 250,
         step: (this.updateSize).bind(this),

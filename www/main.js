@@ -286,6 +286,35 @@ require([
     return bytes;
   };
 
+  $.fn.roll = function(timeout) {
+    var timer;
+
+    var rotate = function(degree) {
+      $(this).css('-webkit-transform', 'rotate(' + degree + 'deg)');
+      $(this).css('-moz-transform', 'rotate(' + degree + 'deg)');
+      $(this).css('-ms-transform', 'rotate(' + degree + 'deg)');
+      $(this).css('-o-transform', 'rotate(' + degree + 'deg)');
+      $(this).css('transform', 'rotate(' + degree + 'deg)');
+
+      timer = setTimeout(function() {
+        degree += 1;
+        rotate(degree);
+      }, 4);
+    }.bind(this);
+
+    rotate(0);
+
+    setTimeout(function() {
+      clearTimeout(timer);
+
+      $(this).css('-webkit-transform', 'rotate(0deg)');
+      $(this).css('-moz-transform', 'rotate(0deg)');
+      $(this).css('-ms-transform', 'rotate(0deg)');
+      $(this).css('-o-transform', 'rotate(0deg)');
+      $(this).css('transform', 'rotate(0deg)');
+    }.bind(this), timeout);
+  };
+
   $(document).on('dblclick mousedown', '.no-select', false);
 
   var headerView = new HeaderView();
