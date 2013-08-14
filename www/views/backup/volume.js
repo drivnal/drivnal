@@ -253,7 +253,6 @@ define([
       this.$('.open-settings').show();
       this.$('.remove-volume').show();
       this.$('.settings i').hide();
-
       this.$('.open-settings').roll(450);
 
       this.$('.settings').slideDown({
@@ -275,6 +274,7 @@ define([
       }
       this.$('.remove-volume').hide();
       this.$('.settings i').hide();
+      this.$('.open-settings').roll(450);
 
       this.$('.settings').slideUp({
         duration: 250,
