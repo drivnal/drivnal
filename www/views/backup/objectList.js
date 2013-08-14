@@ -68,15 +68,17 @@ define([
       this.trigger('updateSize');
     },
     globalSelect: function() {
+      var i;
+
       if (this.selected.length) {
-        for (var i = 0; i < this.selected.length; i++) {
+        for (i = 0; i < this.selected.length; i++) {
           this.selected[i].setSelect(null);
         }
         this.selected = [];
         this.$('.select-header .select').removeClass('selected');
       }
       else if (this.views.length) {
-        for (var i = 0; i < this.views.length; i++) {
+        for (i = 0; i < this.views.length; i++) {
           this.views[i].setSelect('full');
           this.selected.push(this.views[i]);
         }
