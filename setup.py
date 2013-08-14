@@ -1,25 +1,54 @@
 from setuptools import setup
 import os
 import sys
+import copy
 import shlex
 import shutil
 import fileinput
 
 PATCH_DIR = 'build'
+INSTALL_UPSTART = True
+INSTALL_SYSTEMD = True
 
 prefix = sys.prefix
-for arg in sys.argv:
+for arg in copy.copy(sys.argv):
     if arg.startswith('--prefix'):
         prefix = os.path.normpath(shlex.split(arg)[0].split('=')[-1])
+    elif arg == '--no-upstart':
+        sys.argv.remove('--no-upstart')
+        INSTALL_UPSTART = False
+    elif arg == '--no-systemd':
+        sys.argv.remove('--no-systemd')
+        INSTALL_SYSTEMD = False
 
 if not os.path.exists('build'):
     os.mkdir('build')
 
-shutil.copy('data/systemd/drivnal.service', '%s/drivnal.service' % PATCH_DIR)
-shutil.copy('data/init/drivnal.conf', '%s/drivnal.conf' % PATCH_DIR)
+data_files = [
+    ('/etc', ['data/etc/drivnal.conf']),
+    ('/var/lib/drivnal', ['data/var/drivnal.db']),
+    ('/var/log', ['data/var/log/drivnal.log']),
+    ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
+    ('/usr/share/drivnal/www', ['www/dist/index.html']),
+    ('/usr/share/drivnal/www', ['www/dist/robots.txt']),
+    ('/usr/share/drivnal/www/css', ['www/dist/css/main.css']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/main.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/require.min.js']),
+]
 
-for file_name in ['%s/drivnal.service' % PATCH_DIR,
-        '%s/drivnal.conf' % PATCH_DIR]:
+patch_files = []
+if INSTALL_UPSTART:
+    patch_files.append('%s/drivnal.conf' % PATCH_DIR)
+    data_files.append(('/etc/init', ['%s/drivnal.conf' % PATCH_DIR]))
+    shutil.copy('data/init/drivnal.conf', '%s/drivnal.conf' % PATCH_DIR)
+if INSTALL_SYSTEMD:
+    patch_files.append('%s/drivnal.service' % PATCH_DIR)
+    data_files.append(('/etc/systemd/system',
+        ['%s/drivnal.service' % PATCH_DIR]))
+    shutil.copy('data/systemd/drivnal.service',
+        '%s/drivnal.service' % PATCH_DIR)
+
+for file_name in patch_files:
     for line in fileinput.input(file_name, inplace=True):
         line = line.replace('%PREFIX%', prefix)
         print line.rstrip('\n')
@@ -40,19 +69,7 @@ setup(
         'flask',
         'cherrypy>=3.2.0',
     ],
-    data_files=[
-        ('/etc', ['data/etc/drivnal.conf']),
-        ('/etc/systemd/system', ['%s/drivnal.service' % PATCH_DIR]),
-        ('/etc/init', ['%s/drivnal.conf' % PATCH_DIR]),
-        ('/var/lib/drivnal', ['data/var/drivnal.db']),
-        ('/var/log', ['data/var/log/drivnal.log']),
-        ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
-        ('/usr/share/drivnal/www', ['www/dist/index.html']),
-        ('/usr/share/drivnal/www', ['www/dist/robots.txt']),
-        ('/usr/share/drivnal/www/css', ['www/dist/css/main.css']),
-        ('/usr/share/drivnal/www/js', ['www/dist/js/main.js']),
-        ('/usr/share/drivnal/www/js', ['www/dist/js/require.min.js']),
-    ],
+    data_files=data_files,
     entry_points={
         'console_scripts': ['drivnal = drivnal.__main__:drivnal_daemon'],
     },

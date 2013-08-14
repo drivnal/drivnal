@@ -33,6 +33,5 @@ build() {
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
-    python2 setup.py install --root="${pkgdir}" --prefix=/usr
-    rm -rf "${pkgdir}/etc/init"
+    python2 setup.py install --root="${pkgdir}" --prefix=/usr --no-upstart
 }
