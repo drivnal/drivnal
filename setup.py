@@ -11,6 +11,7 @@ setup(
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
+    zip_safe=False,
     install_requires=[
         'flask',
         'cherrypy>=3.2.0',
