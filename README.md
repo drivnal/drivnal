@@ -24,6 +24,24 @@ $ sudo drivnal
 Open http://localhost:6500/
 ```
 
+### JavaScript Development
+To build the webapp the node package manager is required. First install the required node modules then run the available build commands.
+
+```
+$ cd www
+$ npm install
+# Run jshint and build production dist
+$ grunt
+# Run jshint and build production dist with source maps
+$ grunt testing
+# Run jshint and build demo dist
+$ grunt demo
+# Run jshint
+$ grunt lint
+# Update javascript plugins
+$ grunt update
+```
+
 -------------------------------------------------------------------------------
 
 Copyright (c) 2013 Zachary Huff
