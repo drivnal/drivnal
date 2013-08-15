@@ -55,12 +55,12 @@ for file_name in patch_files:
 
 setup(
     name='drivnal',
-    version='0.1.3',
+    version='0.1.4',
     description='Simple snapshot backups',
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
-    download_url='https://github.com/drivnal/drivnal/archive/0.1.3.tar.gz',
+    download_url='https://github.com/drivnal/drivnal/archive/0.1.4.tar.gz',
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
