@@ -92,8 +92,10 @@ define([
     }
     demoData.volumes[volumeId].snapshot_pending = true;
 
+    var snapshotId = Math.round(new Date().getTime() / 1000) + 12;
     var task = {
       id: uuid(),
+      snapshot_id: snapshotId,
       type: 'create_snapshot',
       state: 'pending',
       time: Math.round(new Date().getTime() / 1000)
@@ -118,7 +120,7 @@ define([
       }
 
       demoData.snapshots[volumeId].unshift({
-        id: Math.round(new Date().getTime() / 1000),
+        id: snapshotId,
         received: '32.00 bytes',
         runtime: '10 Seconds',
         sent: '52.12 MB',
@@ -220,6 +222,7 @@ define([
       task = demoData.tasks[volumeId][i];
       tasks.push({
         id: task.id,
+        snapshot_id: task.snapshot_id,
         type: task.type,
         volume: volumeId,
         volume_name: volumeName,

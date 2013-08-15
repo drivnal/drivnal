@@ -66,6 +66,7 @@ define([], function() {
     '8c567322429008ac4b718b8bde034935': [
       {
         id: '0416887b31107aaeb57aacad9e3e3709',
+        snapshot_id: 1374098900,
         type: 'create_snapshot',
         state: 'complete',
         time: 1374098800
@@ -83,6 +84,13 @@ define([], function() {
         time: 1374093700
       },
       {
+        id: '2a200e218d3f81d23fd325b2b83d44a1',
+        snapshot_id: 1374089700,
+        type: 'create_snapshot',
+        state: 'complete',
+        time: 1374091600
+      },
+      {
         id: 'ee8261f956bd78fe75c24175b4490f0e',
         type: 'restore_object',
         state: 'complete',
@@ -90,12 +98,14 @@ define([], function() {
       },
       {
         id: 'c82ca35899199359d530035dac141cd6',
+        snapshot_id: 1374086000,
         type: 'create_snapshot',
         state: 'complete',
         time: 1374085900
       },
       {
         id: '7d3f272982517477fac2d8c2e6abf704',
+        snapshot_id: 1374082000,
         type: 'create_snapshot',
         state: 'complete',
         time: 1374081900
