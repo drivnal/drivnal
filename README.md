@@ -1,4 +1,7 @@
 # Drivnal
+
+[![Downloads](https://pypip.in/v/drivnal/badge.png)](https://crate.io/package/drivnal) [![Downloads](https://pypip.in/d/drivnal/badge.png)](https://crate.io/package/drivnal)
+
 [Drivnal](https://github.com/drivnal/drivnal) is a backup utility created using rsync with a web interface to manage volumes, snapshots and restore files. Similar to Time Machine all snapshots store only the changed files from the previous snapshot and hard links are created for unchanged files. Unchanged files are never stored more then once on the snapshot volume. All snapshots are independent of the other snapshots and previous snapshots are not required to restore files from a snapshot. For more information on how this works read the [hard links](wiki/Hard-Links) page.
 
 ### Development
