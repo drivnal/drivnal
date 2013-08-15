@@ -9,5 +9,5 @@ print '# \\__,_/_/  /_/ |___/_/ /_/\\__,_/_/     #'
 print '#                                       #'
 print '#########################################'
 
-drivnal.server.conf_path = './drivnal.conf'
+drivnal.server.conf_path = './tools/development_drivnal.conf'
 drivnal.server.start()
