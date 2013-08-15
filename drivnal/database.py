@@ -1,106 +1,106 @@
 from constants import *
 import threading
 import logging
-import anydbm
 import copy
+try:
+    import bsddb3 as bsddb
+except ImportError:
+    import bsddb
 
 logger = logging.getLogger(APP_NAME)
 
 class Database():
     def __init__(self, db_path):
         logger.debug('Opening database...')
-        self._db = anydbm.open(db_path, 'c')
-        self._sync_lock = False
+        self._db = bsddb.db.DB()
+        self._db_lock = threading.Lock()
+        self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
 
-    def __del__(self):
-        self._db.sync()
+    def _get(self, key):
+        self._db_lock.acquire()
+        try:
+            value = self._db.get(key=key)
+        finally:
+            self._db_lock.release()
+        return value
 
-    def _get_prefix(self, prefix):
+    def _prefix_get(self, prefix):
         prefix_len = len(prefix)
-        items = {}
+        keys = {}
 
-        # Handle RuntimeError if database changes size while iterating
-        for i in xrange(256):
-            try:
-                for item in self._db:
-                    if item.startswith(prefix):
-                        items[item[prefix_len:]] = self._db[item]
-                break
-            except RuntimeError:
-                if i == 255:
-                    raise
+        self._db_lock.acquire()
+        try:
+            for key in self._db.keys():
+                if key.startswith(prefix):
+                    keys[key[prefix_len:]] = self._db.get(key=key)
+        finally:
+            self._db_lock.release()
 
-        return items
+        return keys
 
-    def _async_sync(self):
-        if self._sync_lock:
-            return
-        threading.Thread(target=self.sync).start()
+    def _set(self, key, value):
+        self._db_lock.acquire()
+        try:
+            self._db.put(key=key, data=value)
+            self._db.sync()
+        finally:
+            self._db_lock.release()
 
-    def sync(self):
-        if self._sync_lock:
-            return
-        self._sync_lock = True
+    def _remove(self, key):
+        self._db_lock.acquire()
+        try:
+            self._db.delete(key=key)
+        except bsddb.db.DBNotFoundError:
+            pass
+        finally:
+            self._db_lock.release()
 
-        logger.debug('Syncing database...')
-        self._db.sync()
+    def _prefix_remove(self, prefix):
+        prefix_len = len(prefix)
 
-        self._sync_lock = False
+        self._db_lock.acquire()
+        try:
+            for key in self._db.keys():
+                if key.startswith(prefix):
+                    self._db.delete(key=key)
+        finally:
+            self._db_lock.release()
 
     def get(self, column_family, row=None, column=None):
         if not row and column:
             raise TypeError('Must specify a row for column')
 
         if not row:
-            items = {}
-            prefix_items = self._get_prefix('%s-' % column_family)
+            keys = {}
+            prefix_keys = self._prefix_get('%s-' % column_family)
 
-            for item in prefix_items:
-                item_split = item.split('-', 1)
-                if item_split[0] not in items:
-                    items[item_split[0]] = {}
-                items[item_split[0]][item_split[1]] = prefix_items[item]
+            for key in prefix_keys:
+                key_split = key.split('-', 1)
+                if key_split[0] not in keys:
+                    keys[key_split[0]] = {}
+                keys[key_split[0]][key_split[1]] = prefix_keys[key]
 
-            return items
+            return keys
 
         if not column:
-            return self._get_prefix('%s-%s-' % (column_family, row))
+            return self._prefix_get('%s-%s-' % (column_family, row))
 
-        item_name = '%s-%s-%s' % (column_family, row, column)
-        if item_name in self._db:
-            return self._db[item_name]
+        key_name = '%s-%s-%s' % (column_family, row, column)
+        return self._get(key_name)
 
     def set(self, column_family, row, column, value):
-        self._db['%s-%s-%s' % (column_family, row, column)] = value
-        self._async_sync()
+        self._set('%s-%s-%s' % (column_family, row, column), value)
 
     def remove(self, column_family, row=None, column=None):
         if not row and column:
             raise TypeError('Must specify a row for column')
 
-        item_name = '%s-' % column_family
+        key_name = '%s-' % column_family
         if row:
-            item_name += '%s-' % row
+            key_name += '%s-' % row
 
         if not column:
-            items = []
-
-            # Handle RuntimeError if database changes size while iterating
-            for i in xrange(256):
-                try:
-                    for item in self._db:
-                        if item.startswith(item_name):
-                            items.append(item)
-                    break
-                except RuntimeError:
-                    if i == 255:
-                        raise
-
-            for item in items:
-                if item in self._db:
-                    del self._db[item]
-
+            self._prefix_remove(key_name)
         else:
-            item_name += column
-            if item_name in self._db:
-                del self._db[item_name]
+            key_name += column
+            self._remove(key_name)
