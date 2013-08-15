@@ -2,6 +2,7 @@ from constants import *
 from config import Config
 from volume import Volume
 from drivnal import server
+from event import Event
 import os
 import copy
 import logging
@@ -38,6 +39,8 @@ class Client:
         })
         self.commit()
 
+        Event(type=VOLUMES_UPDATED)
+
         return volume
 
     def remove_volume(self, volume):
@@ -47,6 +50,8 @@ class Client:
 
         self.volumes.remove(volume)
         self.commit()
+
+        Event(type=VOLUMES_UPDATED)
 
     def load(self):
         logger.debug('Loading client database.')

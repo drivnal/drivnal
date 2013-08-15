@@ -55,7 +55,7 @@ class Event:
         if 'type' not in data or not data['type']:
             return False
 
-        if 'volume_id' not in data or not data['volume_id']:
+        if 'volume_id' not in data:
             return False
 
         return True
@@ -88,7 +88,7 @@ class Event:
             if event['time'] <= last_time:
                 continue
 
-            if event['volume_id'] != volume.id:
+            if event['volume_id'] and event['volume_id'] != volume.id:
                 continue
 
             # Prevent events with the same time from breaking sorted list,

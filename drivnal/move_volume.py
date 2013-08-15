@@ -143,4 +143,4 @@ class MoveVolume(Task):
             })
             self.volume.client.commit()
 
-        Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
+        Event(type=VOLUMES_UPDATED)

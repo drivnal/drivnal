@@ -30,6 +30,7 @@ class Volume:
         self.client = client
 
         self.orig_path = path
+        self.orig_source_path = self.source_path
         self.path = path
 
         if not self.id:
@@ -299,6 +300,8 @@ class Volume:
                 retry_config_commit = True
             else:
                 raise
+
+        Event(type=VOLUMES_UPDATED)
 
         if self.orig_path != self.path:
             self._move_volume()

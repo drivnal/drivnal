@@ -153,7 +153,7 @@ class CreateSnapshot(Task):
 
         self.remove_snapshot()
         self.aborted()
-        Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
+        Event(type=VOLUMES_UPDATED)
 
     def run(self):
         self.snapshot_id = int(time.time())
@@ -183,7 +183,7 @@ class CreateSnapshot(Task):
             'task_id': self.id,
         })
 
-        Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
+        Event(type=VOLUMES_UPDATED)
 
         snapshots_path = os.path.join(self.volume.path, SNAPSHOT_DIR)
         logs_path = os.path.join(self.volume.path, LOG_DIR)
@@ -335,5 +335,5 @@ class CreateSnapshot(Task):
                 })
 
         self.state = COMPLETE
-        Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
+        Event(type=VOLUMES_UPDATED)
         Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
