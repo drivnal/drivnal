@@ -38,6 +38,8 @@ define([
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
 
+      this.origSourcePath = this.model.get('source_path');
+
       var width = 40;
 
       this.storageArc = d3.svg.arc();
@@ -120,6 +122,12 @@ define([
 
       if (!this.isSettings()) {
         this.resetSetttings();
+      }
+
+      // If source path changed update origin
+      if (this.model.get('source_path') !== this.origSourcePath) {
+        this.origSourcePath = this.model.get('source_path');
+        this.trigger('updateOrigin');
       }
     },
     setStorage: function(percent) {
@@ -387,7 +395,6 @@ define([
       var i;
       var error = false;
       var excludes = [];
-      var origSourcePath = this.model.get('source_path');
 
       for (i = 0; i < this.excludeViews.length; i++) {
         if (this.excludeViews[i].getSetting()) {
@@ -422,11 +429,6 @@ define([
         success: function() {
           this.hideSettings(function() {
             this.trigger('update');
-
-            // If source path changed update origin
-            if (origSourcePath !== this.sourePathView.getSetting()) {
-              this.trigger('updateOrigin');
-            }
           }.bind(this));
         }.bind(this),
         error: function() {

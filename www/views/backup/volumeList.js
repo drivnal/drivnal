@@ -37,9 +37,6 @@ define([
         }.bind(this)
       });
     },
-    triggerUpdateOrigin: function() {
-      this.trigger('updateOrigin');
-    },
     createVolume: function() {
       this.collection.add({});
     },
@@ -71,7 +68,13 @@ define([
       this.listenTo(volumeView, 'select', this.select);
       this.listenTo(volumeView, 'update', this.update);
       this.listenTo(volumeView, 'updateSize', this.updateSize);
-      this.listenTo(volumeView, 'updateOrigin', this.triggerUpdateOrigin);
+      this.listenTo(volumeView, 'updateOrigin', function() {
+        // Only update origin for current volume
+        if (volumeView.model.get(
+            'id') === this.currentVolume.model.get('id')) {
+          this.trigger('updateOrigin');
+        }
+      });
       volumeView.render();
 
       // If adding a new volume select it
