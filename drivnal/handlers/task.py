@@ -21,14 +21,19 @@ def task_get(volume_id):
     tasks = []
 
     for task in reversed(volume.get_tasks()):
-        tasks.append({
+        task_data = {
             'id': task.id,
             'volume': volume.id,
             'volume_name': volume.name,
             'type': task.type,
             'state': task.state,
             'time': task.time,
-        })
+        }
+
+        if task.snapshot_id:
+            task_data['snapshot_id'] = task.snapshot_id
+
+        tasks.append(task_data)
 
     return utils.jsonify(tasks)
 

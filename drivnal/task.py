@@ -10,7 +10,7 @@ logger = logging.getLogger(APP_NAME)
 task_threads = {}
 
 _STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
-_INT_DATABASE_VARIABLES = ['time']
+_INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
 
 class Task:
     def __init__(self, id=None, volume=None):

@@ -31,6 +31,9 @@
     Volume: <%= volume_name %><br>
     Time: <%= formatTime(time) %><br>
     State: <%= state.charAt(0).toUpperCase() + state.slice(1) %><br>
+    <% if (typeof snapshot_id !== 'undefined') { %>
+      Snapshot ID: <%= snapshot_id %><br>
+    <% } %>
     <span class="task-id">ID: <%= id %></span>
   </div>
 </div>
