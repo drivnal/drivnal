@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+export PYTHONPATH=$(CURDIR)
+
+%:
+    dh $@ --buildsystem python_distutils --with python2
+
+build:
+    dh build
+ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+    make test
+endif
+
+clean:
+    dh clean
+    rm -rf drivnal.egg-info/ build

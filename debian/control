@@ -1,0 +1,26 @@
+Source: drivnal
+Section: utils
+Priority: optional
+Maintainer: Zachary Huff <zach.huff.386@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: http://drivnal.com/
+#Vcs-Git: https://github.com/drivnal/drivnal.git
+#Vcs-Browser: https://github.com/drivnal/drivnal
+
+Package: drivnal
+Architecture: any
+Depends: python-flask,
+         python-cherrypy,
+         rsync,
+         ${misc:Depends},
+         ${python:Depends}
+Description: Simple snapshot backups
+ Drivnal is a backup utility created using rsync with a web interface to
+ manage volumes, snapshots and restore files. Similar to Time Machine all
+ snapshots store only the changed files from the previous snapshot and
+ hard links are created for unchanged files. Unchanged files are never
+ stored more then once on the snapshot volume. All snapshots are independent
+ of the other snapshots and previous snapshots are not required to restore
+ files from a snapshot. For more information on how this works read the hard
+ links wiki page.
