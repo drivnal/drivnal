@@ -97,7 +97,6 @@ class Task:
             elif self.state == ABORTING:
                 self.state = ABORTED
             self.thread = None
-
         except:
             logger.exception('Task failed. %r' % {
                 'volume_id': self.volume_id,
