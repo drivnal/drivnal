@@ -2,6 +2,7 @@ import os
 import flask
 import cherrypy.wsgiserver
 import logging
+import signal
 from constants import *
 from database import Database
 from werkzeug import SharedDataMiddleware
@@ -76,6 +77,7 @@ class Server:
             self.app.run(host=self.config.bind_addr,
                 port=int(self.config.port), threaded=True)
         finally:
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
             logger.info('Stopping server...')
             if scheduler:
                 scheduler.stop()
@@ -92,6 +94,7 @@ class Server:
         try:
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
             logger.info('Stopping server...')
             if scheduler:
                 scheduler.stop()
