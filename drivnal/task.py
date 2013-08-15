@@ -91,15 +91,13 @@ class Task:
 
     def _run(self, *args, **kwargs):
         try:
-            # 0 second tasks causes error
-            time.sleep(1)
-
             self.run(*args, **kwargs)
             if self.state == PENDING:
                 self.state = COMPLETE
             elif self.state == ABORTING:
                 self.state = ABORTED
             self.thread = None
+
         except:
             logger.exception('Task failed. %r' % {
                 'volume_id': self.volume_id,

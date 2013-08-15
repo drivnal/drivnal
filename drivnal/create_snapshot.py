@@ -334,5 +334,6 @@ class CreateSnapshot(Task):
                     'task_id': self.id,
                 })
 
+        self.state = COMPLETE
         Event(volume_id=self.volume_id, type=VOLUMES_UPDATED)
         Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
