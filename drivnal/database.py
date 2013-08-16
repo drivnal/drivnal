@@ -50,6 +50,7 @@ class Database():
         self._db_lock.acquire()
         try:
             self._db.delete(key=key)
+            self._db.sync()
         except bsddb.db.DBNotFoundError:
             pass
         finally:
@@ -63,6 +64,7 @@ class Database():
             for key in self._db.keys():
                 if key.startswith(prefix):
                     self._db.delete(key=key)
+            self._db.sync()
         finally:
             self._db_lock.release()
 
