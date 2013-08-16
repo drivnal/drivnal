@@ -9,7 +9,7 @@ import uuid
 logger = logging.getLogger(APP_NAME)
 task_threads = {}
 
-_STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state', 'removed']
+_STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
 _INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
 
 class Task:
@@ -87,8 +87,6 @@ class Task:
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
-        # TODO db remove does not always remove task from db
-        self.removed = 'true'
         server.app_db.remove('tasks', self.id)
         Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
@@ -146,9 +144,6 @@ class Task:
 
     @staticmethod
     def _validate(data):
-        if 'removed' in data:
-            return False
-
         if 'time' not in data or not data['time']:
             return False
 
@@ -206,11 +201,11 @@ class Task:
             task = Task(id=task_id)
             if states and task.state not in states:
                 continue
-            tasks_dict[task.time] = task
-            tasks_time.append(task.time)
+            tasks_dict['%s-%s' % (task.time, task_id)] = task
+            tasks_time.append('%s-%s' % (task.time, task_id))
 
-        for task_time in sorted(tasks_time):
-            tasks.append(tasks_dict[task_time])
+        for task_time_id in sorted(tasks_time):
+            tasks.append(tasks_dict[task_time_id])
 
         return tasks
 
