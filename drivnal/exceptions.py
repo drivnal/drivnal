@@ -9,18 +9,3 @@ class SnapshotAlreadyRunning(SnapshotError):
 
 class SnapshotPathExists(SnapshotError):
     pass
-
-class SnapshotSyncError(SnapshotError):
-    pass
-
-class SnapshotSpaceError(SnapshotError):
-    pass
-
-class SnapshotMoveError(SnapshotError):
-    pass
-
-class RestoreError(Exception):
-    pass
-
-class RestoreSyncError(RestoreError):
-    pass

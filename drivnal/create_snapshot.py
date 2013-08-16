@@ -1,5 +1,4 @@
 from constants import *
-from exceptions import *
 from task import Task
 from event import Event
 import os
@@ -62,18 +61,18 @@ class CreateSnapshot(Task):
         self.volume.load_snapshots()
         snapshot = self.volume.get_snapshot(self.snapshot_id)
         if snapshot:
-            self.volume.remove_snapshot(snapshot)
+            self.volume.remove_snapshot(snapshot, block=True)
         else:
             logger.debug('Failed to remove snapshot, snapshot id does ' + \
                 'not exists.')
 
-    def _prune_snapshot(self, snapshot, keep_log=False):
+    def _prune_snapshot(self, snapshot):
         logger.info('Volume low on space, auto removing snapshot. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
             'removing_snapshot_id': snapshot.id,
         })
-        self.volume.remove_snapshot(snapshot)
+        self.volume.remove_snapshot(snapshot, block=True)
 
     def prune_snapshots(self, min_size=None):
         snapshot_count = self.volume.get_snapshot_count()
@@ -305,7 +304,7 @@ class CreateSnapshot(Task):
                     })
 
                 if no_space_error:
-                    raise SnapshotSpaceError('Snapshot failed, unable ' + \
+                    raise OSError('Snapshot failed, unable ' + \
                         'to free up required space. %r' % {
                             'volume_id': self.volume_id,
                             'snapshot_id': self.snapshot_id,
@@ -314,7 +313,7 @@ class CreateSnapshot(Task):
                             'return_code': return_code,
                         })
                 else:
-                    raise SnapshotSyncError('Snapshot failed, command ' + \
+                    raise OSError('Snapshot failed, command ' + \
                         'returned non-zero exit status. %r' % {
                             'volume_id': self.volume_id,
                             'snapshot_id': self.snapshot_id,
@@ -327,12 +326,13 @@ class CreateSnapshot(Task):
         try:
             os.rename(destination_path_temp, destination_path)
         except OSError:
-            raise SnapshotMoveError('Snapshot failed, unable to rename ' + \
+            logging.error('Snapshot failed, unable to rename ' + \
                 'snapshot temp directory. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
                     'task_id': self.id,
                 })
+            raise
 
         self.state = COMPLETE
         Event(type=VOLUMES_UPDATED)

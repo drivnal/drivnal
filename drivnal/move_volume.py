@@ -1,5 +1,4 @@
 from constants import *
-from exceptions import *
 from task import Task
 from event import Event
 import os
@@ -25,6 +24,7 @@ class MoveVolume(Task):
             process.terminate()
             logger.debug('Terminating volume move process. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
                 'pid': process.pid,
             })
             time.sleep(1)
@@ -36,6 +36,7 @@ class MoveVolume(Task):
                 process.kill()
                 logger.debug('Killing volume move process. %r' % {
                     'volume_id': self.volume_id,
+                    'task_id': self.id,
                     'pid': process.pid,
                 })
                 time.sleep(0.5)
@@ -45,11 +46,13 @@ class MoveVolume(Task):
         if process.poll() is None:
             logger.error('Failed to abort volume move process. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
                 'pid': process.pid,
             })
 
         logger.warning('Volume move aborted. %r' % {
             'volume_id': self.volume_id,
+            'task_id': self.id,
         })
 
         self.remove_snapshot()
@@ -116,6 +119,7 @@ class MoveVolume(Task):
 
             logger.debug('Removing previous copy of volume. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
             })
 
             for name in os.listdir(source_path):
@@ -129,17 +133,19 @@ class MoveVolume(Task):
                     logger.debug('Failed to delete path while removing ' +
                         'previous volume files. %r' % {
                             'volume_id': self.volume_id,
+                            'task_id': self.id,
                         })
-                    pass
 
         if return_code != 0:
-            raise RestoreSyncError('Volume move failed, command ' + \
+            raise OSError('Volume move failed, command ' + \
                 'returned non-zero exit status. %r' % {
-                    'volume_id': self.id,
+                    'volume_id': self.volume_id,
+                    'task_id': self.id,
                 })
         else:
             logger.debug('Volume move complete, committing config. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
             })
             self.volume.client.commit()
 

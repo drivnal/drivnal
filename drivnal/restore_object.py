@@ -1,5 +1,4 @@
 from constants import *
-from exceptions import *
 from task import Task
 import os
 import time
@@ -18,6 +17,7 @@ class RestoreObject(Task):
             process.terminate()
             logger.debug('Terminating restore process. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
                 'pid': process.pid,
             })
             time.sleep(1)
@@ -29,6 +29,7 @@ class RestoreObject(Task):
                 process.kill()
                 logger.debug('Killing restore process. %r' % {
                     'volume_id': self.volume_id,
+                    'task_id': self.id,
                     'pid': process.pid,
                 })
                 time.sleep(0.5)
@@ -38,14 +39,21 @@ class RestoreObject(Task):
         if process.poll() is None:
             logger.error('Failed to abort restore process. %r' % {
                 'volume_id': self.volume_id,
+                'task_id': self.id,
                 'pid': process.pid,
             })
+
+        logger.warning('Restore object aborted. %r' % {
+            'volume_id': self.volume_id,
+            'task_id': self.id,
+        })
 
         self.aborted()
 
     def run(self, objects, destination_path):
         logger.info('Restoring objects. %r' % {
             'volume_id': self.volume_id,
+            'task_id': self.id,
         })
 
         log_path = os.path.join(self.volume.path,
@@ -71,7 +79,7 @@ class RestoreObject(Task):
                 time.sleep(0.1)
 
             if return_code != 0:
-                raise RestoreSyncError('Object restore failed, command ' + \
+                raise OSError('Object restore failed, command ' + \
                     'returned non-zero exit status. %r' % {
                         'volume_id': self.volume_id,
                         'snapshot_id': snapshot_id,
