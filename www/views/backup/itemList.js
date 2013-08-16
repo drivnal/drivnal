@@ -313,20 +313,39 @@ define([
       this.currentItem.setSelect(true);
       this.trigger('change', this.currentItem.model.get('id'));
     },
-    onRemove: function(snapshotView) {
+    onRemove: function(snapshotView, key) {
       var i;
 
-      if (snapshotView.getRemove()) {
-        for (i = 0; i < this.removing.length; i++) {
-          if (this.removing[i] === snapshotView) {
-            this.removing.splice(i, 1);
-          }
+      if (key === 'shift' && this.removing.length) {
+        var start = this.views.indexOf(
+          this.removing[this.removing.length - 1]);
+        var end = this.views.indexOf(snapshotView) + 1;
+        if (start >= end) {
+          var temp = start;
+          start = end - 1;
+          end = temp;
         }
-        snapshotView.setRemove(false);
+        for (i = start; i < end; i++) {
+          if (this.views[i].getRemove()) {
+            continue
+          }
+          this.removing.push(this.views[i]);
+          this.views[i].setRemove(true);
+        }
       }
       else {
-        this.removing.push(snapshotView);
-        snapshotView.setRemove(true);
+        if (snapshotView.getRemove()) {
+          for (i = 0; i < this.removing.length; i++) {
+            if (this.removing[i] === snapshotView) {
+              this.removing.splice(i, 1);
+            }
+          }
+          snapshotView.setRemove(false);
+        }
+        else {
+          this.removing.push(snapshotView);
+          snapshotView.setRemove(true);
+        }
       }
 
       if (this.removing.length) {

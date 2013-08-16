@@ -94,7 +94,11 @@ define([
       else if ($(evt.target).hasClass('icon')) {
         if (this.getIconType() === 'remove') {
           this.$('.icon-remove').roll(400);
-          this.trigger('remove', this);
+          var key = null;
+          if (evt.shiftKey) {
+            key = 'shift';
+          }
+          this.trigger('remove', this, key);
         }
         else if (this.getIconType() === 'cancel') {
           if (this.$('.tooltip').length) {
