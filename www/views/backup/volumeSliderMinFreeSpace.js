@@ -10,7 +10,7 @@ define([
   var VolumeSliderMinFreeSpaceView = VolumeSliderView.extend({
     name: 'minFreeSpace',
     title: 'Minimum Free Space',
-    icon: 'icon-trash',
+    icon: 'icon-hdd',
     sliderOptions: {
       min: 0,
       max: 50,
