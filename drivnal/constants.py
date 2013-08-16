@@ -25,7 +25,6 @@ TASKS_UPDATED = 'tasks_updated'
 SNAPSHOT_DIR = 'snapshots'
 LOG_DIR = 'logs'
 
-DEFAULT_MIN_FREE_SPACE = 0.1
 DEFAULT_MAX_PRUNE = 0.8
 DEFAULT_MAX_RETRY = 3
 DEFAULT_DB_PATH = '/var/lib/drivnal/drivnal.db'

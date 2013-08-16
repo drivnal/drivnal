@@ -42,7 +42,8 @@ class Volume:
 
     def __getattr__(self, name):
         if name in ['id', 'name', 'source_path', 'excludes', 'schedule', \
-                'min_free_space', 'bandwidth_limit', 'origin']:
+                'min_free_space', 'snapshot_limit', 'bandwidth_limit',
+                'origin']:
             self.load()
         if name in ['snapshots']:
             self.load_snapshots()
@@ -186,6 +187,17 @@ class Volume:
                     })
         self.min_free_space = min_free_space
 
+        snapshot_limit = None
+        if self.config.snapshot_limit:
+            try:
+                snapshot_limit = int(self.config.snapshot_limit)
+            except ValueError:
+                logger.warning(
+                    'Config option snapshot_limit is invalid. %r' % {
+                        'volume_id': self.id,
+                    })
+        self.snapshot_limit = snapshot_limit
+
         bandwidth_limit = None
         if self.config.bandwidth_limit:
             try:
@@ -264,6 +276,7 @@ class Volume:
         self.config.excludes = self.excludes
         self.config.schedule = self.schedule
         self.config.min_free_space = self.min_free_space
+        self.config.snapshot_limit = self.snapshot_limit
         self.config.bandwidth_limit = self.bandwidth_limit
         self.config.max_prune = self.max_prune
         self.config.max_retry = self.max_retry
