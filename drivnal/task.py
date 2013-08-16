@@ -201,8 +201,9 @@ class Task:
             task = Task(id=task_id)
             if states and task.state not in states:
                 continue
-            tasks_dict['%s-%s' % (task.time, task_id)] = task
-            tasks_time.append('%s-%s' % (task.time, task_id))
+            task_time_id = '%s-%s' % (task.time, task_id)
+            tasks_dict[task_time_id] = task
+            tasks_time.append(task_time_id)
 
         for task_time_id in sorted(tasks_time):
             tasks.append(tasks_dict[task_time_id])
