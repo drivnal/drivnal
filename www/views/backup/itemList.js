@@ -346,11 +346,7 @@ define([
     },
     onRemoveSelected: function() {
       _.each(this.removing, function(view) {
-        view.model.destroy({
-          success: function() {
-            view.remove();
-          }
-        });
+        view.model.destroy({});
       });
       this.resetRemove();
       this.updateSize();

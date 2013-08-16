@@ -1,11 +1,11 @@
 from constants import *
-from exceptions import *
 from config import Config
 from origin import Origin
 from snapshot import Snapshot
 from task import Task
 from event import Event
 from create_snapshot import CreateSnapshot
+from remove_snapshot import RemoveSnapshot
 from restore_object import RestoreObject
 from move_volume import MoveVolume
 import os
@@ -108,33 +108,14 @@ class Volume:
 
         return task
 
-    def remove_snapshot(self, snapshot, keep_log=False):
-        logger.info('Removing snapshot. %r' % {
-            'volume_id': self.id,
-            'snapshot_id': snapshot.id,
-        })
+    def remove_snapshot(self, snapshot, keep_log=False, block=False):
+        task = RemoveSnapshot(volume=self, snapshot=snapshot)
+        task.start(keep_log)
 
-        self.snapshots.index(snapshot)
+        if block:
+            task.join()
 
-        if not keep_log:
-            logger.debug('Removing snapshot log file. %r' % {
-                'volume_id': self.id,
-                'snapshot_id': snapshot.id,
-            })
-
-            if os.path.isfile(snapshot.log_path):
-                os.remove(snapshot.log_path)
-
-        logger.debug('Removing snapshot directory. %r' % {
-            'volume_id': self.id,
-            'snapshot_id': snapshot.id,
-        })
-
-        if os.path.isdir(snapshot.path):
-            shutil.rmtree(snapshot.path)
-
-        self.snapshots.remove(snapshot)
-        Event(volume_id=self.id, type=SNAPSHOTS_UPDATED)
+        return task
 
     def snapshot_pending(self):
         tasks = Task.get_pending_tasks(self, CREATE_SNAPSHOT)

@@ -15,6 +15,9 @@ class Snapshot(Bucket):
         if id[-7:] == '.failed':
             self.id = int(id[:-7])
             self.state = FAILED
+        elif id[-9:] == '.removing':
+            self.id = int(id[:-9])
+            self.state = REMOVING
         elif id[-5:] == '.temp':
             self.id = int(id[:-5])
             self.state = PENDING

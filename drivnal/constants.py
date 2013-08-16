@@ -7,12 +7,14 @@ SAVED = 'saved'
 UNSAVED = 'unsaved'
 
 FAILED = 'failed'
+REMOVING = 'removing'
 ABORTED = 'aborted'
 ABORTING = 'aborting'
 PENDING = 'pending'
 COMPLETE = 'complete'
 
 CREATE_SNAPSHOT = 'create_snapshot'
+REMOVE_SNAPSHOT = 'remove_snapshot'
 RESTORE_OBJECT = 'restore_object'
 MOVE_VOLUME = 'move_volume'
 

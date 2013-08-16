@@ -1,6 +1,7 @@
 from drivnal.constants import *
 from drivnal.client import Client
 from drivnal.task import Task
+from drivnal.event import Event
 import drivnal.utils as utils
 from drivnal import server
 import os

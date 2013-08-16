@@ -9,11 +9,11 @@ import uuid
 logger = logging.getLogger(APP_NAME)
 task_threads = {}
 
-_STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
+_STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state', 'removed']
 _INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
 
 class Task:
-    def __init__(self, id=None, volume=None):
+    def __init__(self, id=None, volume=None, snapshot=None):
         if id is None:
             self.id = uuid.uuid1().hex
             self.type = None
@@ -29,6 +29,10 @@ class Task:
         else:
             self.volume_id = volume.id
             self.volume = volume
+
+        if snapshot is not None:
+            self.snapshot_id = snapshot.id
+            self.snapshot = snapshot
 
         self.update()
 
@@ -83,6 +87,8 @@ class Task:
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
+        # TODO db remove does not always remove task from db
+        self.removed = 'true'
         server.app_db.remove('tasks', self.id)
         Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
@@ -117,6 +123,11 @@ class Task:
             target=self._run, args=args, kwargs=kwargs)
         self.thread.start()
 
+    def join(self):
+        if not self.thread:
+            return
+        self.thread.join()
+
     def update(self):
         if self.state not in [PENDING, ABORTING]:
             return
@@ -135,6 +146,9 @@ class Task:
 
     @staticmethod
     def _validate(data):
+        if 'removed' in data:
+            return False
+
         if 'time' not in data or not data['time']:
             return False
 
