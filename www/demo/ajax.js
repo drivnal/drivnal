@@ -159,8 +159,8 @@ define([
   var snapshotDelete = function(request, volumeId, snapshotId) {
     var i;
 
-    for (i = 0; i < demoData.snapshots[volumeId]; i++) {
-      if (demoData.snapshots[volumeId][i] === snapshotId) {
+    for (i = 0; i < demoData.snapshots[volumeId].length; i++) {
+      if (demoData.snapshots[volumeId][i].id === parseInt(snapshotId, 10)) {
         demoData.snapshots[volumeId].splice(i, 1);
         break;
       }

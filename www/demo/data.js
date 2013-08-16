@@ -31,7 +31,7 @@ define([], function() {
         sent: '8.43 MB',
         speed: '31.45 MB/sec',
         state: 'complete',
-        volume: '5001c61fef3685f4482c06f41b333fbd'
+        volume: '8c567322429008ac4b718b8bde034935'
       },
       {
         id: 1374089700,
