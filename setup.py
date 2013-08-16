@@ -6,6 +6,7 @@ import shlex
 import shutil
 import fileinput
 
+VERSION = '0.1.7'
 PATCH_DIR = 'build'
 INSTALL_UPSTART = True
 INSTALL_SYSTEMD = True
@@ -55,12 +56,13 @@ for file_name in patch_files:
 
 setup(
     name='drivnal',
-    version='0.1.6',
+    version=VERSION,
     description='Simple snapshot backups',
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
-    download_url='https://github.com/drivnal/drivnal/archive/0.1.6.tar.gz',
+    download_url='https://github.com/drivnal/drivnal/archive/%s.tar.gz' % (
+        VERSION),
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license='AGPL3',
