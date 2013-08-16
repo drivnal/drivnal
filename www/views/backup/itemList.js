@@ -327,7 +327,7 @@ define([
         }
         for (i = start; i < end; i++) {
           if (this.views[i].getRemove()) {
-            continue
+            continue;
           }
           this.removing.push(this.views[i]);
           this.views[i].setRemove(true);
