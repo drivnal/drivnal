@@ -14,6 +14,7 @@ define([
       'excludes': [],
       'schedule': '1day',
       'min_free_space': 0.1,
+      'snapshot_limit': 300,
       'bandwidth_limit': 0,
       'snapshot_pending': false
     },
