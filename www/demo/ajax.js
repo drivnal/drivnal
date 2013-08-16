@@ -165,6 +165,12 @@ define([
       }
     }
 
+    demoData.events[volumeId].push({
+      id: uuid(),
+      type: 'snapshots_updated',
+      time: Math.round(new Date().getTime() / 1000)
+    });
+
     setTimeout(function() {
       request.success({});
     }, responseDelay);
@@ -296,6 +302,12 @@ define([
         break;
       }
     }
+
+    demoData.events[volumeId].push({
+      id: uuid(),
+      type: 'tasks_updated',
+      time: Math.round(new Date().getTime() / 1000)
+    });
 
     setTimeout(function() {
       request.success({});
