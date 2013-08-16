@@ -1,20 +1,11 @@
+from constants import *
 import unittest
 import requests
 import json
 import time
 
-URL = 'http://localhost:6500'
-HEADERS = {
-    'Content-type': 'application/json',
-    'Accept': 'application/json',
-}
-
 class Volume(unittest.TestCase):
-    def setUp(self):
-        # Start vagrant
-        pass
-
-    def test_vagrant_data(self):
+    def test_vagrant_volume(self):
         #######################################################################
         # Get volume
         #######################################################################
@@ -134,6 +125,3 @@ class Volume(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data, {})
-
-if __name__ == '__main__':
-    unittest.main()
