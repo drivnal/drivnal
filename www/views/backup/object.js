@@ -55,15 +55,14 @@ define([
         this.trigger('open', this);
       }
       else {
+        var key = null;
         if (evt.shiftKey) {
-          this.trigger('select', this, 'shift');
+          key = 'shift';
         }
         else if (evt.ctrlKey) {
-          this.trigger('select', this, 'ctrl');
+          key = 'ctrl';
         }
-        else {
-          this.trigger('select', this, null);
-        }
+        this.trigger('select', this, key);
       }
     },
     onClickCheckbox: function() {
