@@ -58,6 +58,7 @@ define([
     volume.excludes = request.data.excludes;
     volume.schedule = request.data.schedule;
     volume.min_free_space = request.data.min_free_space;
+    volume.snapshot_limit = request.data.snapshot_limit;
     volume.bandwidth_limit = request.data.bandwidth_limit;
 
     setTimeout(function() {
