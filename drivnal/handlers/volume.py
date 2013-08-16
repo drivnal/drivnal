@@ -15,6 +15,7 @@ def _get_volume_object(volume):
         'excludes': volume.excludes,
         'schedule': volume.schedule or 0,
         'min_free_space': volume.min_free_space or 0,
+        'snapshot_limit': volume.snapshot_limit,
         'bandwidth_limit': volume.bandwidth_limit or 0,
         'snapshot_pending': volume.snapshot_pending()
     }
@@ -45,6 +46,7 @@ def volume_put_post(volume_id=None):
     excludes = flask.request.json['excludes']
     schedule = flask.request.json['schedule']
     min_free_space = flask.request.json['min_free_space']
+    snapshot_limit = flask.request.json['snapshot_limit']
     bandwidth_limit = flask.request.json['bandwidth_limit']
 
     if volume_id:
@@ -62,6 +64,7 @@ def volume_put_post(volume_id=None):
         volume.excludes[i] = os.path.normpath(exclude)
     volume.schedule = schedule
     volume.min_free_space = min_free_space
+    volume.snapshot_limit = snapshot_limit
     volume.bandwidth_limit = bandwidth_limit
 
     volume.commit()

@@ -8,6 +8,7 @@ define([
   'views/backup/volumeSettingName',
   'views/backup/volumeSliderSchedule',
   'views/backup/volumeSliderMinFreeSpace',
+  'views/backup/volumeSliderSnapshotLimit',
   'views/backup/volumeSliderBandwidthLimit',
   'views/backup/volumePathSelectSourcePath',
   'views/backup/volumePathSelectPath',
@@ -15,8 +16,9 @@ define([
   'text!templates/backup/volume.html'
 ], function($, _, Backbone, Bootstrap, d3, jQueryUI, VolumeSettingName,
     VolumeSliderScheduleView, VolumeSliderMinFreeSpaceView,
-    VolumeSliderBandwidthLimitView, VolumePathSelectSourcePathView,
-    VolumePathSelectPathView, VolumePathSelectExcludeView,
+    VolumeSliderSnapshotLimitView, VolumeSliderBandwidthLimitView,
+    VolumePathSelectSourcePathView, VolumePathSelectPathView,
+    VolumePathSelectExcludeView,
     volumeTemplate) {
   'use strict';
   var VolumeView = Backbone.View.extend({
@@ -94,6 +96,12 @@ define([
       });
       this.$('.setting-min-free-space').html(
         this.minFreeSpaceView.render().el);
+
+      this.snapshotLimit = new VolumeSliderSnapshotLimitView({
+        value: this.model.get('snapshot_limit')
+      });
+      this.$('.setting-snapshot-limit').html(
+        this.snapshotLimit.render().el);
 
       this.bandwidthLimitView = new VolumeSliderBandwidthLimitView({
         value: this.model.get('bandwidth_limit')
@@ -383,6 +391,7 @@ define([
       this.pathView.hidePathSelect();
       this.scheduleView.setValue(this.model.get('schedule'));
       this.minFreeSpaceView.setValue(this.model.get('min_free_space') * 100);
+      this.snapshotLimit.setValue(this.model.get('snapshot_limit'));
       this.bandwidthLimitView.setValue(this.model.get('bandwidth_limit'));
     },
     onClickCancel: function() {
@@ -407,6 +416,7 @@ define([
       error = (!this.pathView.checkSetting() ? true : error);
       error = (!this.scheduleView.checkSetting() ? true : error);
       error = (!this.minFreeSpaceView.checkSetting() ? true : error);
+      error = (!this.snapshotLimit.checkSetting() ? true : error);
       error = (!this.bandwidthLimitView.checkSetting() ? true : error);
 
       for (i = 0; i < this.excludeViews.length; i++) {
@@ -424,6 +434,7 @@ define([
         'excludes': excludes,
         'schedule': this.scheduleView.getSetting(),
         'min_free_space': this.minFreeSpaceView.getSetting(),
+        'snapshot_limit': this.snapshotLimit.getSetting(),
         'bandwidth_limit': this.bandwidthLimitView.getSetting(),
       }, {
         success: function() {
