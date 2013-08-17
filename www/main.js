@@ -186,7 +186,10 @@ require([
     if (decimals === undefined) {
       decimals = 1;
     }
-    if (bytes < 1024) {
+    if (!bytes) {
+      bytes = '0 bytes';
+    }
+    else if (bytes < 1024) {
       bytes = bytes + ' bytes';
     }
     else if (bytes < 1048576) {
