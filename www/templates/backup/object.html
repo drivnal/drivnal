@@ -1,7 +1,12 @@
 <%
+var titleClass = 'file';
 var isDir = false;
 if (type && type.indexOf('directory') !== -1) {
   isDir = true;
+  titleClass = 'dir';
+}
+else if (type && type.substr(0, 4) === 'text') {
+  titleClass = 'text';
 }
 %>
 <td class="select-col">
@@ -10,7 +15,7 @@ if (type && type.indexOf('directory') !== -1) {
   </div>
 </td>
 <td class="title-col">
-  <div class="title-col-box <%= isDir ? 'dir' : 'file' %>-name">
+  <div class="title-col-box <%= titleClass %>-name">
     <span class=><%= id %></span>
   </div>
 </td>

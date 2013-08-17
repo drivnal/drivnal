@@ -644,7 +644,8 @@
   white-space: nowrap;
 }
 
-.backup .object-list .file-name {
+.backup .object-list .file-name,
+.backup .object-list .text-name {
   background-image: @file-icon-uri;
 }
 
@@ -652,7 +653,8 @@
   background-image: @dir-icon-uri;
 }
 
-.backup .object-list .dir-name span:hover {
+.backup .object-list .dir-name span:hover,
+.backup .object-list .text-name span:hover {
   text-decoration: underline;
   cursor: pointer;
 }
