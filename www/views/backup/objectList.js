@@ -242,7 +242,7 @@ define([
         this.collection.getPath());
       this.update();
     },
-    onView: function(objectView) {
+    onView: function() {
       if (this.textView && this.textView.$el.is(':visible')) {
         return;
       }
