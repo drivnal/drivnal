@@ -698,8 +698,8 @@
   min-width: @object-drop-min-width;
   margin-top: 6px;
   position: absolute;
+  cursor: pointer;
   border: @object-drop-border;
-  position: absolute;
   background-color: @object-drop-bg;
   z-index: 5;
 }
@@ -742,4 +742,33 @@
   padding: 7px 7px 7px 12px;
   cursor: pointer;
   z-index: 10;
+}
+
+.backup .text-viewer-box {
+  .width-calc(~'38% - 6px');
+  min-width: @object-drop-min-width;
+  margin-top: 6px;
+  position: absolute;
+  z-index: 5;
+  border: @box-border;
+  background-color: @default-bg;
+}
+
+.backup .text-viewer-box .title {
+  font-size: 1.25em;
+  color: @button-fg;
+  background-color: @button-bg;
+  padding: 10px;
+  height: 20px;
+}
+
+.backup .text-viewer-box .title .close-viewer {
+  float: right;
+}
+
+.backup .text-viewer-box .data {
+  font-family: Consolas, 'Liberation Mono', Courier, monospace;
+  color: #333333;
+  border-radius: 0;
+  .height-calc(~'100% - 61px');
 }

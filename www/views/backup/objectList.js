@@ -6,12 +6,13 @@ define([
   'views/backup/object',
   'views/backup/objectPathList',
   'views/backup/objectDrop',
+  'views/backup/text',
   'text!templates/backup/objectList.html'
 ], function($, _, Backbone, ObjectCollection, ObjectView, ObjectPathListView,
-    ObjectDropView, objectListTemplate) {
+    ObjectDropView, TextView, objectListTemplate) {
   'use strict';
   var ObjectListView = Backbone.View.extend({
-    className: 'object-list',
+    className: 'object-list  no-select',
     template: _.template(objectListTemplate),
     events: {
       'click .select-header .select': 'globalSelect'
@@ -104,6 +105,7 @@ define([
         this.listenTo(objectView, 'select', this.onSelect);
         this.listenTo(objectView, 'drag', this.onDrag);
         this.listenTo(objectView, 'open', this.onOpen);
+        this.listenTo(objectView, 'view', this.onView);
         this.$('tbody').append(objectView.render().el);
       }
       this.updateSize();
@@ -239,6 +241,14 @@ define([
       this.pathList.updatePath(this.collection.getSnapshot(),
         this.collection.getPath());
       this.update();
+    },
+    onView: function(objectView) {
+      if (this.textView && this.textView.$el.is(':visible')) {
+        return;
+      }
+      this.textView = new TextView();
+      this.$el.parent().prepend(this.textView.render().el);
+      this.updateSize();
     },
     onChangePath: function(path) {
       this.collection.setPath(path);

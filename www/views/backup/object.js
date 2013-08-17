@@ -54,6 +54,9 @@ define([
       if ($(evt.target).parent().hasClass('dir-name')) {
         this.trigger('open', this);
       }
+      else if ($(evt.target).parent().hasClass('text-name')) {
+        this.trigger('view', this);
+      }
       else {
         var key = null;
         if (evt.shiftKey) {
