@@ -12,3 +12,4 @@ Thumbs.db
 /drivnal.egg-info
 /drivnal.db
 /www/node_modules
+/tools/private_key.asc
