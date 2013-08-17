@@ -55,21 +55,17 @@ define([
         if (this.basePath !== '/') {
           path = this.basePath;
         }
-        if (this.$('input').val() !== '') {
-          path += '/';
-        }
       }
       path += this.$('input').val();
       return path;
     },
     setValue: function(value) {
       this.setErrorMessage();
-      if (this.basePath) {
-        // Remove leading slash from path if there is base path
+      if (this.basePath && this.basePath !== '/') {
         value = value.replace(this.basePath, '');
-        if (value.substr(0, 1) === '/') {
-          value = value.substr(1);
-        }
+      }
+      if (this.basePath && value === '/') {
+        value = '';
       }
       if (this.$('input').val() !== value) {
         this.trigger('change', value);
