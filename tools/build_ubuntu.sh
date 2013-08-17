@@ -5,12 +5,14 @@ gpg --import /vagrant/build/private_key.asc
 mkdir -p /vagrant/build/debian
 cd /vagrant/build/debian
 
-tar xfz ../../$VERSION.tar.gz
+wget https://github.com/drivnal/drivnal/archive/$VERSION.tar.gz
+
+tar xfz $VERSION.tar.gz
 rm -rf drivnal-$VERSION/debian
 tar cfz drivnal_$VERSION.orig.tar.gz drivnal-$VERSION
 rm -rf drivnal-$VERSION
 
-tar xfz ../../$VERSION.tar.gz
+tar xfz $VERSION.tar.gz
 cd drivnal-$VERSION
 
 debuild -S
