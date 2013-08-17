@@ -289,7 +289,7 @@ require([
     return bytes;
   };
 
-  $.fn.roll = function(timeout) {
+  $.fn.roll = function(timeout, complete) {
     var timer;
 
     var rotate = function(degree) {
@@ -315,6 +315,10 @@ require([
       $(this).css('-ms-transform', 'rotate(0deg)');
       $(this).css('-o-transform', 'rotate(0deg)');
       $(this).css('transform', 'rotate(0deg)');
+
+      if (complete) {
+        complete();
+      }
     }.bind(this), timeout);
   };
 
