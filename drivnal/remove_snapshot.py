@@ -91,7 +91,7 @@ class RemoveSnapshot(Task):
             'task_id': self.id,
         })
 
-        args = ['rm', '-rf', self.snapshot.path]
+        args = ['rm', '-rf', snapshot_path_temp]
 
         process = subprocess.Popen(args)
         return_code = None
