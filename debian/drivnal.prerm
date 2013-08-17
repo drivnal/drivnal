@@ -1,0 +1,10 @@
+if which pyclean >/dev/null 2>&1; then
+	pyclean -p drivnal
+else
+	dpkg -L drivnal | grep \.py$ | while read file
+	do
+		rm -f "${file}"[co] >/dev/null
+  	done
+fi
+
+service drivnal stop

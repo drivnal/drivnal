@@ -1,0 +1,5 @@
+if which pycompile >/dev/null 2>&1; then
+	pycompile -p drivnal
+fi
+
+service drivnal restart
