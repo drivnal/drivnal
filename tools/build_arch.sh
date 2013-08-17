@@ -1,7 +1,7 @@
 VERSION="0.1.8"
 
-mkdir -p ../build/arch
-cd ../build/arch
+mkdir -p ../build/arch_linux
+cd ../build/arch_linux
 
 wget https://github.com/drivnal/drivnal/archive/$VERSION.tar.gz
 
