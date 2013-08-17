@@ -31,14 +31,14 @@ DEFAULT_DB_PATH = '/var/lib/drivnal/drivnal.db'
 DEFAULT_WWW_PATH = '/usr/share/drivnal/www'
 
 DEFAULT_ROOT_EXCLUDES = [
-    'dev/*',
-    'proc/*',
-    'sys/*',
-    'tmp/*',
-    'run/*',
-    'mnt/*',
-    'media/*',
-    'lost+found',
+    '/dev/*',
+    '/proc/*',
+    '/sys/*',
+    '/tmp/*',
+    '/run/*',
+    '/mnt/*',
+    '/media/*',
+    '/lost+found',
 ]
 
 DIR_MIME_TYPE = 'inode/directory'
