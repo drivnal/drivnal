@@ -1,6 +1,6 @@
-VERSION="0.1.8"
+VERSION="0.1.9"
 
-gpg --import /vagrant/build/private_key.asc
+gpg --import private_key.asc
 
 mkdir -p /vagrant/build/debian
 cd /vagrant/build/debian
