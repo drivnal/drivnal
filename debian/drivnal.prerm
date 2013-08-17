@@ -7,4 +7,4 @@ else
   	done
 fi
 
-service drivnal stop
+service drivnal stop || true

@@ -2,7 +2,9 @@ Source: drivnal
 Section: utils
 Priority: optional
 Maintainer: Zachary Huff <zach.huff.386@gmail.com>
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 8.0.0),
+               python-all (>= 2.6.6-3),
+               python-setuptools (>= 0.6b3)
 Standards-Version: 3.9.4
 Homepage: http://drivnal.com/
 X-Python-Version: >= 2.7

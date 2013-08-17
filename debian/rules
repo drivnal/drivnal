@@ -1,4 +1,11 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with python2 --buildsystem=python_distutils
+	dh $@ --with python2 --buildsystem python_distutils
+
+build:
+	dh build
+
+clean:
+	dh clean
+	rm -rf drivnal.egg-info build
