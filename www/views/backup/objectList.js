@@ -71,11 +71,7 @@ define([
       var i;
 
       if (this.selected.length) {
-        for (i = 0; i < this.selected.length; i++) {
-          this.selected[i].setSelect(null);
-        }
-        this.selected = [];
-        this.$('.select-header .select').removeClass('selected');
+        this.clearSelected();
       }
       else if (this.views.length) {
         for (i = 0; i < this.views.length; i++) {
@@ -84,6 +80,13 @@ define([
         }
         this.$('.select-header .select').addClass('selected');
       }
+    },
+    clearSelected: function() {
+      for (var i = 0; i < this.selected.length; i++) {
+        this.selected[i].setSelect(null);
+      }
+      this.selected = [];
+      this.$('.select-header .select').removeClass('selected');
     },
     onReset: function(collection) {
       var i;
