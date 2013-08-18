@@ -1,6 +1,7 @@
 <div class="title">
-  <span><%= id %></span>
+  <span class="id-text"><%= id %></span>
   <i class="close-viewer icon-remove no-select"></i>
+  <span class="snapshot-text"><%= '(' + (snapshot ? formatTime(snapshot) : 'Current') + ')' %></span>
 </div>
 <div class="data">
   <pre class="brush: <%= syntax %>; toolbar: false;"><%= data %></pre>
