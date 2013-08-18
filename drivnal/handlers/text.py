@@ -29,10 +29,11 @@ def text_get(volume_id, snapshot_id, path=None):
         }, 404)
 
     object = bucket.get_object(path)
-    object.get_mime_type()
+    object.get_syntax()
     object_data = {
-        'id': path,
+        'id': object.name,
         'type': object.type,
+        'syntax': object.syntax,
         'data': object.read(),
     }
 

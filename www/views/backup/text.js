@@ -39,75 +39,6 @@ define([
     BrushPython, BrushRuby, BrushSass, BrushScala, BrushSql, BrushTypeScript,
     BrushVb, BrushXml, TextModel, textTemplate) {
   'use strict';
-  var EXT_TYPES = {
-    'scpt': 'applescript',
-    'AppleScript': 'applescript',
-    'as': 'actionscript3',
-    'sh': 'shell',
-    'cfm': 'coldfusion',
-    'cfml': 'coldfusion',
-    'cfc': 'coldfusion',
-    'h': 'cpp',
-    'hh': 'cpp',
-    'hpp': 'cpp',
-    'hxx': 'cpp',
-    'h++': 'cpp',
-    'c': 'c',
-    'cc': 'cpp',
-    'cpp': 'cpp',
-    'cxx': 'cpp',
-    'c++': 'cpp',
-    'cs': 'csharp',
-    'css': 'css',
-    'dfm': 'delphi',
-    'delphi': 'delphi',
-    'pp': 'pascal',
-    'pas': 'pascal',
-    'pascal': 'pascal',
-    'diff': 'diff',
-    'patch': 'patch',
-    'erl': 'erlang',
-    'hrl': 'erlang',
-    'gy': 'groovy',
-    'gvy': 'groovy',
-    'gsh': 'groovy',
-    'groovy': 'groovy',
-    'hx': 'haxe',
-    'hxml': 'haxe',
-    'java': 'java',
-    'class': 'java',
-    'jfx': 'javafx',
-    'javafx': 'javafx',
-    'js': 'javascript',
-    'pl': 'perl',
-    'pm': 'perl',
-    't': 'perl',
-    'pod': 'perl',
-    'php': 'php',
-    'phps': 'php',
-    'php3': 'php',
-    'php4': 'php',
-    'php5': 'php',
-    'phtml': 'php',
-    'ps': 'powershell',
-    'ps1': 'powershell',
-    'py': 'python',
-    'rb': 'ruby',
-    'rbw': 'ruby',
-    'sass': 'sass',
-    'scss': 'scss',
-    'scala': 'scala',
-    'sql': 'sql',
-    'svg': 'xml',
-    'vb': 'vb',
-    'ts': 'ts',
-    'txt': 'plain',
-    'xml': 'xml',
-    'html': 'xml',
-    'xhtml': 'xml',
-    'xslt': 'xml',
-  };
-
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
     events: {
@@ -124,13 +55,7 @@ define([
       });
     },
     render: function() {
-      var ext = this.model.get('id').split('.').pop();
-      var type = 'plain';
-      if (EXT_TYPES[ext]) {
-        type = EXT_TYPES[ext];
-      }
-      this.$el.html(this.template(
-        $.extend(this.model.toJSON(), {type: type})));
+      this.$el.html(this.template(this.model.toJSON()));
       SyntaxHighlighter.highlight(null, this.$('pre')[0]);
       this.$el.fadeIn(400);
       return this;

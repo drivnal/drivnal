@@ -43,6 +43,7 @@ def object_get(volume_id, snapshot_id, path=None):
         objects_dict[object.name] = {
             'id': object.name,
             'type': object.type,
+            'syntax': object.syntax,
             'size': object.size,
             'time': object.time,
         }

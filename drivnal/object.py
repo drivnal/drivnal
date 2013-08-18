@@ -11,6 +11,8 @@ class Object:
     def __init__(self, path):
         self.name = os.path.basename(path)
         self.path = path
+        self.syntax = None
+        self.readable = False
 
         if os.path.isdir(self.path):
             self.type = DIR_MIME_TYPE
@@ -25,24 +27,39 @@ class Object:
             except OSError:
                 self.size = None
                 self.time = None
-                self.readable = False
             self.type = None
 
-    def get_mime_type(self):
-        try:
-            # TODO Follow symlinks
-            self.type = subprocess.check_output(['file',
-                '--mime-type', '--brief', self.path]).strip()
-        except subprocess.CalledProcessError, error:
-            logger.warning('File mime-type call failed. %r' % {
-                'return_code': error.returncode,
-                'output': error.output,
-            })
+    def get_syntax(self):
+        extension = os.path.splitext(self.path)[1].lower().replace('.', '')
+        if extension in EXTENSION_TYPES:
+            self.syntax = EXTENSION_TYPES[extension]
+            return
+
+        if not self.type:
+            try:
+                # TODO Follow symlinks
+                self.type = subprocess.check_output(['file',
+                    '--mime-type', '--brief', self.path]).strip()
+            except subprocess.CalledProcessError, error:
+                logger.warning('File mime-type call failed. %r' % {
+                    'return_code': error.returncode,
+                    'output': error.output,
+                })
+
+        if not self.type:
+            return
+
+        for mime_type, syntax in MIME_TYPES:
+            if mime_type in self.type.lower():
+                self.syntax = syntax
 
     def read(self):
         # TODO
         # if self.readable:
-        #     return None
+        #     return
+
+        if not self.syntax:
+            return
 
         try:
             with open(self.path) as file_data:
@@ -51,7 +68,7 @@ class Object:
             logger.warning('Failed to read file. %r' % {
                 'error': error,
             })
-            return None
+            return
 
     @staticmethod
     def get_objects(path):
@@ -66,6 +83,8 @@ class Object:
                 if not object.type:
                     object_paths.append(object_path)
 
+        # Attempt to get all mime types with one call get_syntax will
+        # call again if this fails
         try:
             # TODO Follow symlinks
             mime_types = subprocess.check_output(['file',
@@ -82,5 +101,8 @@ class Object:
                     object.type = mime_types.pop(0)
         except IndexError:
             logger.error('File mime-type call index error.')
+
+        for object in objects:
+            object.get_syntax()
 
         return objects
