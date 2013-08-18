@@ -14,7 +14,7 @@ def event_get(volume_id, last_event):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     if not last_event:
         events = [

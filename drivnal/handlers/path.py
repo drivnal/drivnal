@@ -23,7 +23,7 @@ def path_get(path=None):
         return utils.jsonify({
             'error': PATH_NOT_FOUND,
             'error_msg': error.strerror,
-        }), 404
+        }, 404)
 
     for name in sorted(path_list):
         full_path = os.path.join(path, name)

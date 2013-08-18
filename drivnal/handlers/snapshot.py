@@ -14,7 +14,7 @@ def snapshot_get(volume_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     snapshots = []
     for snapshot in reversed(volume.get_snapshots()):
@@ -39,7 +39,7 @@ def snapshot_post(volume_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     snapshot_task = volume.create_snapshot()
 
@@ -55,7 +55,7 @@ def snapshot_delete(volume_id, snapshot_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     snapshot = volume.get_snapshot(snapshot_id)
 
@@ -63,7 +63,7 @@ def snapshot_delete(volume_id, snapshot_id):
         return utils.jsonify({
             'error': SNAPSHOT_NOT_FOUND,
             'error_msg': SNAPSHOT_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     volume.remove_snapshot(snapshot)
 

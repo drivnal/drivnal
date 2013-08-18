@@ -17,7 +17,7 @@ def task_get(volume_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     tasks = []
 
@@ -47,7 +47,7 @@ def task_put(volume_id, task_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     task = Task(id=task_id.encode())
 

@@ -15,7 +15,7 @@ def object_get(volume_id, snapshot_id, path=None):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     if snapshot_id == 'origin':
         bucket = volume.origin
@@ -26,7 +26,7 @@ def object_get(volume_id, snapshot_id, path=None):
         return utils.jsonify({
             'error': SNAPSHOT_NOT_FOUND,
             'error_msg': SNAPSHOT_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     objects_dict = {}
     objects_name = []
@@ -37,7 +37,7 @@ def object_get(volume_id, snapshot_id, path=None):
         return utils.jsonify({
             'error': PATH_NOT_FOUND,
             'error_msg': error.strerror,
-        }), 404
+        }, 404)
 
     for object in bucket_objects:
         objects_dict[object.name] = {

@@ -25,7 +25,7 @@ def format_seconds(seconds):
     else:
         return '%.1f Days' % (seconds / 86400)
 
-def jsonify(data=None):
+def jsonify(data=None, status_code=None):
     if not isinstance(data, basestring):
         data = json.dumps(data)
 
@@ -36,4 +36,9 @@ def jsonify(data=None):
     else:
         mimetype = 'application/json'
 
-    return flask.Response(response=data, mimetype=mimetype)
+    response = flask.Response(response=data, mimetype=mimetype)
+
+    if status_code is not None:
+        response.status_code = status_code
+
+    return response

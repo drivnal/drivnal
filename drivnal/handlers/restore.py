@@ -18,7 +18,7 @@ def restore_post(volume_id, snapshot_id):
         return utils.jsonify({
             'error': VOLUME_NOT_FOUND,
             'error_msg': VOLUME_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     snapshot = volume.get_snapshot(snapshot_id)
 
@@ -26,7 +26,7 @@ def restore_post(volume_id, snapshot_id):
         return utils.jsonify({
             'error': SNAPSHOT_NOT_FOUND,
             'error_msg': SNAPSHOT_NOT_FOUND_MSG,
-        }), 404
+        }, 404)
 
     source_paths = flask.request.json['source_paths']
     destination_path = os.path.join(
