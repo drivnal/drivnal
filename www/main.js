@@ -93,7 +93,6 @@ require.config({
     shBrushSass: 'vendor/syntaxHighlighter/shBrushSass',
     shBrushScala: 'vendor/syntaxHighlighter/shBrushScala',
     shBrushSql: 'vendor/syntaxHighlighter/shBrushSql',
-    shBrushTAP: 'vendor/syntaxHighlighter/shBrushTAP',
     shBrushTypeScript: 'vendor/syntaxHighlighter/shBrushTypeScript',
     shBrushVb: 'vendor/syntaxHighlighter/shBrushVb',
     shBrushXml: 'vendor/syntaxHighlighter/shBrushXml',
@@ -131,7 +130,6 @@ require.config({
     shBrushSass: ['shCore'],
     shBrushScala: ['shCore'],
     shBrushSql: ['shCore'],
-    shBrushTAP: ['shCore'],
     shBrushTypeScript: ['shCore'],
     shBrushVb: ['shCore'],
     shBrushXml: ['shCore']

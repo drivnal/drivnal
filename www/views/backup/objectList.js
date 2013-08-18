@@ -242,13 +242,29 @@ define([
         this.collection.getPath());
       this.update();
     },
-    onView: function() {
+    onView: function(objectView) {
       if (this.textView && this.textView.$el.is(':visible')) {
         return;
       }
-      this.textView = new TextView();
-      this.$el.parent().prepend(this.textView.render().el);
-      this.updateSize();
+
+      var path = '';
+      if (this.collection.getPath()) {
+        path += this.collection.getPath() + '/';
+      }
+      path += objectView.model.get('id');
+
+      this.textView = new TextView({
+        id: path,
+        volume: this.collection.getVolume(),
+        snapshot: this.collection.getSnapshot()
+      });
+
+      this.textView.model.fetch({
+        success: function() {
+          this.$el.parent().prepend(this.textView.render().el);
+          this.updateSize();
+        }.bind(this)
+      });
     },
     onChangePath: function(path) {
       this.collection.setPath(path);

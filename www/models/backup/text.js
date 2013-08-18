@@ -5,9 +5,23 @@ define([
 ], function($, _, Backbone) {
   'use strict';
   var TextModel = Backbone.Model.extend({
-    defaults: {
-      'path': '/home/ubuntu/test.txt',
-      'data': 'Test text file'
+    initialize: function(options) {
+      this.volume = options.volume;
+      this.snapshot = options.snapshot;
+    },
+    url: function() {
+      var url = '/text/' + this.volume;
+
+      if (this.snapshot) {
+        url += '/' + this.snapshot;
+      }
+      else {
+        url += '/origin';
+      }
+
+      url += '/' + this.get('id');
+
+      return url;
     }
   });
 

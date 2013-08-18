@@ -105,7 +105,6 @@ module.exports = function(grunt) {
             shBrushSass: 'vendor/syntaxHighlighter/shBrushSass',
             shBrushScala: 'vendor/syntaxHighlighter/shBrushScala',
             shBrushSql: 'vendor/syntaxHighlighter/shBrushSql',
-            shBrushTAP: 'vendor/syntaxHighlighter/shBrushTAP',
             shBrushTypeScript: 'vendor/syntaxHighlighter/shBrushTypeScript',
             shBrushVb: 'vendor/syntaxHighlighter/shBrushVb',
             shBrushXml: 'vendor/syntaxHighlighter/shBrushXml',
@@ -159,7 +158,6 @@ module.exports = function(grunt) {
             shBrushSass: 'vendor/syntaxHighlighter/shBrushSass',
             shBrushScala: 'vendor/syntaxHighlighter/shBrushScala',
             shBrushSql: 'vendor/syntaxHighlighter/shBrushSql',
-            shBrushTAP: 'vendor/syntaxHighlighter/shBrushTAP',
             shBrushTypeScript: 'vendor/syntaxHighlighter/shBrushTypeScript',
             shBrushVb: 'vendor/syntaxHighlighter/shBrushVb',
             shBrushXml: 'vendor/syntaxHighlighter/shBrushXml',
@@ -213,7 +211,6 @@ module.exports = function(grunt) {
             shBrushSass: 'vendor/syntaxHighlighter/shBrushSass',
             shBrushScala: 'vendor/syntaxHighlighter/shBrushScala',
             shBrushSql: 'vendor/syntaxHighlighter/shBrushSql',
-            shBrushTAP: 'vendor/syntaxHighlighter/shBrushTAP',
             shBrushTypeScript: 'vendor/syntaxHighlighter/shBrushTypeScript',
             shBrushVb: 'vendor/syntaxHighlighter/shBrushVb',
             shBrushXml: 'vendor/syntaxHighlighter/shBrushXml',
@@ -368,9 +365,6 @@ module.exports = function(grunt) {
       'vendor/syntaxHighlighter/shBrushSql.js':
         'https://raw.github.com/alexgorbatchev/SyntaxHighlighter/master/' +
           'src/js/shBrushSql.js',
-      'vendor/syntaxHighlighter/shBrushTAP.js':
-        'https://raw.github.com/alexgorbatchev/SyntaxHighlighter/master/' +
-          'src/js/shBrushTAP.js',
       'vendor/syntaxHighlighter/shBrushTypeScript.js':
         'https://raw.github.com/alexgorbatchev/SyntaxHighlighter/master/' +
           'src/js/shBrushTypeScript.js',

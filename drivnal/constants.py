@@ -84,3 +84,6 @@ SNAPSHOT_NOT_FOUND = 'snapshot_not_found'
 SNAPSHOT_NOT_FOUND_MSG = 'Snapshot not found'
 
 PATH_NOT_FOUND = 'path_not_found'
+
+FILE_NOT_FOUND = 'file_not_found'
+FILE_NOT_FOUND_MSG = 'File not found'

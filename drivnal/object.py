@@ -1,5 +1,6 @@
 from constants import *
 import os
+import stat
 import urllib
 import subprocess
 import logging
@@ -17,13 +18,40 @@ class Object:
             self.time = None
         else:
             try:
-                stat = os.stat(self.path)
-                self.size = stat.st_size
-                self.time = stat.st_mtime
+                file_stat = os.stat(self.path)
+                self.size = file_stat.st_size
+                self.time = file_stat.st_mtime
+                self.readable = bool(file_stat.st_mode & stat.S_IROTH)
             except OSError:
                 self.size = None
                 self.time = None
+                self.readable = False
             self.type = None
+
+    def get_mime_type(self):
+        try:
+            # TODO Follow symlinks
+            self.type = subprocess.check_output(['file',
+                '--mime-type', '--brief', self.path]).strip()
+        except subprocess.CalledProcessError, error:
+            logger.warning('File mime-type call failed. %r' % {
+                'return_code': error.returncode,
+                'output': error.output,
+            })
+
+    def read(self):
+        # TODO
+        # if self.readable:
+        #     return None
+
+        try:
+            with open(self.path) as file_data:
+                return file_data.read()
+        except OSError, error:
+            logger.warning('Failed to read file. %r' % {
+                'error': error,
+            })
+            return None
 
     @staticmethod
     def get_objects(path):
