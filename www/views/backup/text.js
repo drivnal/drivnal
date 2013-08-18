@@ -2,9 +2,12 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'shCore',
+  'shBrushJScript',
   'models/backup/text',
   'text!templates/backup/text.html'
-], function($, _, Backbone, TextModel, textTemplate) {
+], function($, _, Backbone, SyntaxHighlighter, shBrushJScript,
+    TextModel, textTemplate) {
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
@@ -19,8 +22,8 @@ define([
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
+      SyntaxHighlighter.highlight(null, this.$('pre')[0]);
       this.$el.fadeIn(400);
-
       return this;
     },
     addIconWhite: function(evt) {

@@ -111,7 +111,8 @@ define([
 
       this.past.$('.object-list-box').height(innerHeight - 137);
       this.origin.$('.object-list-box').height(innerHeight - 137);
-      this.$('.object-drop, .text-viewer-box').height(innerHeight - 98);
+      this.$('.object-drop').height(innerHeight - 98);
+      this.$('.text-viewer-box .syntaxhighlighter').height(innerHeight - 140);
 
       this.$('.object-list-box .title-header').width(objectWidth);
       this.$('.object-list-box .title-col-box').width(objectWidth - 22);
