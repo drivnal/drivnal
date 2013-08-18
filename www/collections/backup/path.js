@@ -9,8 +9,12 @@ define([
     model: PathModel,
     url: function() {
       var url = '/path';
-      if (this.getPath() && this.getPath() !== '/') {
-        url += '/' + this.getPath().slice(1);
+      var path = this.getPath();
+      if (path && path !== '/') {
+        if (path.substr(0, 1) !== '/') {
+          path = '/' + path;
+        }
+        url += path;
       }
       return url;
     },
