@@ -6135,6 +6135,17 @@ button:focus {
 .syntaxhighlighter table td.code .line {
   padding: 0 2px !important;
 }
+.syntaxhighlighter table td.gutter .line {
+  padding: 0 5px !important;
+}
+.syntaxhighlighter table td.code .container textarea {
+  color: #222222 !important;
+  padding-top: 3px !important;
+  padding-left: 2px !important;
+}
+.syntaxhighlighter table td.code .container textarea:focus {
+  box-shadow: none !important;
+}
 .about .logos {
   margin: 10px;
 }
@@ -6763,7 +6774,7 @@ button:focus {
   border-style: solid;
   border-width: 1px;
   pointer-events: none;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0px 0px 5px 1px #b0b0b0;
   padding: 7px 7px 7px 12px;
   cursor: pointer;
@@ -6787,6 +6798,11 @@ button:focus {
   background-color: #0072e6;
   padding: 10px;
   height: 20px;
+}
+.backup .text-viewer-box .title .snapshot-text {
+  font-size: 0.6em;
+  float: right;
+  margin-right: 5px;
 }
 .backup .text-viewer-box .title .close-viewer {
   margin: 3px 0 0 0;
