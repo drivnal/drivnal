@@ -219,6 +219,69 @@ define([
   };
   routes['GET+object'] = objectGet;
 
+  var textGet = function(request, volumeId) {
+    var i;
+    var x;
+    var object;
+    var pathList = [];
+    var objects = demoData.objects;
+    var notFound;
+    var sourcePathList = demoData.volumes[volumeId].source_path.split('/');
+
+    for (i = 0; i < sourcePathList.length; i++) {
+      if (sourcePathList[i]) {
+        pathList.push(sourcePathList[i]);
+      }
+    }
+
+    for (i = 3; i < arguments.length; i++) {
+      pathList.push(arguments[i]);
+    }
+
+    var fileName = pathList.pop();
+
+    for (i = 0; i < pathList.length; i++) {
+      notFound = true;
+      for (x = 0; x < objects.length; x++) {
+        if (pathList[i] === objects[x].id && objects[x].objects) {
+          objects = objects[x].objects;
+          notFound = false;
+          break;
+        }
+      }
+      if (notFound) {
+        request.error({
+          status: 404,
+        });
+        break;
+      }
+    }
+
+    for (i = 0; i < objects.length; i++) {
+      if (objects[i].id === fileName) {
+        object = objects[i];
+        break;
+      }
+    }
+
+    if (!object) {
+      request.error({
+        status: 404,
+      });
+      return;
+    }
+
+    setTimeout(function() {
+      request.success({
+        id: fileName,
+        type: object.type,
+        syntax: object.syntax,
+        data: demoData.objectsText[object.syntax]
+      });
+    }, responseDelay);
+  };
+  routes['GET+text'] = textGet;
+
   var taskGet = function(request, volumeId) {
     var i;
     var task;
