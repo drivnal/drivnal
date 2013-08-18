@@ -21,5 +21,6 @@ debuild -S
 
 cd ..
 
-dput ppa:drivnal/ppa/ubuntu/lucid drivnal_$VERSION-0ubuntu1_source.changes
-dput ppa:drivnal/ppa/ubuntu/raring drivnal_$VERSION-0ubuntu2_source.changes
+echo '\n\nRUN COMMANDS BELOW TO UPLOAD:'
+echo 'sudo dput ppa:drivnal/ppa/ubuntu/lucid ../build/debian/drivnal_$VERSION-0ubuntu1_source.changes'
+echo 'sudo dput ppa:drivnal/ppa/ubuntu/raring ../build/debian/drivnal_$VERSION-0ubuntu2_source.changes'
