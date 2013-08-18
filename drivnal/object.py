@@ -41,7 +41,7 @@ class Object:
                 self.type = subprocess.check_output(['file',
                     '--mime-type', '--brief', self.path]).strip()
             except subprocess.CalledProcessError, error:
-                logger.warning('File mime-type call failed. %r' % {
+                logger.debug('File mime-type call failed. %r' % {
                     'return_code': error.returncode,
                     'output': error.output,
                 })
@@ -90,7 +90,7 @@ class Object:
             mime_types = subprocess.check_output(['file',
                 '--mime-type', '--brief'] + object_paths).splitlines()
         except subprocess.CalledProcessError, error:
-            logger.warning('File mime-type call failed. %r' % {
+            logger.debug('File mime-type call failed. %r' % {
                 'return_code': error.returncode,
                 'output': error.output,
             })
