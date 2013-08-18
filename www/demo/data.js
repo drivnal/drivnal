@@ -12,7 +12,7 @@ define([], function() {
       source_path: '/home/ubuntu',
       percent_used: 0.3112,
       excludes: [
-        '.cache'
+        '/.cache'
       ],
       schedule: '1day',
       min_free_space: 0.1,
