@@ -209,7 +209,13 @@ button:focus {
 }
 
 .syntaxhighlighter table td.code .container {
-  padding: 3px 0 3px 0 !important;
+  top: 0 !important;
+  position: absolute !important;
+  padding: 3px 0 0 0 !important;
+}
+
+.syntaxhighlighter .gutter {
+  padding-top: 3px !important;
 }
 
 .syntaxhighlighter .gutter .line {
@@ -221,12 +227,12 @@ button:focus {
 }
 
 .syntaxhighlighter table td.gutter .line {
-  padding: 0 5px !important;
+  padding: 0 4px !important;
 }
 
 .syntaxhighlighter table td.code .container textarea {
   color: @darker-fg !important;
-  padding-top: 3px !important;
+  padding-top: 0 !important;
   padding-left: 2px !important;
 }
 
