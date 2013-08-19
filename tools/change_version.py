@@ -19,3 +19,8 @@ for file_path in ['build_arch.sh', 'vagrant_build_ubuntu.sh']:
         if 'VERSION=' in line:
             line = 'VERSION=\'%s\'' % VERSION
         print line.rstrip('\n')
+
+for line in fileinput.input('../debian/changelog', inplace=True):
+    if 'drivnal (' in line:
+        line = 'drivnal (%s-0ubuntu1) unstable; urgency=low' % VERSION
+    print line.rstrip('\n')
