@@ -16,7 +16,7 @@ mkdir -p /var/lib/drivnal
 cp /vagrant/tools/vagrant_dput.cf /etc/dput.cf
 cp /vagrant/tools/vagrant_collection3.conf /etc/apache2/conf.d/collection3.conf
 
-service apache2 restart
+service apache2 restart 1> /dev/null
 
 cp /vagrant/tools/vagrant_drivnal.py /usr/bin/drivnal
 cp /vagrant/tools/vagrant_drivnal.db /var/lib/drivnal/drivnal.db
