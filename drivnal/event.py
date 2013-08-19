@@ -84,8 +84,8 @@ class Event:
                 server.app_db.remove('events', event_id)
                 continue
 
-            # Remove events after 3 minutes
-            if (cur_time - event['time']) > 180000:
+            # Remove events after 61 seconds
+            if (cur_time - event['time']) > 61000:
                 server.app_db.remove('events', event_id)
                 continue
 
