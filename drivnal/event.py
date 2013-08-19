@@ -76,7 +76,7 @@ class Event:
             event = events_query[event_id]
 
             # Remove broken events
-            if not Event._validate(event, cur_time):
+            if not Event._validate(event):
                 logger.debug('Removing broken event from database. %r' % {
                     'volume_id': volume.id,
                     'event_id': event_id,
