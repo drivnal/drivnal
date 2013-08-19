@@ -6127,7 +6127,12 @@ button:focus {
   overflow-y: scroll !important;
 }
 .syntaxhighlighter table td.code .container {
-  padding: 3px 0 3px 0 !important;
+  top: 0 !important;
+  position: absolute !important;
+  padding: 3px 0 0 0 !important;
+}
+.syntaxhighlighter .gutter {
+  padding-top: 3px !important;
 }
 .syntaxhighlighter .gutter .line {
   border-right: 1px solid #e5e5e5 !important;
@@ -6136,11 +6141,11 @@ button:focus {
   padding: 0 2px !important;
 }
 .syntaxhighlighter table td.gutter .line {
-  padding: 0 5px !important;
+  padding: 0 4px !important;
 }
 .syntaxhighlighter table td.code .container textarea {
   color: #222222 !important;
-  padding-top: 3px !important;
+  padding-top: 0 !important;
   padding-left: 2px !important;
 }
 .syntaxhighlighter table td.code .container textarea:focus {
