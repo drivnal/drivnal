@@ -1,4 +1,4 @@
-VERSION='0.1.10'
+VERSION='0.1.11'
 
 mkdir -p ../build/arch_linux
 cd ../build/arch_linux
