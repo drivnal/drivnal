@@ -38,7 +38,10 @@ class Task:
 
     def __setattr__(self, name, value):
         if name == 'thread':
-            task_threads[self.id] = value
+            if value is None:
+                task_threads.pop(self.id, None)
+            else:
+                task_threads[self.id] = value
         elif name in _STR_DATABASE_VARIABLES:
             server.app_db.set('tasks', self.id, name, value)
         elif name in _INT_DATABASE_VARIABLES:
@@ -130,11 +133,6 @@ class Task:
         if self.state not in [PENDING, ABORTING]:
             return
 
-        logger.debug('Updating task state. %r' % {
-            'volume_id': self.volume_id,
-            'task_id': self.id,
-        })
-
         if not self.thread or not self.thread.is_alive():
             logger.warning('Task failed, thread ended unexpectable. %r' % {
                 'volume_id': self.volume_id,
@@ -148,7 +146,7 @@ class Task:
             return False
 
         try:
-            data_time = int(data['time'])
+            data['time'] = int(data['time'])
         except ValueError:
             return False
 
@@ -186,8 +184,6 @@ class Task:
                 server.app_db.remove('tasks', task_id)
                 continue
 
-            task['time'] = int(task['time'])
-
             if type and task['type'] != type:
                 continue
             if task['volume_id'] != volume.id:
@@ -224,6 +220,10 @@ class Task:
 
     @staticmethod
     def get_pending_tasks(volume, type=None):
+        # Valid pending tasks will always be in task_threads if
+        # empty assume there are no pending tasks
+        if not len(task_threads):
+            return []
         return Task._get_tasks(volume, type, [PENDING, ABORTING])
 
     @staticmethod

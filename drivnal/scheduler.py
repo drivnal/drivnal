@@ -16,7 +16,7 @@ class Scheduler:
             localtime = time.localtime()
 
             if localtime.tm_min == last_check:
-                time.sleep(0.5)
+                time.sleep(1)
                 continue
 
             last_check = localtime.tm_min

@@ -48,7 +48,7 @@ class Event:
             return False
 
         try:
-            data_time = int(data['time'])
+            data['time'] = int(data['time'])
         except ValueError:
             return False
 
@@ -65,6 +65,7 @@ class Event:
         events = []
         events_dict = {}
         events_time = []
+        cur_time = int(time.time() * 1000)
 
         logger.debug('Getting events for volume. %r' % {
             'volume_id': volume.id,
@@ -75,7 +76,7 @@ class Event:
             event = events_query[event_id]
 
             # Remove broken events
-            if not Event._validate(event):
+            if not Event._validate(event, cur_time):
                 logger.debug('Removing broken event from database. %r' % {
                     'volume_id': volume.id,
                     'event_id': event_id,
@@ -83,7 +84,10 @@ class Event:
                 server.app_db.remove('events', event_id)
                 continue
 
-            event['time'] = int(event['time'])
+            # Remove events after 3 minutes
+            if (cur_time - event['time']) > 180000:
+                server.app_db.remove('events', event_id)
+                continue
 
             if event['time'] <= last_time:
                 continue

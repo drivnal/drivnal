@@ -10,9 +10,6 @@ import logging
 logger = logging.getLogger(APP_NAME)
 
 class Client:
-    def __init__(self):
-        pass
-
     def __getattr__(self, name):
         if name in ['volumes']:
             self.load()
@@ -66,6 +63,7 @@ class Client:
                 logger.error('Failed to normalize volume path. %r' % {
                     'volume_num': i,
                 })
+
             try:
                 volume = Volume(self, volume_path)
                 self.volumes.append(volume)
