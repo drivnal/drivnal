@@ -35,7 +35,7 @@ class Volume:
 
         if not self.id:
             self.id = uuid.uuid4().hex
-            logger.debug('Generated and setting volume uuid. %r' % {
+            logger.debug('Setting new volume uuid. %r' % {
                 'volume_id': self.id,
             })
             self.commit()
