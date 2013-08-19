@@ -19,7 +19,7 @@ def event_get(volume_id, last_event):
     if not last_event:
         events = [
             {
-                'id': uuid.uuid1().hex,
+                'id': uuid.uuid4().hex,
                 'type': 'time',
                 'time': int(time.time() * 1000),
             },

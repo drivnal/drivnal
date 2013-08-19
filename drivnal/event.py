@@ -12,7 +12,7 @@ _INT_DATABASE_VARIABLES = ['time']
 class Event:
     def __init__(self, id=None, volume_id=None, type=None):
         if id is None:
-            self.id = uuid.uuid1().hex
+            self.id = uuid.uuid4().hex
             self.type = type
             self.time = int(time.time() * 1000)
             self.volume_id = None

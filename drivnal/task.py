@@ -15,7 +15,7 @@ _INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
 class Task:
     def __init__(self, id=None, volume=None, snapshot=None):
         if id is None:
-            self.id = uuid.uuid1().hex
+            self.id = uuid.uuid4().hex
             self.type = None
             self.state = None
             self.time = None
