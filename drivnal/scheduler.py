@@ -28,6 +28,9 @@ class Scheduler:
     def _check_volume_schedule(self, localtime, volume):
         schedule = volume.schedule
 
+        if schedule == 'none':
+            return
+
         try:
             time_num = int(''.join([x for x in schedule if x.isdigit()]))
         except ValueError:
