@@ -25,6 +25,11 @@ TASKS_UPDATED = 'tasks_updated'
 SNAPSHOT_DIR = 'snapshots'
 LOG_DIR = 'logs'
 
+MATCH_ALL = 'match_all'
+MATCH_BOTH = 'match_both'
+MATCH_PREFIX = 'match_prefix'
+MATCH_SUFFIX = 'match_suffix'
+
 DEFAULT_MAX_PRUNE = 0.8
 DEFAULT_MAX_RETRY = 3
 DEFAULT_DB_PATH = '/var/lib/drivnal/drivnal.db'
@@ -76,6 +81,7 @@ WEEKDAY_UNITS = {
     'sun': 6,
     'su': 6,
 }
+
 EXTENSION_TYPES = {
     'scpt': 'applescript',
     'applescript': 'applescript',
@@ -147,6 +153,7 @@ EXTENSION_TYPES = {
     'xslt': 'xml',
     'md': 'plain',
 };
+
 # Mime match string, syntax type
 MIME_TYPES = [
     ('actionscript', 'actionscript3'),
@@ -163,6 +170,15 @@ MIME_TYPES = [
     ('html', 'html'),
     ('diff', 'diff'),
     ('xml', 'xml'),
+];
+
+# Filename match string, syntax type
+FILENAME_TYPES = [
+    ('vagrantfile', 'ruby', MATCH_ALL),
+    ('pkgbuild', 'bash', MATCH_ALL),
+    ('bash', 'bash', MATCH_ALL),
+    ('xml', 'xml', MATCH_ALL),
+    ('rc', 'bash', MATCH_SUFFIX),
 ];
 
 VOLUME_NOT_FOUND = 'volume_not_found'

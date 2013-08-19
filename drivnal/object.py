@@ -29,12 +29,7 @@ class Object:
                 self.time = None
             self.type = None
 
-    def get_syntax(self):
-        extension = os.path.splitext(self.path)[1].lower().replace('.', '')
-        if extension in EXTENSION_TYPES:
-            self.syntax = EXTENSION_TYPES[extension]
-            return
-
+    def get_mime_type(self):
         if not self.type:
             try:
                 # TODO Follow symlinks
@@ -45,13 +40,42 @@ class Object:
                     'return_code': error.returncode,
                     'output': error.output,
                 })
+        return self.type
 
-        if not self.type:
+    def get_syntax(self):
+        if self.type == DIR_MIME_TYPE:
             return
 
-        for mime_type, syntax in MIME_TYPES:
-            if mime_type in self.type.lower():
+        extension = os.path.splitext(self.path)[1].lower().replace('.', '')
+        if extension in EXTENSION_TYPES:
+            self.syntax = EXTENSION_TYPES[extension]
+            return self.syntax
+
+        for match, syntax, match_type in FILENAME_TYPES:
+            name = self.name.lower()
+
+            if match_type == MATCH_ALL:
+                if match in name:
+                    self.syntax = syntax
+                    return self.syntax
+                continue
+
+            if match_type == MATCH_BOTH or match_type == MATCH_PREFIX:
+                if name.startswith(match):
+                    self.syntax = syntax
+                    return self.syntax
+                if match_type == MATCH_PREFIX:
+                    continue
+
+            if name.endswith(match):
                 self.syntax = syntax
+                return self.syntax
+
+        if self.get_mime_type():
+            for mime_type, syntax in MIME_TYPES:
+                if mime_type in self.type.lower():
+                    self.syntax = syntax
+                    return self.syntax
 
     def read(self):
         # TODO
