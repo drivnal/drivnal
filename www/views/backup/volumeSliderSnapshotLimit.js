@@ -19,10 +19,22 @@ define([
     onInputChange: function() {
       var value = this.$('input').val();
       value = parseInt(value, 10) || 0;
+      if (value >= 1 && value <= 2) {
+        value = 3;
+      }
       this.$('.slider').slider('value', value);
     },
     onSliderEvent: function(evt, ui) {
       var value = ui.value;
+
+      if (value === 1) {
+        value = 3;
+        this.$('.slider').slider('value', value);
+      }
+      else if (value === 2) {
+        value = 0;
+        this.$('.slider').slider('value', value);
+      }
 
       if (value === 0) {
         this.$('input').val('None');
