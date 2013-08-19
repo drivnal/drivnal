@@ -18,8 +18,8 @@ Open http://localhost:6500/
 ```
 $ git clone https://github.com/drivnal/drivnal.git
 $ cd drivnal
-$ vagrant up
-$ vagrant ssh
+$ vagrant up testing
+$ vagrant ssh testing
 $ sudo drivnal
 Open http://localhost:6500/
 Open http://localhost:8080/collectd
