@@ -67,16 +67,22 @@ class CreateSnapshot(Task):
                 'not exists.')
 
     def _prune_snapshot(self, snapshot):
-        self.volume.remove_snapshot(snapshot, block=True)
+        keep_log = False
+        if snapshot.state == FAILED:
+            keep_log = True
+        self.volume.remove_snapshot(snapshot, keep_log, True)
 
     def prune_snapshots(self, min_size=None):
+        snapshots = self.volume.get_snapshots()
+        failed_snapshots = self.volume.get_failed_snapshots()
         snapshot_count = self.volume.get_snapshot_count()
-        min_free_space = self.volume.min_free_space
         snapshot_limit = self.volume.snapshot_limit
+        min_free_space = self.volume.min_free_space
+        orig_free_space = self.volume.get_space_free()
+        prune_count = 0
         max_prune = self.volume.max_prune or DEFAULT_MAX_PRUNE
         max_prune_count = (int(self.orig_snapshot_count * max_prune) -
             (self.orig_snapshot_count - snapshot_count))
-        orig_free_space = self.volume.get_space_free()
 
         logger.debug('Pruning snapshots. %r' % {
             'volume_id': self.volume_id,
@@ -85,7 +91,7 @@ class CreateSnapshot(Task):
 
         if snapshot_limit:
             for i in xrange((snapshot_count + 1) - snapshot_limit):
-                snapshot = self.volume.snapshots.pop(0)
+                snapshot = snapshots.pop(0)
                 logger.info('Exceeding snapshot limit, auto removing ' + \
                     'snapshot. %r' % {
                         'volume_id': self.volume_id,
@@ -94,24 +100,22 @@ class CreateSnapshot(Task):
                     })
                 self._prune_snapshot(snapshot)
 
+        # If a min space needed is set and percent of volume is greater then
+        # min_free_space use the percent needed + 0.02 for min free space
+        if min_size:
+            path_stat = os.statvfs(self.volume.path)
+            percent_needed = (min_size / float(
+                path_stat.f_bsize * path_stat.f_blocks)) + 0.02
+
+            if not min_free_space or percent_needed > min_free_space:
+                min_free_space = percent_needed
+
         if not min_free_space:
             return True
 
-        # If a min space needed is set and percent of volume is greater then
-        # min_free_space use the percent needed + 0.01 for min free space
-        percent_needed = None
-        if min_size:
-            path_stat = os.statvfs(self.volume.path)
-            percent_needed = min_size / float(
-                path_stat.f_bsize * path_stat.f_blocks) + 0.01
-
-            if percent_needed > min_free_space:
-                min_free_space = percent_needed
-
-        for snapshot in self.volume.get_failed_snapshots():
+        for snapshot in failed_snapshots:
             if self.volume.get_space_free() >= min_free_space:
-                return False
-            snapshot = self.volume.snapshots.pop(0)
+                return True
             logger.info('Auto removing failed snapshot. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
@@ -121,18 +125,20 @@ class CreateSnapshot(Task):
 
         # Remove up to the max prune count of volumes until required free
         # space has been reached
-        for i in xrange(max_prune_count):
+        for snapshot in snapshots:
             if self.volume.get_space_free() >= min_free_space:
-                return False
-            snapshot = self.volume.snapshots.pop(0)
+                return True
             logger.info('Volume low on space, auto removing snapshot. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
                 'removing_snapshot_id': snapshot.id,
             })
             self._prune_snapshot(snapshot)
+            prune_count += 1
+            if prune_count >= max_prune_count:
+                break
 
-        if orig_free_space != self.volume.get_space_free():
+        if self.volume.get_space_free() >= min_free_space:
             return True
         return False
 
@@ -309,7 +315,7 @@ class CreateSnapshot(Task):
                     destination_path, log_path)
                 if no_space_error and i <= max_retry:
                     # If prune was able to free up space try again
-                    if self.prune_snapshots():
+                    if self.prune_snapshots(last_file_size):
                         logger.warning('Snapshot did not have required ' + \
                             'free space, retrying snapshot. %r' % {
                                 'volume_id': self.volume_id,
