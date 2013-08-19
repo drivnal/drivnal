@@ -70,7 +70,7 @@ define([
       this.listenTo(volumeView, 'updateSize', this.updateSize);
       this.listenTo(volumeView, 'updateOrigin', function() {
         // Only update origin for current volume
-        if (volumeView.model.get(
+        if (this.currentVolume && volumeView.model.get(
             'id') === this.currentVolume.model.get('id')) {
           this.trigger('updateOrigin');
         }
