@@ -258,7 +258,9 @@ class CreateSnapshot(Task):
                 'snapshot_id': self.snapshot_id,
                 'task_id': self.id,
             })
-            excludes.append(self.volume.path.replace(rsync_source_path, '', 1))
+            path = os.path.normpath(self.volume.path.replace(
+                rsync_source_path, '', 1)) + os.sep
+            excludes.append(path)
 
         if excludes:
             for exclude in excludes:
