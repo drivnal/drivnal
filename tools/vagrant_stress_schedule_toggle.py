@@ -1,3 +1,4 @@
+"""Toggle scheduling for vagrant stress testing volumes."""
 import fileinput
 
 for i in xrange(1, 9):

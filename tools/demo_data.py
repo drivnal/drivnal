@@ -1,3 +1,4 @@
+"""Generate demo data for webapp demo."""
 import os
 import pprint
 import urllib
