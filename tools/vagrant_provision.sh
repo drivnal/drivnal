@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-apt-get update
+apt-get update -qq 1> /dev/null
 
 # Dev requirements
-apt-get install -y python-flask python-cherrypy3
+apt-get install -qq -y python-flask python-cherrypy3 1> /dev/null
 
 # Build requirements
-apt-get install -y devscripts debhelper python-all python-setuptools
+apt-get install -qq -y devscripts debhelper python-all python-setuptools 1> /dev/null
 
 # Collectd
-apt-get install -y collectd apache2 librrds-perl libconfig-general-perl libregexp-common-perl
+apt-get install -qq -y collectd apache2 librrds-perl libconfig-general-perl libregexp-common-perl 1> /dev/null
 
 mkdir -p /media/backup
 mkdir -p /var/lib/drivnal
