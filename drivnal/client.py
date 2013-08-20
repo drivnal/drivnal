@@ -56,7 +56,6 @@ class Client:
 
         for i, volume_path in enumerate(
                 server.app_db.get('system', 'volumes')):
-
             try:
                 volume_path = os.path.normpath(volume_path)
             except AttributeError:

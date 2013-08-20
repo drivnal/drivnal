@@ -1,4 +1,5 @@
 from constants import *
+from exceptions import *
 from task import Task
 from event import Event
 import os
@@ -48,7 +49,7 @@ class CreateSnapshot(Task):
                         file_stat = os.stat(file_path)
                         return (no_space_error, file_stat.st_size)
                     except OSError:
-                        logger.warning('Failed to get size of file, ' + \
+                        logger.exception('Failed to get size of file, ' + \
                             'that caused no space error. %r' % {
                                 'volume_id': self.volume_id,
                                 'snapshot_id': self.snapshot_id,
@@ -192,7 +193,7 @@ class CreateSnapshot(Task):
             destination_path = os.path.join(self.volume.path,
                 SNAPSHOT_DIR, str(self.snapshot_id))
         except AttributeError:
-            logger.error('Failed to join snapshot destination path. %r' % {
+            logger.exception('Failed to join snapshot destination path. %r' % {
                 'volume_id': self.volume_id,
                 'snapshot_id': self.snapshot_id,
                 'task_id': self.id,
@@ -278,12 +279,14 @@ class CreateSnapshot(Task):
         for path in [destination_path, destination_path_temp,
                 destination_path_failed]:
             if os.path.isdir(path):
-                raise OSError('Snapshot failed, snapshot ' + \
+                logger.error('Snapshot failed, snapshot ' + \
                     'path already exists. %r' % {
                         'volume_id': self.volume_id,
                         'snapshot_id': self.snapshot_id,
                         'task_id': self.id,
+                        'path': path,
                     })
+                raise SnapshotError
 
         self.prune_snapshots()
 
@@ -327,14 +330,14 @@ class CreateSnapshot(Task):
                 try:
                     os.rename(destination_path_temp, destination_path_failed)
                 except OSError:
-                    logger.error('Unable to rename failed snapshot. %r' % {
+                    logger.exception('Unable to rename failed snapshot. %r' % {
                         'volume_id': self.volume_id,
                         'snapshot_id': self.snapshot_id,
                         'task_id': self.id,
                     })
 
                 if no_space_error:
-                    raise OSError('Snapshot failed, unable ' + \
+                    logger.error('Snapshot failed, unable ' + \
                         'to free up required space. %r' % {
                             'volume_id': self.volume_id,
                             'snapshot_id': self.snapshot_id,
@@ -342,8 +345,9 @@ class CreateSnapshot(Task):
                             'cmd_args': args,
                             'return_code': return_code,
                         })
+                    raise SnapshotError
                 else:
-                    raise OSError('Snapshot failed, command ' + \
+                    logger.error('Snapshot failed, command ' + \
                         'returned non-zero exit status. %r' % {
                             'volume_id': self.volume_id,
                             'snapshot_id': self.snapshot_id,
@@ -351,18 +355,19 @@ class CreateSnapshot(Task):
                             'cmd_args': args,
                             'return_code': return_code,
                         })
+                    raise SnapshotError
             break
 
         try:
             os.rename(destination_path_temp, destination_path)
         except OSError:
-            logging.error('Snapshot failed, unable to rename ' + \
+            logger.exception('Snapshot failed, unable to rename ' + \
                 'snapshot temp directory. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
                     'task_id': self.id,
                 })
-            raise
+            raise SnapshotError
 
         self.state = COMPLETE
         Event(type=VOLUMES_UPDATED)
