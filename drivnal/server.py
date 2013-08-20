@@ -79,6 +79,21 @@ class Server:
         self._setup_handlers()
         self._setup_static_handler()
 
+    def _run_wsgi(self):
+        import cherrypy.wsgiserver
+
+        logger.info('Starting server...')
+
+        server = cherrypy.wsgiserver.CherryPyWSGIServer(
+            (self.config.bind_addr, int(self.config.port)), self.app)
+        try:
+            server.start()
+        except (KeyboardInterrupt, SystemExit), exc:
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
+            self._stop_scheduler()
+            logger.info('Stopping server...')
+            server.stop()
+
     def _run_wsgi_debug(self):
         logger.info('Starting debug server...')
 
@@ -94,21 +109,6 @@ class Server:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self._stop_scheduler()
             logger.info('Stopping server...')
-
-    def _run_wsgi(self):
-        import cherrypy.wsgiserver
-
-        logger.info('Starting server...')
-
-        server = cherrypy.wsgiserver.CherryPyWSGIServer(
-            (self.config.bind_addr, int(self.config.port)), self.app)
-        try:
-            server.start()
-        except (KeyboardInterrupt, SystemExit), exc:
-            signal.signal(signal.SIGINT, signal.SIG_IGN)
-            self._stop_scheduler()
-            logger.info('Stopping server...')
-            server.stop()
 
     def _run_server(self):
         if self.config.debug == 'true':
