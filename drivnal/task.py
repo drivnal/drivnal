@@ -40,7 +40,8 @@ class Task:
     def __setattr__(self, name, value):
         if name == 'thread':
             if value is None:
-                task_threads.pop(self.id, None)
+                if self.id in task_threads:
+                    del task_threads[self.id]
             else:
                 task_threads[self.id] = value
         elif name in _STR_DATABASE_VARIABLES:
