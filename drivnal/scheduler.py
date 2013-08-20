@@ -42,7 +42,7 @@ class Scheduler:
             })
 
     def _check_volume_schedule(self, localtime, volume):
-        schedule = volume.schedule
+        schedule = volume.schedule.lower()
 
         if schedule == 'none':
             return
@@ -51,7 +51,7 @@ class Scheduler:
             time_num = int(''.join([x for x in schedule if x.isdigit()]))
         except ValueError:
             time_num = None
-        time_unit = ''.join([x for x in schedule if x.isalpha()]).lower()
+        time_unit = ''.join([x for x in schedule if x.isalpha()])
 
         if time_unit in WEEKDAY_UNITS:
             if (localtime.tm_hour == 4 and
