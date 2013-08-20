@@ -171,7 +171,7 @@ class Volume:
             except AttributeError:
                 logger.error('Failed to normalize volume exclude path. %r' % {
                     'volume_id': self.id,
-                    'exclude_num': i,
+                    'path': exclude,
                 })
         self.schedule = self.config.schedule
 

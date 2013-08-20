@@ -19,22 +19,21 @@ class Client:
         logger.debug('Loading client volumes.')
         volumes = []
 
-        for i, volume_path in enumerate(
-                server.app_db.get('system', 'volumes')):
+        for i, path in enumerate(server.app_db.get('system', 'volumes')):
             try:
-                volume_path = os.path.normpath(volume_path)
+                path = os.path.normpath(path)
             except AttributeError:
                 logger.error('Failed to normalize volume path. %r' % {
-                    'volume_num': i,
+                    'path': path,
                 })
                 continue
 
             try:
-                volume = Volume(volume_path)
+                volume = Volume(path)
                 volumes.append(volume)
             except IOError:
                 logger.debug('Failed to load volume. %r' % {
-                    'volume_num': i,
+                    'path': path,
                 })
 
         return volumes
@@ -48,6 +47,7 @@ class Client:
 
         logger.debug('Adding volume path to database. %r' % {
             'volume_id': volume.id,
+            'path': path,
         })
         server.app_db.set('system', 'volumes', volume.path, None)
 
