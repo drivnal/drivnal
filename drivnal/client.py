@@ -63,6 +63,7 @@ class Client:
                 logger.error('Failed to normalize volume path. %r' % {
                     'volume_num': i,
                 })
+                continue
 
             try:
                 volume = Volume(self, volume_path)

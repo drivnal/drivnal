@@ -278,7 +278,7 @@ class CreateSnapshot(Task):
         for path in [destination_path, destination_path_temp,
                 destination_path_failed]:
             if os.path.isdir(path):
-                raise SnapshotPathExists('Snapshot failed, snapshot ' + \
+                raise OSError('Snapshot failed, snapshot ' + \
                     'path already exists. %r' % {
                         'volume_id': self.volume_id,
                         'snapshot_id': self.snapshot_id,

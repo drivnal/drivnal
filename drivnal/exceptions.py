@@ -6,6 +6,3 @@ class SnapshotPermissionError(SnapshotError):
 
 class SnapshotAlreadyRunning(SnapshotError):
     pass
-
-class SnapshotPathExists(SnapshotError):
-    pass

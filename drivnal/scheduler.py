@@ -1,8 +1,11 @@
 from constants import *
+from exceptions import *
 from client import Client
 import time
 import logging
 import threading
+
+logger = logging.getLogger(APP_NAME)
 
 class Scheduler:
     def __init__(self):
@@ -20,10 +23,20 @@ class Scheduler:
                 continue
 
             last_check = localtime.tm_min
-            self.check_schedule(localtime)
+            try:
+                self.check_schedule(localtime)
+            except:
+                logger.exception('Scheduler failed to check schedule.')
 
     def _create_snapshot(self, volume):
-        volume.create_snapshot()
+        try:
+            volume.create_snapshot()
+        except SnapshotAlreadyRunning:
+            pass
+        except:
+            logger.exception('Scheduler failed to call create_snapshot. %r' % {
+                'volume_id': volume.id,
+            })
 
     def _check_volume_schedule(self, localtime, volume):
         schedule = volume.schedule
