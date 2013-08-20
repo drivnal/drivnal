@@ -11,6 +11,7 @@ task_threads = {}
 
 _STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
 _INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
+_CACHED_DATABASE_VARIABLES = ['volume_id', 'type', 'time', 'snapshot_id']
 
 class Task:
     def __init__(self, id=None, volume=None, snapshot=None):
@@ -49,6 +50,9 @@ class Task:
         else:
             self.__dict__[name] = value
 
+        if name in _CACHED_DATABASE_VARIABLES:
+            self.__dict__[name] = value
+
         if name == 'state' and value:
             Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
@@ -57,6 +61,8 @@ class Task:
             if self.id not in task_threads:
                 return None
             return task_threads[self.id]
+        elif name in _CACHED_DATABASE_VARIABLES and name in self.__dict__:
+            return self.__dict__[name]
         elif name in _STR_DATABASE_VARIABLES:
             return server.app_db.get('tasks', self.id, name)
         elif name in _INT_DATABASE_VARIABLES:

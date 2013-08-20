@@ -8,6 +8,7 @@ logger = logging.getLogger(APP_NAME)
 
 _STR_DATABASE_VARIABLES = ['volume_id', 'type']
 _INT_DATABASE_VARIABLES = ['time']
+_CACHED_DATABASE_VARIABLES = ['volume_id', 'type', 'time']
 
 class Event:
     def __init__(self, id=None, volume_id=None, type=None):
@@ -30,8 +31,13 @@ class Event:
         else:
             self.__dict__[name] = value
 
+        if name in _CACHED_DATABASE_VARIABLES:
+            self.__dict__[name] = value
+
     def __getattr__(self, name):
-        if name in _STR_DATABASE_VARIABLES:
+        if name in _CACHED_DATABASE_VARIABLES and name in self.__dict__:
+            return self.__dict__[name]
+        elif name in _STR_DATABASE_VARIABLES:
             return server.app_db.get('events', self.id, name)
         elif name in _INT_DATABASE_VARIABLES:
             value = server.app_db.get('events', self.id, name)
