@@ -7,7 +7,7 @@ import time
 import uuid
 
 logger = logging.getLogger(APP_NAME)
-task_threads = {}
+_task_threads = {}
 
 _STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
 _INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
@@ -21,7 +21,7 @@ class Task:
             self.state = None
             self.time = None
             self.volume_id = None
-            task_threads[self.id] = None
+            _task_threads[self.id] = None
         else:
             self.id = id
 
@@ -40,10 +40,10 @@ class Task:
     def __setattr__(self, name, value):
         if name == 'thread':
             if value is None:
-                if self.id in task_threads:
-                    del task_threads[self.id]
+                if self.id in _task_threads:
+                    del _task_threads[self.id]
             else:
-                task_threads[self.id] = value
+                _task_threads[self.id] = value
         elif name in _STR_DATABASE_VARIABLES:
             server.app_db.set('tasks', self.id, name, value)
         elif name in _INT_DATABASE_VARIABLES:
@@ -59,9 +59,9 @@ class Task:
 
     def __getattr__(self, name):
         if name == 'thread':
-            if self.id not in task_threads:
+            if self.id not in _task_threads:
                 return None
-            return task_threads[self.id]
+            return _task_threads[self.id]
         elif name in _CACHED_DATABASE_VARIABLES and name in self.__dict__:
             return self.__dict__[name]
         elif name in _STR_DATABASE_VARIABLES:
@@ -229,7 +229,7 @@ class Task:
     def get_pending_tasks(volume, type=None):
         # Valid pending tasks will always be in task_threads if
         # empty assume there are no pending tasks
-        if not len(task_threads):
+        if not len(_task_threads):
             return []
         return Task._get_tasks(volume, type, [PENDING, ABORTING])
 
