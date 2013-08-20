@@ -28,7 +28,7 @@ class Client:
 
         if not os.path.isdir(path):
             os.mkdir(path)
-        volume = Volume(self, path)
+        volume = Volume(path)
 
         self.volumes.append(volume)
         logger.debug('Adding volume path to config. %r' % {
@@ -65,7 +65,7 @@ class Client:
                 continue
 
             try:
-                volume = Volume(self, volume_path)
+                volume = Volume(volume_path)
                 self.volumes.append(volume)
             except IOError:
                 logger.debug('Failed to load volume. %r' % {

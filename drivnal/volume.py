@@ -18,7 +18,7 @@ import logging
 logger = logging.getLogger(APP_NAME)
 
 class Volume:
-    def __init__(self, client, path):
+    def __init__(self, path):
         try:
             config_path = os.path.join(path, CONF_FILENAME)
         except AttributeError:
@@ -28,8 +28,6 @@ class Volume:
             raise
 
         self.config = Config(config_path)
-        self.client = client
-
         self.orig_path = path
         self.orig_source_path = self.source_path
         self.path = path
