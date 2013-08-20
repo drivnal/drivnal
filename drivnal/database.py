@@ -9,12 +9,42 @@ except ImportError:
 
 logger = logging.getLogger(APP_NAME)
 
+class DebugDB():
+    def __init__(self):
+        self._data = {}
+
+    def get(self, key):
+        if key in self._data:
+            return self._data[key]
+
+    def put(self, key, data):
+        self._data[key] = str(data)
+
+    def delete(self, key):
+        if key in self._data:
+            del self._data[key]
+
+    def keys(self):
+        keys = []
+        for key in self._data:
+            keys.append(key)
+        return keys
+
+    def sync(self):
+        pass
+
 class Database():
     def __init__(self, db_path):
         logger.debug('Opening database...')
-        self._db = bsddb.db.DB()
+
         self._db_lock = threading.Lock()
-        self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
+
+        if db_path is None:
+            logger.info('Using debug database.')
+            self._db = DebugDB()
+        else:
+            self._db = bsddb.db.DB()
+            self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
 
     def _get(self, key):
         self._db_lock.acquire()
