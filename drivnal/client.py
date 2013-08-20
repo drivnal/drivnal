@@ -10,49 +10,14 @@ import logging
 logger = logging.getLogger(APP_NAME)
 
 class Client:
-    def __getattr__(self, name):
-        if name in ['volumes']:
-            self.load()
-
-        if name not in self.__dict__:
-            raise AttributeError('Object instance has no attribute %r' % name)
-        return self.__dict__[name]
-
     def get_volume(self, id):
-        for volume in self.volumes:
+        for volume in self.get_volumes():
             if volume.id == id:
                 return volume
 
-    def create_volume(self, path):
-        logger.debug('Creating volume.')
-
-        if not os.path.isdir(path):
-            os.mkdir(path)
-        volume = Volume(path)
-
-        self.volumes.append(volume)
-        logger.debug('Adding volume path to config. %r' % {
-            'volume_id': volume.id,
-        })
-        self.commit()
-
-        Event(type=VOLUMES_UPDATED)
-
-        return volume
-
-    def remove_volume(self, volume):
-        logger.debug('Removing volume. %r' % {
-            'volume_id': volume.id,
-        })
-
-        self.volumes.remove(volume)
-        self.commit()
-
-        Event(type=VOLUMES_UPDATED)
-
-    def load(self):
-        logger.debug('Loading client database.')
-        self.volumes = []
+    def get_volumes(self):
+        logger.debug('Loading client volumes.')
+        volumes = []
 
         for i, volume_path in enumerate(
                 server.app_db.get('system', 'volumes')):
@@ -66,15 +31,37 @@ class Client:
 
             try:
                 volume = Volume(volume_path)
-                self.volumes.append(volume)
+                volumes.append(volume)
             except IOError:
                 logger.debug('Failed to load volume. %r' % {
                     'volume_num': i,
                 })
 
-    def commit(self):
-        logger.debug('Writing client database.')
+        return volumes
 
-        server.app_db.remove('system', 'volumes')
-        for volume in self.volumes:
-            server.app_db.set('system', 'volumes', volume.path, None)
+    def create_volume(self, path):
+        logger.debug('Creating volume.')
+
+        if not os.path.isdir(path):
+            os.mkdir(path)
+        volume = Volume(path)
+
+        logger.debug('Adding volume path to database. %r' % {
+            'volume_id': volume.id,
+        })
+        server.app_db.set('system', 'volumes', volume.path, None)
+
+        Event(type=VOLUMES_UPDATED)
+
+        return volume
+
+    def remove_volume(self, volume_id):
+        logger.debug('Removing volume. %r' % {
+            'volume_id': volume_id,
+        })
+
+        for volume in self.get_volumes():
+            if volume.id == volume_id:
+                server.app_db.remove('system', 'volumes', volume.path)
+                Event(type=VOLUMES_UPDATED)
+                break

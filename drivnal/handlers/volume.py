@@ -30,7 +30,7 @@ def volume_get(volume_id=None):
         return utils.jsonify(_get_volume_object(volume))
 
     volumes = []
-    for volume in client.volumes:
+    for volume in client.get_volumes():
         volumes.append(_get_volume_object(volume))
 
     return utils.jsonify(volumes)
@@ -74,8 +74,6 @@ def volume_put_post(volume_id=None):
 @server.app.route('/volume/<volume_id>', methods=['DELETE'])
 def volume_delete(volume_id):
     client = Client()
-    volume = client.get_volume(volume_id)
-
-    client.remove_volume(volume)
+    client.remove_volume(volume_id)
 
     return utils.jsonify({})

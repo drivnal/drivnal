@@ -77,7 +77,7 @@ class Scheduler:
     def check_schedule(self, localtime):
         client = Client()
 
-        for volume in client.volumes:
+        for volume in client.get_volumes():
             self._check_volume_schedule(localtime, volume)
 
     def start(self):
