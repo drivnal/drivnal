@@ -302,7 +302,7 @@ class CreateSnapshot(Task):
                 if self.state == ABORTING:
                     self._abort_process(process)
                     return
-                time.sleep(0.1)
+                time.sleep(0.5)
 
             if return_code != 0:
                 logger.debug('Command returned non-zero exit status. %r' % {

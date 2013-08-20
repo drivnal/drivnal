@@ -76,7 +76,7 @@ class RestoreObject(Task):
                 if self.state == ABORTING:
                     self._abort_process(process)
                     return
-                time.sleep(0.1)
+                time.sleep(0.5)
 
             if return_code != 0:
                 raise OSError('Object restore failed, command ' + \

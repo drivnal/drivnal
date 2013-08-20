@@ -110,7 +110,7 @@ class RemoveSnapshot(Task):
 
                 self._abort_process(process)
                 return
-            time.sleep(0.1)
+            time.sleep(0.5)
 
         time.sleep(5)
 

@@ -81,7 +81,7 @@ class MoveVolume(Task):
                 if self.state == ABORTING:
                     self._abort_process(process)
                     return
-                time.sleep(0.1)
+                time.sleep(0.5)
 
         else:
             logger.info('Copying volume. %r' % {
@@ -115,7 +115,7 @@ class MoveVolume(Task):
                 if self.state == ABORTING:
                     self._abort_process(process)
                     return
-                time.sleep(0.1)
+                time.sleep(0.5)
 
             logger.debug('Removing previous copy of volume. %r' % {
                 'volume_id': self.volume_id,
