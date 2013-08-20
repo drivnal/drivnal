@@ -32,7 +32,10 @@ class Scheduler:
         try:
             volume.create_snapshot()
         except SnapshotAlreadyRunning:
-            pass
+            logger.debug('Snapshot already running, skipping scheduled ' + \
+                'snapshot. %r' % {
+                    'volume_id': volume.id,
+                })
         except:
             logger.exception('Scheduler failed to call create_snapshot. %r' % {
                 'volume_id': volume.id,
