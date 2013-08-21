@@ -27,4 +27,4 @@ def drivnal_daemon():
         conf_path = '/etc/drivnal.conf'
 
     drivnal.server.conf_path = conf_path
-    drivnal.server.start()
+    drivnal.server.run_all()

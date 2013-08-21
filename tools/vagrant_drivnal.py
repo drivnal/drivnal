@@ -17,4 +17,4 @@ print '#                                       #'
 print '#########################################'
 
 drivnal.server.conf_path = './tools/vagrant_drivnal.conf'
-drivnal.server.start()
+drivnal.server.run_all()

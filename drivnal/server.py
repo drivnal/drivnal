@@ -153,7 +153,3 @@ class Server:
         self._setup_all()
         self._start_scheduler()
         self._run_server()
-
-    def start(self):
-        # TODO Replace usage of start with run_all
-        return self.run_all()

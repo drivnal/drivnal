@@ -10,4 +10,4 @@ print '#                                       #'
 print '#########################################'
 
 drivnal.server.conf_path = './tools/development_drivnal.conf'
-drivnal.server.start()
+drivnal.server.run_all()
