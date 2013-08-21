@@ -2,7 +2,7 @@
 
 pkgname=drivnal
 pkgver=0.1.12
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux backup utility with web interface"
 arch=("any")
 license=("AGPL3")
