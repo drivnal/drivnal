@@ -1,6 +1,8 @@
 from constants import *
 from exceptions import *
 from client import Client
+from event import Event
+from task import Task
 import time
 import logging
 import threading
@@ -21,12 +23,17 @@ class Scheduler:
             if localtime.tm_min == last_check:
                 time.sleep(1)
                 continue
-
             last_check = localtime.tm_min
+
             try:
                 self.check_schedule(localtime)
             except:
                 logger.exception('Scheduler failed to check schedule.')
+
+            try:
+                self.clean_database()
+            except:
+                logger.exception('Scheduler failed to clean database.')
 
     def _create_snapshot(self, volume):
         try:
@@ -79,6 +86,10 @@ class Scheduler:
 
         for volume in client.get_volumes():
             self._check_volume_schedule(localtime, volume)
+
+    def clean_database(self):
+        Task.clean_database()
+        Event.clean_database()
 
     def start(self):
         self.interrupt = None

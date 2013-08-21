@@ -1,16 +1,19 @@
 from constants import *
 from drivnal import server
+from database_object import DatabaseObject
 import logging
 import time
 import uuid
 
 logger = logging.getLogger(APP_NAME)
 
-_STR_DATABASE_VARIABLES = ['volume_id', 'type']
-_INT_DATABASE_VARIABLES = ['time']
-_CACHED_DATABASE_VARIABLES = ['volume_id', 'type', 'time']
+class Event(DatabaseObject):
+    column_family = 'events'
+    str_columns = ['volume_id', 'type']
+    int_columns = ['time']
+    cached_columns = ['volume_id', 'type', 'time']
+    required_columns = ['volume_id', 'type', 'time']
 
-class Event:
     def __init__(self, id=None, volume_id=None, type=None):
         if id is None:
             self.id = uuid.uuid4().hex
@@ -23,48 +26,27 @@ class Event:
         if volume_id is not None:
             self.volume_id = volume_id
 
-    def __setattr__(self, name, value):
-        if name in _STR_DATABASE_VARIABLES:
-            server.app_db.set('events', self.id, name, value)
-        elif name in _INT_DATABASE_VARIABLES:
-            server.app_db.set('events', self.id, name, str(value))
-        else:
-            self.__dict__[name] = value
-
-        if name in _CACHED_DATABASE_VARIABLES:
-            self.__dict__[name] = value
-
-    def __getattr__(self, name):
-        if name in _CACHED_DATABASE_VARIABLES and name in self.__dict__:
-            return self.__dict__[name]
-        elif name in _STR_DATABASE_VARIABLES:
-            return server.app_db.get('events', self.id, name)
-        elif name in _INT_DATABASE_VARIABLES:
-            value = server.app_db.get('events', self.id, name)
-            if value:
-                return int(value)
-            return None
-        elif name not in self.__dict__:
-            raise AttributeError('Object instance has no attribute %r' % name)
-        return self.__dict__[name]
-
     @staticmethod
-    def _validate(data):
-        if 'time' not in data or not data['time']:
-            return False
+    def clean_database():
+        cur_time = int(time.time() * 1000)
 
-        try:
-            data['time'] = int(data['time'])
-        except ValueError:
-            return False
+        events_query = server.app_db.get(Event.column_family)
+        for event_id in events_query:
+            event = events_query[event_id]
 
-        if 'type' not in data or not data['type']:
-            return False
+            # Skip broken events
+            if not DatabaseObject.validate(Event, event_id, event):
+                continue
 
-        if 'volume_id' not in data:
-            return False
+            event['time'] = int(event['time'])
 
-        return True
+            # Remove events after ttl
+            if (cur_time - event['time']) > EVENT_DB_TTL:
+                logger.info('Removing event past ttl from database. %r' % {
+                    'event_id': event_id,
+                })
+                server.app_db.remove(Event.column_family, event_id)
+                continue
 
     @staticmethod
     def get_events(volume, last_time):
@@ -77,23 +59,15 @@ class Event:
             'volume_id': volume.id,
         })
 
-        events_query = server.app_db.get('events')
+        events_query = server.app_db.get(Event.column_family)
         for event_id in events_query:
             event = events_query[event_id]
 
-            # Remove broken events
-            if not Event._validate(event):
-                logger.debug('Removing broken event from database. %r' % {
-                    'volume_id': volume.id,
-                    'event_id': event_id,
-                })
-                server.app_db.remove('events', event_id)
+            # Skip broken events
+            if not DatabaseObject.validate(Event, event_id, event):
                 continue
 
-            # Remove events after 61 seconds
-            if (cur_time - event['time']) > 61000:
-                server.app_db.remove('events', event_id)
-                continue
+            event['time'] = int(event['time'])
 
             if event['time'] <= last_time:
                 continue

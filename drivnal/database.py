@@ -9,7 +9,7 @@ except ImportError:
 
 logger = logging.getLogger(APP_NAME)
 
-class DebugDB():
+class DebugDB:
     def __init__(self):
         self._data = {}
 
@@ -33,7 +33,7 @@ class DebugDB():
     def sync(self):
         pass
 
-class Database():
+class Database:
     def __init__(self, db_path):
         logger.debug('Opening database...')
 

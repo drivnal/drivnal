@@ -1,6 +1,7 @@
 from constants import *
 from event import Event
 from drivnal import server
+from database_object import DatabaseObject
 import threading
 import logging
 import time
@@ -9,11 +10,13 @@ import uuid
 logger = logging.getLogger(APP_NAME)
 _task_threads = {}
 
-_STR_DATABASE_VARIABLES = ['volume_id', 'type', 'state']
-_INT_DATABASE_VARIABLES = ['time', 'snapshot_id']
-_CACHED_DATABASE_VARIABLES = ['volume_id', 'type', 'time', 'snapshot_id']
+class Task(DatabaseObject):
+    column_family = 'tasks'
+    str_columns = ['volume_id', 'type', 'state']
+    int_columns = ['time', 'snapshot_id']
+    cached_columns = ['volume_id', 'type', 'time', 'snapshot_id']
+    required_columns = ['volume_id', 'type', 'state', 'time', 'snapshot_id']
 
-class Task:
     def __init__(self, id=None, volume=None, snapshot=None):
         if id is None:
             self.id = uuid.uuid4().hex
@@ -37,6 +40,14 @@ class Task:
 
         self.update()
 
+    def __getattr__(self, name):
+        if name == 'thread':
+            if self.id not in _task_threads:
+                return None
+            return _task_threads[self.id]
+        else:
+            return DatabaseObject.__getattr__(self, name)
+
     def __setattr__(self, name, value):
         if name == 'thread':
             if value is None:
@@ -44,36 +55,11 @@ class Task:
                     del _task_threads[self.id]
             else:
                 _task_threads[self.id] = value
-        elif name in _STR_DATABASE_VARIABLES:
-            server.app_db.set('tasks', self.id, name, value)
-        elif name in _INT_DATABASE_VARIABLES:
-            server.app_db.set('tasks', self.id, name, str(value))
         else:
-            self.__dict__[name] = value
-
-        if name in _CACHED_DATABASE_VARIABLES:
-            self.__dict__[name] = value
+            DatabaseObject.__setattr__(self, name, value)
 
         if name == 'state' and value:
             Event(volume_id=self.volume_id, type=TASKS_UPDATED)
-
-    def __getattr__(self, name):
-        if name == 'thread':
-            if self.id not in _task_threads:
-                return None
-            return _task_threads[self.id]
-        elif name in _CACHED_DATABASE_VARIABLES and name in self.__dict__:
-            return self.__dict__[name]
-        elif name in _STR_DATABASE_VARIABLES:
-            return server.app_db.get('tasks', self.id, name)
-        elif name in _INT_DATABASE_VARIABLES:
-            value = server.app_db.get('tasks', self.id, name)
-            if value:
-                return int(value)
-            return None
-        elif name not in self.__dict__:
-            raise AttributeError('Object instance has no attribute %r' % name)
-        return self.__dict__[name]
 
     def abort(self):
         logger.debug('Aborting task. %r' % {
@@ -97,7 +83,7 @@ class Task:
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
-        server.app_db.remove('tasks', self.id)
+        server.app_db.remove(self.column_family, self.id)
         Event(volume_id=self.volume_id, type=TASKS_UPDATED)
 
     def run(self, *args, **kwargs):
@@ -148,25 +134,37 @@ class Task:
             self.state = FAILED
 
     @staticmethod
-    def _validate(data):
-        if 'time' not in data or not data['time']:
-            return False
+    def clean_database():
+        tasks_dict = {}
+        tasks_time = []
 
-        try:
-            data['time'] = int(data['time'])
-        except ValueError:
-            return False
+        tasks_query = server.app_db.get(Task.column_family)
+        for task_id in tasks_query:
+            task = tasks_query[task_id]
 
-        if 'type' not in data or not data['type']:
-            return False
+            # Skip broken events
+            if not DatabaseObject.validate(Task, task_id, task):
+                continue
 
-        if 'volume_id' not in data or not data['volume_id']:
-            return False
+            task['time'] = int(task['time'])
 
-        if 'state' not in data or not data['state']:
-            return False
+            task_time_id = '%s-%s' % (task['time'], task_id)
+            tasks_dict[task_time_id] = task_id
+            tasks_time.append(task_time_id)
 
-        return True
+        prune_count = len(tasks_query) - TASK_DB_MAX
+        if prune_count <= 0:
+            return
+
+        # Remove tasks after limit is reached
+        tasks_time = sorted(tasks_time)
+        for i in xrange(prune_count):
+            task_id = tasks_dict[tasks_time.pop(0)]
+            logger.info('Max task count reached removing task ' + \
+                    'from database. %r' % {
+                'task_id': task_id,
+            })
+            server.app_db.remove(Task.column_family, task_id)
 
     @staticmethod
     def _get_tasks(volume, type, states=[]):
@@ -178,18 +176,15 @@ class Task:
             'volume_id': volume.id,
         })
 
-        tasks_query = server.app_db.get('tasks')
+        tasks_query = server.app_db.get(Task.column_family)
         for task_id in tasks_query:
             task = tasks_query[task_id]
 
-            # Remove broken events
-            if not Task._validate(task):
-                logger.debug('Removing broken task from database. %r' % {
-                    'volume_id': volume.id,
-                    'task_id': task_id,
-                })
-                server.app_db.remove('tasks', task_id)
+            # Skip broken events
+            if not DatabaseObject.validate(Task, task_id, task):
                 continue
+
+            task['time'] = int(task['time'])
 
             if type and task['type'] != type:
                 continue

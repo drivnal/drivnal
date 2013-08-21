@@ -25,6 +25,9 @@ TASKS_UPDATED = 'tasks_updated'
 SNAPSHOT_DIR = 'snapshots'
 LOG_DIR = 'logs'
 
+EVENT_DB_TTL = 61000
+TASK_DB_MAX = 100
+
 MATCH_ALL = 'match_all'
 MATCH_BOTH = 'match_both'
 MATCH_PREFIX = 'match_prefix'
