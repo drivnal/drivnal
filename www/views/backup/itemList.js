@@ -201,6 +201,9 @@ define([
       var currentModels = [];
       var newModels = [];
 
+      this.$('.list-title span').text(this.title + ' (' +
+        collection.models.length + ')');
+
       for (i = 0; i < this.views.length; i++) {
         currentModels.push(this.views[i].model.get('id'));
       }
