@@ -6484,15 +6484,18 @@ button:focus {
   background-color: #686868;
 }
 .backup .item-box.failed .item,
-.backup .item-box.aborted .item {
+.backup .item-box.aborted .item,
+.backup .item-box.warning .item {
   background-color: #f53205;
 }
 .backup .item-box.failed .item:hover,
-.backup .item-box.aborted .item:hover {
+.backup .item-box.aborted .item:hover,
+.backup .item-box.warning .item:hover {
   background-color: #c72904;
 }
 .backup .item-box.failed.selected .item,
-.backup .item-box.aborted.selected .item {
+.backup .item-box.aborted.selected .item,
+.backup .item-box.warning.selected .item {
   background-color: #ff6f4f;
 }
 .backup .item-box.removing .item {
@@ -6559,7 +6562,8 @@ button:focus {
   border-bottom: 1px solid #4e4e4e;
 }
 .backup .item-box.failed .info,
-.backup .item-box.aborted .info {
+.backup .item-box.aborted .info,
+.backup .item-box.warning .info {
   background-color: rgba(245, 50, 5, 0.5);
   border-left: 1px solid #f53205;
   border-right: 1px solid #f53205;
