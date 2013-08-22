@@ -2,16 +2,18 @@ from constants import *
 import threading
 import logging
 import copy
-try:
-    import bsddb3 as bsddb
-except ImportError:
-    import bsddb
 
 logger = logging.getLogger(APP_NAME)
 
 class BerkeleyBackend:
     def __init__(self, db_path):
         logger.info('Opening berkeley database...')
+
+        try:
+            import bsddb3 as bsddb
+        except ImportError:
+            import bsddb
+
         self._db = bsddb.db.DB()
         self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
 
