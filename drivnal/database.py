@@ -105,7 +105,7 @@ class Database:
     def __init__(self, db_path):
         self._db_lock = threading.Lock()
 
-        if db_path is None:
+        if db_path is None or db_path == 'none':
             self._db = DebugBackend()
         elif db_path.startswith('redis://'):
             parse = urlparse.urlparse(db_path)
