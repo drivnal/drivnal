@@ -51,7 +51,9 @@ class RedisBackend:
 
 class BerkeleyBackend:
     def __init__(self, db_path):
-        logger.info('Opening berkeley database...')
+        logger.info('Opening berkeley database... %r' % {
+            'path': db_path,
+        })
 
         try:
             import bsddb3 as bsddb
