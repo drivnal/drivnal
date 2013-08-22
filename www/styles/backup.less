@@ -390,17 +390,20 @@
 }
 
 .backup .item-box.failed .item,
-.backup .item-box.aborted .item {
+.backup .item-box.aborted .item,
+.backup .item-box.warning .item {
   background-color: @item-failed-bg;
 }
 
 .backup .item-box.failed .item:hover,
-.backup .item-box.aborted .item:hover {
+.backup .item-box.aborted .item:hover,
+.backup .item-box.warning .item:hover {
   background-color: @item-failed-hover-bg;
 }
 
 .backup .item-box.failed.selected .item,
-.backup .item-box.aborted.selected .item {
+.backup .item-box.aborted.selected .item,
+.backup .item-box.warning.selected .item {
   background-color: @item-failed-active-bg;
 }
 
@@ -480,7 +483,8 @@
 }
 
 .backup .item-box.failed .info,
-.backup .item-box.aborted .info {
+.backup .item-box.aborted .info,
+.backup .item-box.warning .info {
   background-color: @item-failed-box-bg;
   border-left: @item-failed-box-border;
   border-right: @item-failed-box-border;

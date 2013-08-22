@@ -11,6 +11,7 @@ REMOVING = 'removing'
 ABORTED = 'aborted'
 ABORTING = 'aborting'
 PENDING = 'pending'
+WARNING = 'warning'
 COMPLETE = 'complete'
 
 CREATE_SNAPSHOT = 'create_snapshot'
@@ -50,6 +51,11 @@ DEFAULT_ROOT_EXCLUDES = [
 ]
 
 DIR_MIME_TYPE = 'inode/directory'
+
+RSYNC_WARN_EXIT_CODES = [
+    23, # Partial transfer from error
+    24, # Partial transfer from vanished files
+]
 
 MIN_UNITS = ['m', 'min', 'minute']
 HOUR_UNITS = ['h', 'hr', 'hour']

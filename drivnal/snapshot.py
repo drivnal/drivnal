@@ -21,6 +21,9 @@ class Snapshot(Bucket):
         elif id[-5:] == '.temp':
             self.id = int(id[:-5])
             self.state = PENDING
+        elif id[-8:] == '.warning':
+            self.id = int(id[:-8])
+            self.state = WARNING
         else:
             self.id = int(id)
             self.state = COMPLETE

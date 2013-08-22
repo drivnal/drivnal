@@ -66,7 +66,7 @@ class Volume:
     def get_snapshots(self):
         snapshots = []
         for snapshot in self.snapshots:
-            if snapshot.state == COMPLETE:
+            if snapshot.state in [WARNING, COMPLETE]:
                 snapshots.append(snapshot)
         return snapshots
 
@@ -79,7 +79,7 @@ class Volume:
 
     def get_last_snapshot(self):
         for snapshot in reversed(self.snapshots):
-            if snapshot.state == COMPLETE:
+            if snapshot.state in [WARNING, COMPLETE]:
                 return snapshot
 
     def create_snapshot(self):

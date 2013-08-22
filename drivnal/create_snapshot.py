@@ -200,6 +200,7 @@ class CreateSnapshot(Task):
             })
         destination_path_temp = destination_path + '.temp'
         destination_path_failed = destination_path + '.failed'
+        destination_path_warning = destination_path + '.failed'
         log_path = os.path.join(self.volume.path,
             LOG_DIR, 'snapshot_%s.log' % self.snapshot_id)
         max_retry = self.volume.max_retry or DEFAULT_MAX_RETRY
@@ -304,7 +305,7 @@ class CreateSnapshot(Task):
                     return
                 time.sleep(0.5)
 
-            if return_code != 0:
+            if return_code != 0 and return_code not in RSYNC_WARN_EXIT_CODES:
                 logger.debug('Command returned non-zero exit status. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
@@ -359,7 +360,10 @@ class CreateSnapshot(Task):
             break
 
         try:
-            os.rename(destination_path_temp, destination_path)
+            if return_code == 0:
+                os.rename(destination_path_temp, destination_path)
+            else:
+                os.rename(destination_path_temp, destination_path_warning)
         except OSError:
             logger.exception('Snapshot failed, unable to rename ' + \
                 'snapshot temp directory. %r' % {
