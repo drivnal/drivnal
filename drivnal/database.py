@@ -17,8 +17,8 @@ class RedisBackend:
         logger.info('Connecting to redis database... %r' % {
             'host': host,
             'port': port,
-            'db': db
-            })
+            'db': db,
+        })
         import redis
         self._client = redis.Redis(host=host, port=port, db=db)
 
