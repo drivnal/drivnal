@@ -157,10 +157,10 @@ define([
         });
       });
     },
-    newSnapshot: function() {
+    newSnapshot: function(options) {
       this.snapshots.collection.create({
         volume: this.snapshots.collection.getVolume()
-      });
+      }, options);
     },
     restoreObjects: function(volumeId, snapshotId, sourcePath, objectIds) {
       var i;

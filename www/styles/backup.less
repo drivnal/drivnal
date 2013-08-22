@@ -203,11 +203,24 @@
   display: inline;
 }
 
-.backup .new-snapshot {
+.backup .new-snapshot-box {
   margin: 10px;
+}
+
+.backup .new-snapshot-box .new-snapshot {
   padding: 10px;
   font-size: 1.5em;
   text-align: center;
+}
+
+.backup .new-snapshot-box .error {
+  padding: 3px;
+  font-size: 1.15em;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  border-top: @error-box-border;
+  background-color: @error-box-bg2;
 }
 
 .backup .setting .loading {

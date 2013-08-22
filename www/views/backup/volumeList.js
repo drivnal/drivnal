@@ -12,7 +12,8 @@ define([
     events: {
       'click .new-volume .item': 'createVolume',
       'click .current-volume .item': 'onClickCurrentVolume',
-      'click .new-snapshot': 'onNewSnapshot'
+      'click .new-snapshot-box .new-snapshot': 'onNewSnapshot',
+      'click .new-snapshot-box .error': 'hideNewSnapshotError'
     },
     initialize: function() {
       this.collection = new VolumeCollection();
@@ -40,6 +41,33 @@ define([
     createVolume: function() {
       this.collection.add({});
     },
+    showNewSnapshotError: function() {
+      if (this.isNewSnapshotError()) {
+        return;
+      }
+      this.$('.new-snapshot-box .error').slideDown({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    hideNewSnapshotError: function() {
+      if (!this.isNewSnapshotError()) {
+        return;
+      }
+      this.$('.new-snapshot-box .error').slideUp({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    isNewSnapshotError: function() {
+      return this.$('.new-snapshot-box .error').is(':visible');
+    },
     onNewSnapshot: function() {
       if (!this.currentVolume) {
         return;
@@ -47,7 +75,14 @@ define([
       if (this.currentVolume.getRunning()) {
         return;
       }
-      this.trigger('newSnapshot', this.currentVolume.model.get('id'));
+      this.trigger('newSnapshot', {
+        success: function() {
+          this.hideNewSnapshotError();
+        }.bind(this),
+        error: function() {
+          this.showNewSnapshotError();
+        }.bind(this)
+      });
     },
     updateRunning: function() {
       if (!this.currentVolume || this.currentVolume.getRunning() ||
@@ -192,6 +227,8 @@ define([
       }
     },
     select: function(volumeView) {
+      this.hideNewSnapshotError();
+
       if (this.currentVolume) {
         this.currentVolume.$el.removeClass('current-volume');
         this.$('.backup-volumes .last').before(this.currentVolume.el);
