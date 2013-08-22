@@ -14,7 +14,7 @@ for line in fileinput.input('../setup.py', inplace=True):
         line = 'VERSION = \'%s\'' % VERSION
     print line.rstrip('\n')
 
-for file_path in ['build_arch.sh', 'vagrant_build_ubuntu.sh']:
+for file_path in ['build_pip.sh', 'build_arch.sh', 'vagrant_build_ubuntu.sh']:
     for line in fileinput.input(file_path, inplace=True):
         if 'VERSION=' in line:
             line = 'VERSION=\'%s\'' % VERSION
