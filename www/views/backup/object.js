@@ -72,10 +72,15 @@ define([
       this.trigger('select', this, 'ctrl');
     },
     onMouseDown: function(evt) {
+      if (evt.button !== 0) {
+        return;
+      }
+
       if ($(evt.target).hasClass('select-col') ||
           $(evt.target).parents().hasClass('select-col')) {
         return false;
       }
+
       var mouseStartX = evt.clientX + window.scrollX;
       var mouseStartY = evt.clientY + window.scrollY;
 
