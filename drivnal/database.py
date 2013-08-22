@@ -2,8 +2,52 @@ from constants import *
 import threading
 import logging
 import copy
+import urlparse
 
 logger = logging.getLogger(APP_NAME)
+
+class RedisBackend:
+    def __init__(self, host, port, db):
+        if host is None:
+            host = 'localhost'
+        if port is None:
+            port = 6379
+        if db is None:
+            db = 0
+        logger.info('Connecting to redis database... %r' % {
+            'host': host,
+            'port': port,
+            'db': db
+            })
+        import redis
+        self._client = redis.Redis(host=host, port=port, db=db)
+
+    def get(self, key):
+        value = self._client.get(key)
+        if value == '':
+            return None
+        return value
+
+    def set(self, key, value):
+        if value is None:
+            value = ''
+        if not self._client.set(key, value):
+            raise redis.exceptions.ResponseError(
+                'Database set returned false.')
+
+    def remove(self, key):
+        self._client.delete(key)
+
+    def keys(self, prefix=None):
+        if prefix is not None:
+            prefix = '%s*' % prefix
+        else:
+            prefix = '*'
+        keys = self._client.keys(prefix)
+        return keys
+
+    def sync(self):
+        pass
 
 class BerkeleyBackend:
     def __init__(self, db_path):
@@ -14,23 +58,23 @@ class BerkeleyBackend:
         except ImportError:
             import bsddb
 
-        self._db = bsddb.db.DB()
-        self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
+        self._client = bsddb.db.DB()
+        self._client.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
 
     def get(self, key):
-        return self._db.get(key=key)
+        return self._client.get(key=key)
 
     def set(self, key, value):
-        self._db.put(key=key, data=value)
+        self._client.put(key=key, data=value)
 
     def remove(self, key):
-        self._db.delete(key=key)
+        self._client.delete(key=key)
 
-    def keys(self):
-        return self._db.keys()
+    def keys(self, prefix):
+        return self._client.keys()
 
     def sync(self):
-        self._db.sync()
+        self._client.sync()
 
 class DebugBackend:
     def __init__(self):
@@ -42,13 +86,13 @@ class DebugBackend:
             return self._data[key]
 
     def set(self, key, value):
-        self._data[key] = str(value)
+        self._data[key] = value
 
     def remove(self, key):
         if key in self._data:
             del self._data[key]
 
-    def keys(self):
+    def keys(self, prefix):
         keys = []
         for key in self._data:
             keys.append(key)
@@ -63,6 +107,22 @@ class Database:
 
         if db_path is None:
             self._db = DebugBackend()
+        elif db_path.startswith('redis://'):
+            parse = urlparse.urlparse(db_path)
+            if len(parse.netloc.split(':')) > 1:
+                host = parse.netloc.split(':')[0]
+                port = int(parse.netloc.split(':')[1])
+            else:
+                if parse.netloc:
+                    host = parse.netloc
+                else:
+                    host = None
+                port = None
+            if parse.path:
+                db = int(parse.path.replace('/', ''))
+            else:
+                db = None
+            self._db = RedisBackend(host, port, db)
         else:
             self._db = BerkeleyBackend(db_path)
 
@@ -80,7 +140,7 @@ class Database:
 
         self._db_lock.acquire()
         try:
-            for key in self._db.keys():
+            for key in self._db.keys(prefix):
                 if key.startswith(prefix):
                     keys[key[prefix_len:]] = self._db.get(key)
         finally:
@@ -111,7 +171,7 @@ class Database:
 
         self._db_lock.acquire()
         try:
-            for key in self._db.keys():
+            for key in self._db.keys(prefix):
                 if key.startswith(prefix):
                     self._db.remove(key)
             self._db.sync()

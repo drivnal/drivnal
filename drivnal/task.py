@@ -83,8 +83,10 @@ class Task(DatabaseObject):
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
+        # Volume id will be removed in next call
+        volume_id = self.volume_id
         server.app_db.remove(self.column_family, self.id)
-        Event(volume_id=self.volume_id, type=TASKS_UPDATED)
+        Event(volume_id=volume_id, type=TASKS_UPDATED)
 
     def run(self, *args, **kwargs):
         raise NotImplementedError('Derived class must override run method')
