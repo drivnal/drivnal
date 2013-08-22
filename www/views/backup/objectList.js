@@ -71,6 +71,11 @@ define([
     globalSelect: function() {
       var i;
 
+      // Only snapshot object list uses selection
+      if (!this.origin) {
+        return;
+      }
+
       if (this.selected.length) {
         this.clearSelected();
       }
