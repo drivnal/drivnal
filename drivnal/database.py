@@ -9,18 +9,40 @@ except ImportError:
 
 logger = logging.getLogger(APP_NAME)
 
-class DebugDB:
+class BerkeleyBackend:
+    def __init__(self, db_path):
+        logger.info('Opening berkeley database...')
+        self._db = bsddb.db.DB()
+        self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
+
+    def get(self, key):
+        return self._db.get(key=key)
+
+    def set(self, key, value):
+        self._db.put(key=key, data=value)
+
+    def remove(self, key):
+        self._db.delete(key=key)
+
+    def keys(self):
+        return self._db.keys()
+
+    def sync(self):
+        self._db.sync()
+
+class DebugBackend:
     def __init__(self):
+        logger.info('Creating debug database...')
         self._data = {}
 
     def get(self, key):
         if key in self._data:
             return self._data[key]
 
-    def put(self, key, data):
-        self._data[key] = str(data)
+    def set(self, key, value):
+        self._data[key] = str(value)
 
-    def delete(self, key):
+    def remove(self, key):
         if key in self._data:
             del self._data[key]
 
@@ -35,21 +57,17 @@ class DebugDB:
 
 class Database:
     def __init__(self, db_path):
-        logger.debug('Opening database...')
-
         self._db_lock = threading.Lock()
 
         if db_path is None:
-            logger.info('Using debug database.')
-            self._db = DebugDB()
+            self._db = DebugBackend()
         else:
-            self._db = bsddb.db.DB()
-            self._db.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
+            self._db = BerkeleyBackend(db_path)
 
     def _get(self, key):
         self._db_lock.acquire()
         try:
-            value = self._db.get(key=key)
+            value = self._db.get(key)
         finally:
             self._db_lock.release()
         return value
@@ -62,7 +80,7 @@ class Database:
         try:
             for key in self._db.keys():
                 if key.startswith(prefix):
-                    keys[key[prefix_len:]] = self._db.get(key=key)
+                    keys[key[prefix_len:]] = self._db.get(key)
         finally:
             self._db_lock.release()
 
@@ -71,7 +89,7 @@ class Database:
     def _set(self, key, value):
         self._db_lock.acquire()
         try:
-            self._db.put(key=key, data=value)
+            self._db.set(key, value)
             self._db.sync()
         finally:
             self._db_lock.release()
@@ -79,7 +97,7 @@ class Database:
     def _remove(self, key):
         self._db_lock.acquire()
         try:
-            self._db.delete(key=key)
+            self._db.remove(key)
             self._db.sync()
         except bsddb.db.DBNotFoundError:
             pass
@@ -93,7 +111,7 @@ class Database:
         try:
             for key in self._db.keys():
                 if key.startswith(prefix):
-                    self._db.delete(key=key)
+                    self._db.remove(key)
             self._db.sync()
         finally:
             self._db_lock.release()
