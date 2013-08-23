@@ -17,7 +17,8 @@ def _get_volume_object(volume):
         'min_free_space': volume.min_free_space or 0,
         'snapshot_limit': volume.snapshot_limit,
         'bandwidth_limit': volume.bandwidth_limit or 0,
-        'snapshot_pending': volume.snapshot_pending()
+        'snapshot_pending': volume.snapshot_pending(),
+        'email': 'user@domain.com'
     }
 
 @server.app.route('/volume', methods=['GET'])

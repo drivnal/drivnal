@@ -6,6 +6,7 @@ define([
   'd3',
   'jqueryUi',
   'views/backup/volumeSettingName',
+  'views/backup/volumeSettingEmail',
   'views/backup/volumeSliderSchedule',
   'views/backup/volumeSliderMinFreeSpace',
   'views/backup/volumeSliderSnapshotLimit',
@@ -15,11 +16,10 @@ define([
   'views/backup/volumePathSelectExclude',
   'text!templates/backup/volume.html'
 ], function($, _, Backbone, Bootstrap, d3, jQueryUI, VolumeSettingName,
-    VolumeSliderScheduleView, VolumeSliderMinFreeSpaceView,
-    VolumeSliderSnapshotLimitView, VolumeSliderBandwidthLimitView,
-    VolumePathSelectSourcePathView, VolumePathSelectPathView,
-    VolumePathSelectExcludeView,
-    volumeTemplate) {
+    VolumeSettingEmailView, VolumeSliderScheduleView,
+    VolumeSliderMinFreeSpaceView, VolumeSliderSnapshotLimitView,
+    VolumeSliderBandwidthLimitView, VolumePathSelectSourcePathView,
+    VolumePathSelectPathView, VolumePathSelectExcludeView, volumeTemplate) {
   'use strict';
   var VolumeView = Backbone.View.extend({
     tagName: 'li',
@@ -108,6 +108,11 @@ define([
       });
       this.$('.setting-bandwidth-limit').html(
         this.bandwidthLimitView.render().el);
+
+      this.emailView = new VolumeSettingEmailView({
+        value: this.model.get('email')
+      });
+      this.$('.setting-email').html(this.emailView.render().el);
 
       this.$('.remove-volume').tooltip({
         title: 'Click three times to remove volume',
