@@ -45,7 +45,8 @@ class Config:
                         name = line_split[0]
                         value = '='.join(line_split[1:])
 
-                        if name[-1] == 's':
+                        # If option name ends with s assume list
+                        if name[-1] == 's' and name[-2:] != 'ss':
                             value = value.split(',')
                             value[:] = [x for x in value if x != '']
 
@@ -72,7 +73,8 @@ class Config:
 
                 if name[0] == '_':
                     continue
-                elif name[-1] == 's':
+                # If option name ends with s assume list
+                elif name[-1] == 's' and name[-2:] != 'ss':
                     value = ','.join(value)
                 elif value is None:
                     continue

@@ -42,7 +42,8 @@ class Volume:
     def __getattr__(self, name):
         if name in ['id', 'name', 'source_path', 'excludes', 'schedule', \
                 'min_free_space', 'snapshot_limit', 'bandwidth_limit',
-                'origin']:
+                'email', 'email_host', 'email_user', 'email_pass',
+                'max_prune', 'max_retry', 'origin']:
             self.load()
         if name in ['snapshots']:
             self.load_snapshots()
@@ -208,6 +209,11 @@ class Volume:
                     })
         self.bandwidth_limit = bandwidth_limit
 
+        self.email = self.config.email
+        self.email_host = self.config.email_host
+        self.email_user = self.config.email_user
+        self.email_pass = self.config.email_pass
+
         max_prune = None
         if self.config.max_prune:
             try:
@@ -277,6 +283,10 @@ class Volume:
         self.config.min_free_space = self.min_free_space
         self.config.snapshot_limit = self.snapshot_limit
         self.config.bandwidth_limit = self.bandwidth_limit
+        self.config.email = self.email
+        self.config.email_host = self.email_host
+        self.config.email_user = self.email_user
+        self.config.email_pass = self.email_pass
         self.config.max_prune = self.max_prune
         self.config.max_retry = self.max_retry
         try:

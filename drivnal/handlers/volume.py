@@ -18,10 +18,10 @@ def _get_volume_object(volume):
         'snapshot_limit': volume.snapshot_limit,
         'bandwidth_limit': volume.bandwidth_limit or 0,
         'snapshot_pending': volume.snapshot_pending(),
-        'email': '',
-        'email_host': '',
-        'email_user': '',
-        'email_pass': ''
+        'email': volume.email,
+        'email_host': volume.email_host,
+        'email_user': volume.email_user,
+        'email_pass': volume.email_pass
     }
 
 @server.app.route('/volume', methods=['GET'])
@@ -52,6 +52,10 @@ def volume_put_post(volume_id=None):
     min_free_space = flask.request.json['min_free_space']
     snapshot_limit = flask.request.json['snapshot_limit']
     bandwidth_limit = flask.request.json['bandwidth_limit']
+    email = flask.request.json['email']
+    email_host = flask.request.json['email_host']
+    email_user = flask.request.json['email_user']
+    email_pass = flask.request.json['email_pass']
 
     if volume_id:
         volume = client.get_volume(volume_id)
@@ -70,6 +74,11 @@ def volume_put_post(volume_id=None):
     volume.min_free_space = min_free_space
     volume.snapshot_limit = snapshot_limit
     volume.bandwidth_limit = bandwidth_limit
+
+    volume.email = email
+    volume.email_host = email_host
+    volume.email_user = email_user
+    volume.email_pass = email_pass
 
     volume.commit()
 
