@@ -10,7 +10,16 @@ define([
     name: 'email',
     title: 'Email Address for Alerts',
     icon: 'icon-envelope',
-    required: false
+    required: false,
+    events: {
+      'keyup input': 'triggerChange',
+      'change input': 'triggerChange',
+      'paste input': 'triggerChange',
+      'cut input': 'triggerChange'
+    },
+    triggerChange: function() {
+      this.trigger('change', this.getValue());
+    }
   });
 
   return VolumeSettingEmailView;

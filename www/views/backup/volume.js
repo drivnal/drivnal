@@ -7,6 +7,9 @@ define([
   'jqueryUi',
   'views/backup/volumeSettingName',
   'views/backup/volumeSettingEmail',
+  'views/backup/volumeSettingEmailHost',
+  'views/backup/volumeSettingEmailUser',
+  'views/backup/volumeSettingEmailPass',
   'views/backup/volumeSliderSchedule',
   'views/backup/volumeSliderMinFreeSpace',
   'views/backup/volumeSliderSnapshotLimit',
@@ -16,10 +19,12 @@ define([
   'views/backup/volumePathSelectExclude',
   'text!templates/backup/volume.html'
 ], function($, _, Backbone, Bootstrap, d3, jQueryUI, VolumeSettingName,
-    VolumeSettingEmailView, VolumeSliderScheduleView,
-    VolumeSliderMinFreeSpaceView, VolumeSliderSnapshotLimitView,
-    VolumeSliderBandwidthLimitView, VolumePathSelectSourcePathView,
-    VolumePathSelectPathView, VolumePathSelectExcludeView, volumeTemplate) {
+    VolumeSettingEmailView, VolumeSettingEmailHostView,
+    VolumeSettingEmailUserView, VolumeSettingEmailPassView,
+    VolumeSliderScheduleView, VolumeSliderMinFreeSpaceView,
+    VolumeSliderSnapshotLimitView, VolumeSliderBandwidthLimitView,
+    VolumePathSelectSourcePathView, VolumePathSelectPathView,
+    VolumePathSelectExcludeView, volumeTemplate) {
   'use strict';
   var VolumeView = Backbone.View.extend({
     tagName: 'li',
@@ -112,12 +117,34 @@ define([
       this.emailView = new VolumeSettingEmailView({
         value: this.model.get('email')
       });
+      this.listenTo(this.emailView, 'change', this.onEmailChange);
       this.$('.setting-email').html(this.emailView.render().el);
+
+      this.emailHostView = new VolumeSettingEmailHostView({
+        value: this.model.get('email_host')
+      });
+      this.$('.setting-email-host').html(this.emailHostView.render().el);
+
+      this.emailUserView = new VolumeSettingEmailUserView({
+        value: this.model.get('email_user')
+      });
+      this.$('.setting-email-user').html(this.emailUserView.render().el);
+
+      this.emailPassView = new VolumeSettingEmailPassView({
+        value: this.model.get('email_pass')
+      });
+      this.$('.setting-email-pass').html(this.emailPassView.render().el);
 
       this.$('.remove-volume').tooltip({
         title: 'Click three times to remove volume',
         trigger: 'manual'
       });
+
+      if (!this.model.get('email')) {
+        this.emailHostView.$el.hide();
+        this.emailUserView.$el.hide();
+        this.emailPassView.$el.hide();
+      }
 
       return this;
     },
@@ -196,6 +223,53 @@ define([
     },
     getRunning: function() {
       return this.running;
+    },
+    showEmailSettings: function() {
+      if (this.isEmailSettings()) {
+        return;
+      }
+      this.emailHostView.$el.slideDown({
+        duration: 250
+      });
+      this.emailUserView.$el.slideDown({
+        duration: 250
+      });
+      this.emailPassView.$el.slideDown({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    hideEmailSettings: function() {
+      if (!this.isEmailSettings()) {
+        return;
+      }
+      this.emailHostView.$el.slideUp({
+        duration: 250
+      });
+      this.emailUserView.$el.slideUp({
+        duration: 250
+      });
+      this.emailPassView.$el.slideUp({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    isEmailSettings: function() {
+      return this.emailPassView.$el.is(':visible');
+    },
+    onEmailChange: function(value) {
+      if (value) {
+        this.showEmailSettings();
+      }
+      else {
+        this.hideEmailSettings();
+      }
     },
     runningLoop: function(progress) {
       var twoPi = 2 * Math.PI;
@@ -398,6 +472,21 @@ define([
       this.minFreeSpaceView.setValue(this.model.get('min_free_space') * 100);
       this.snapshotLimit.setValue(this.model.get('snapshot_limit'));
       this.bandwidthLimitView.setValue(this.model.get('bandwidth_limit'));
+      this.emailView.setValue(this.model.get('email'));
+      this.emailHostView.setValue(this.model.get('email_host'));
+      this.emailUserView.setValue(this.model.get('email_user'));
+      this.emailPassView.setValue(this.model.get('email_pass'));
+
+      if (this.model.get('email')) {
+        this.emailHostView.$el.show();
+        this.emailUserView.$el.show();
+        this.emailPassView.$el.show();
+      }
+      else {
+        this.emailHostView.$el.hide();
+        this.emailUserView.$el.hide();
+        this.emailPassView.$el.hide();
+      }
     },
     onClickCancel: function() {
       this.hideSettings(function() {
@@ -423,6 +512,10 @@ define([
       error = (!this.minFreeSpaceView.checkSetting() ? true : error);
       error = (!this.snapshotLimit.checkSetting() ? true : error);
       error = (!this.bandwidthLimitView.checkSetting() ? true : error);
+      error = (!this.emailView.checkSetting() ? true : error);
+      error = (!this.emailHostView.checkSetting() ? true : error);
+      error = (!this.emailUserView.checkSetting() ? true : error);
+      error = (!this.emailPassView.checkSetting() ? true : error);
 
       for (i = 0; i < this.excludeViews.length; i++) {
         error = (!this.excludeViews[i].checkSetting() ? true : error);
@@ -430,6 +523,16 @@ define([
 
       if (error) {
         return;
+      }
+
+      var emailHost = this.emailHostView.getSetting();
+      var emailUser = this.emailUserView.getSetting();
+      var emailPass = this.emailPassView.getSetting();
+      if (!this.emailView.getSetting()) {
+        // Clear values if there is no email address
+        emailHost = '';
+        emailUser = '';
+        emailPass = '';
       }
 
       this.model.save({
@@ -441,6 +544,10 @@ define([
         'min_free_space': this.minFreeSpaceView.getSetting(),
         'snapshot_limit': this.snapshotLimit.getSetting(),
         'bandwidth_limit': this.bandwidthLimitView.getSetting(),
+        'email': this.emailView.getSetting(),
+        'email_host': emailHost,
+        'email_user': emailUser,
+        'email_pass': emailPass,
       }, {
         success: function() {
           this.hideSettings(function() {

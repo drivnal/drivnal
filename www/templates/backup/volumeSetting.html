@@ -1,5 +1,5 @@
 <i class="left-icon <%= icon %> icon-white"></i>
 <div class="setting">
-  <input type="text" name="<%= name %>" value="<%= value %>"
+  <input type="<%= password ? 'password' : 'text' %>" name="<%= name %>" value="<%= value %>"
     title="<%= title %>" placeholder="<%= title %>">
 </div>

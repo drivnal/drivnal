@@ -27,7 +27,8 @@ define([
         name: this.name,
         title: this.title,
         icon: this.icon,
-        value: this.value
+        value: this.value,
+        password: this.password
       }));
 
       this.$('input').tooltip();
