@@ -36,20 +36,21 @@ class Messenger:
         message = 'From %s\r\nTo: %s\r\nSubject:%s\r\n\r\n%s' % (
             SMTP_FROM_ADDR, self.email, SMTP_SUBJECT, message)
 
+        host = self.smtp_host or None
         port = self.smtp_port or None
         username = self.smtp_user or None
         password = self.smtp_pass or None
 
         logger.debug('Sending smtp message. %r' % {
             'volume_id': self.volume_id,
-            'smtp_host': self.smtp_host,
+            'smtp_host': host,
             'smtp_port': port,
             'smtp_user': username,
             'smtp_pass': password,
             'message': message,
         })
 
-        server = smtplib.SMTP_SSL(self.smtp_host, port)
+        server = smtplib.SMTP_SSL(host, port)
         if username or password:
             server.login(username, password)
         server.sendmail(SMTP_FROM_ADDR, [self.email], message)
