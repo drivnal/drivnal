@@ -85,6 +85,6 @@ class DatabaseObject:
                 # Its possible row is currently being created and will
                 # be valid once created. Wait for next db clean to
                 # revalidate and remove row.
-                server.app_db.set(db_obj.column_family, row, 'remove', True)
+                server.app_db.set(db_obj.column_family, row, 'remove', 'true')
 
         return valid
