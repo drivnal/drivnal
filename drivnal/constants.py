@@ -29,6 +29,10 @@ LOG_DIR = 'logs'
 EVENT_DB_TTL = 61000
 TASK_DB_MAX = 100
 
+SMTP_TIMEOUT = 30
+SMTP_FROM_ADDR = 'notify@drivnal.com'
+SMTP_SUBJECT = 'Drivnal Notification'
+
 MATCH_ALL = 'match_all'
 MATCH_BOTH = 'match_both'
 MATCH_PREFIX = 'match_prefix'
