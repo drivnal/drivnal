@@ -60,6 +60,10 @@ define([
     volume.min_free_space = request.data.min_free_space;
     volume.snapshot_limit = request.data.snapshot_limit;
     volume.bandwidth_limit = request.data.bandwidth_limit;
+    volume.email = request.data.email;
+    volume.email_host = request.data.email_host;
+    volume.email_user = request.data.email_user;
+    volume.email_pass = request.data.email_pass;
 
     setTimeout(function() {
       request.success({});

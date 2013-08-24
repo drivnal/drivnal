@@ -24,6 +24,10 @@ define([], function() {
       min_free_space: 0.1,
       snapshot_limit: 100,
       bandwidth_limit: 0,
+      email: '',
+      email_host: '',
+      email_user: '',
+      email_pass: '',
       snapshot_pending: false
     }
   };
