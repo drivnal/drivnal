@@ -42,7 +42,7 @@ class Event(DatabaseObject):
 
             # Remove events after ttl
             if (cur_time - event['time']) > EVENT_DB_TTL:
-                logger.info('Removing event past ttl from database. %r' % {
+                logger.debug('Removing event past ttl from database. %r' % {
                     'event_id': event_id,
                 })
                 server.app_db.remove(Event.column_family, event_id)
