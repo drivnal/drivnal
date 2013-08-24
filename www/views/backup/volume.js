@@ -228,6 +228,11 @@ define([
       if (this.isEmailSettings()) {
         return;
       }
+
+      this.emailHostView.$('i').hide();
+      this.emailUserView.$('i').hide();
+      this.emailPassView.$('i').hide();
+
       this.emailHostView.$el.slideDown({
         duration: 250
       });
@@ -238,6 +243,10 @@ define([
         duration: 250,
         step: (this.updateSize).bind(this),
         complete: function() {
+          this.emailHostView.$('i').show();
+          this.emailUserView.$('i').show();
+          this.emailPassView.$('i').show();
+
           this.updateSize();
         }.bind(this)
       });
@@ -246,6 +255,11 @@ define([
       if (!this.isEmailSettings()) {
         return;
       }
+
+      this.emailHostView.$('i').hide();
+      this.emailUserView.$('i').hide();
+      this.emailPassView.$('i').hide();
+
       this.emailHostView.$el.slideUp({
         duration: 250
       });
