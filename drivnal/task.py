@@ -162,7 +162,7 @@ class Task(DatabaseObject):
         tasks_time = sorted(tasks_time)
         for i in xrange(prune_count):
             task_id = tasks_dict[tasks_time.pop(0)]
-            logger.info('Max task count reached removing task ' + \
+            logger.debug('Max task count reached removing task ' + \
                     'from database. %r' % {
                 'task_id': task_id,
             })
