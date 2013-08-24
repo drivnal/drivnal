@@ -405,6 +405,7 @@ define([
       this.$('.remove-volume').hide();
       this.$('.settings i').hide();
       this.$('.open-settings').roll(450);
+      this.emailView.setSendTest(false);
 
       this.$('.settings').slideUp({
         duration: 250,
@@ -591,6 +592,7 @@ define([
         'email_host': emailHost,
         'email_user': emailUser,
         'email_pass': emailPass,
+        'email_send_test': this.emailView.getSendTest(),
       }, {
         success: function() {
           this.hideSettings(function() {

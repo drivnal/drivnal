@@ -1,5 +1,6 @@
 from drivnal.constants import *
 from drivnal.client import Client
+from drivnal.messenger import Messenger
 import drivnal.utils as utils
 from drivnal import server
 import flask
@@ -56,6 +57,7 @@ def volume_put_post(volume_id=None):
     email_host = flask.request.json['email_host']
     email_user = flask.request.json['email_user']
     email_pass = flask.request.json['email_pass']
+    email_send_test = flask.request.json['email_send_test']
 
     if volume_id:
         volume = client.get_volume(volume_id)
@@ -81,6 +83,10 @@ def volume_put_post(volume_id=None):
     volume.email_pass = email_pass
 
     volume.commit()
+
+    if email_send_test:
+        msg = Messenger(volume)
+        msg.send('Test notification.')
 
     return utils.jsonify({})
 

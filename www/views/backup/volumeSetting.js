@@ -32,6 +32,7 @@ define([
       }));
 
       this.$('input').tooltip();
+      this.$('i').tooltip();
 
       return this;
     },
