@@ -386,6 +386,8 @@ define([
       if (!this.isSettings()) {
         return;
       }
+      this.hideError();
+
       this.$('.remove-volume').hide();
       this.$('.settings i').hide();
       this.$('.open-settings').roll(450);
@@ -403,6 +405,33 @@ define([
     },
     isSettings: function() {
       return this.$('.settings').is(':visible');
+    },
+    showError: function() {
+      if (this.isError()) {
+        return;
+      }
+      this.$('.error').slideDown({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    hideError: function() {
+      if (!this.isError()) {
+        return;
+      }
+      this.$('.error').slideUp({
+        duration: 250,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    isError: function() {
+      return this.$('.error').is(':visible');
     },
     onClickItem: function(evt) {
       if (this.$(evt.target).hasClass('remove-volume')) {
@@ -555,7 +584,7 @@ define([
           }.bind(this));
         }.bind(this),
         error: function() {
-          this.$('.error').show();
+          this.showError();
         }.bind(this)
       });
     },
