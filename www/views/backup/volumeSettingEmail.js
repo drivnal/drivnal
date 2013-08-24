@@ -31,12 +31,13 @@ define([
       return false;
     },
     setSendTest: function(state) {
+      var tooltipText;
       if (state !== true && state !== false) {
         state = !this.sendTest;
       }
       if (state) {
         this.sendTest = true;
-        var tooltipText = 'Test email will be sent after saving';
+        tooltipText = 'Test email will be sent after saving';
         this.$('.send-test-email .tooltip-inner').text(tooltipText);
         this.$('.send-test-email').attr('data-original-title', tooltipText);
         this.$('.send-test-email').tooltip('fixTitle');
@@ -44,7 +45,7 @@ define([
       }
       else {
         this.sendTest = false;
-        var tooltipText = 'Send test email after saving';
+        tooltipText = 'Send test email after saving';
         this.$('.send-test-email .tooltip-inner').text(tooltipText);
         this.$('.send-test-email').attr('data-original-title', tooltipText);
         this.$('.send-test-email').tooltip('fixTitle');
