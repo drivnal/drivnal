@@ -6333,11 +6333,22 @@ button:focus {
   position: static;
   display: inline;
 }
-.backup .new-snapshot {
+.backup .new-snapshot-box {
   margin: 10px;
+}
+.backup .new-snapshot-box .new-snapshot {
   padding: 10px;
   font-size: 1.5em;
   text-align: center;
+}
+.backup .new-snapshot-box .error {
+  padding: 3px;
+  font-size: 1.15em;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  border-top: 1px solid #ff2423;
+  background-color: rgba(255, 36, 35, 0.9);
 }
 .backup .setting .loading {
   font-size: 0.8em;
