@@ -3,9 +3,11 @@ from exceptions import *
 from client import Client
 from event import Event
 from task import Task
+from messenger import Messenger
 import time
 import logging
 import threading
+import traceback
 
 logger = logging.getLogger(APP_NAME)
 
@@ -85,7 +87,15 @@ class Scheduler:
         client = Client()
 
         for volume in client.get_volumes():
-            self._check_volume_schedule(localtime, volume)
+            try:
+                self._check_volume_schedule(localtime, volume)
+            except:
+                error_msg = 'Scheduler failed to check volume schedule. %r' % {
+                    'volume_id': volume.id
+                }
+                logger.exception(error_msg)
+                msg = Messenger(volume)
+                msg.send('%s\n\n%s' % (error_msg, traceback.format_exc()))
 
     def clean_database(self):
         Task.clean_database()
