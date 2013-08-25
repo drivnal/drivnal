@@ -19,6 +19,6 @@ cp /vagrant/tools/vagrant_collection3.conf /etc/apache2/conf.d/collection3.conf
 service apache2 restart 1> /dev/null
 
 cp /vagrant/tools/vagrant_drivnal.py /usr/bin/drivnal
-cp /vagrant/tools/vagrant_drivnal.db /var/lib/drivnal/drivnal.db
-cp /vagrant/tools/vagrant_volume.conf /media/backup/drivnal.conf
+cp -n /vagrant/tools/vagrant_drivnal.db /var/lib/drivnal/drivnal.db
+cp -n /vagrant/tools/vagrant_volume.conf /media/backup/drivnal.conf
 chmod +x /usr/bin/drivnal
