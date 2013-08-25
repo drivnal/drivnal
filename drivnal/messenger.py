@@ -50,8 +50,18 @@ class Messenger:
             'message': message,
         })
 
-        server = smtplib.SMTP_SSL(host, port)
-        if username or password:
-            server.login(username, password)
-        server.sendmail(SMTP_FROM_ADDR, [self.email], message)
-        server.quit()
+        try:
+            server = smtplib.SMTP_SSL(host, port)
+            if username or password:
+                server.login(username, password)
+            server.sendmail(SMTP_FROM_ADDR, [self.email], message)
+            server.quit()
+        except:
+            logger.exception('Failed to send email. %r' % {
+                'volume_id': self.volume_id,
+                'smtp_host': host,
+                'smtp_port': port,
+                'smtp_user': username,
+                'smtp_pass': password,
+                'message': message,
+            })
