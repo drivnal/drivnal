@@ -28,6 +28,10 @@ class Messenger:
                 self.smtp_port = None
         self.smtp_user = volume.config.email_user
         self.smtp_pass = volume.config.email_pass
+        if volume.config.email_ssl is not None:
+            self.smtp_ssl = volume.config.email_ssl
+        else:
+            self.smtp_ssl = True
 
     def send(self, message):
         if not self.email:
@@ -51,7 +55,11 @@ class Messenger:
         })
 
         try:
-            server = smtplib.SMTP_SSL(host, port)
+            if self.smtp_ssl:
+                server = smtplib.SMTP_SSL(host, port)
+            else:
+                server = smtplib.SMTP(host, port)
+
             if username or password:
                 server.login(username, password)
             server.sendmail(SMTP_FROM_ADDR, [self.email], message)
