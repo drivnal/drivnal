@@ -47,7 +47,7 @@ define([
       }
       else {
         this.sendTest = false;
-        tooltipText = 'Send test email after saving';
+        tooltipText = 'Test email will not be sent after saving';
         this.$('.send-test-email').parent().find('.tooltip-inner').text(
           tooltipText);
         this.$('.send-test-email').attr('data-original-title', tooltipText);
