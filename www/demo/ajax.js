@@ -64,6 +64,7 @@ define([
     volume.email_host = request.data.email_host;
     volume.email_user = request.data.email_user;
     volume.email_pass = request.data.email_pass;
+    volume.email_ssl = request.data.email_ssl;
 
     setTimeout(function() {
       request.success({});

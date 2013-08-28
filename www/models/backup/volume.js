@@ -16,7 +16,12 @@ define([
       'min_free_space': 0.1,
       'snapshot_limit': 300,
       'bandwidth_limit': 0,
-      'snapshot_pending': false
+      'snapshot_pending': false,
+      'email': '',
+      'email_host': '',
+      'email_user': '',
+      'email_pass': '',
+      'email_ssl': true
     },
     url: function() {
       var url = '/volume';

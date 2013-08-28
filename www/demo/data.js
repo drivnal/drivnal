@@ -28,6 +28,7 @@ define([], function() {
       email_host: '',
       email_user: '',
       email_pass: '',
+      email_ssl: true,
       snapshot_pending: false
     }
   };
