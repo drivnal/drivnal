@@ -119,6 +119,7 @@ define([
       });
       this.listenTo(this.emailView, 'change', this.onEmailChange);
       this.$('.setting-email').html(this.emailView.render().el);
+      this.emailView.setEmailSSL(this.model.get('email_ssl'));
 
       this.emailHostView = new VolumeSettingEmailHostView({
         value: this.model.get('email_host')
@@ -517,6 +518,7 @@ define([
       this.snapshotLimit.setValue(this.model.get('snapshot_limit'));
       this.bandwidthLimitView.setValue(this.model.get('bandwidth_limit'));
       this.emailView.setValue(this.model.get('email'));
+      this.emailView.setEmailSSL(this.model.get('email_ssl'));
       this.emailHostView.setValue(this.model.get('email_host'));
       this.emailUserView.setValue(this.model.get('email_user'));
       this.emailPassView.setValue(this.model.get('email_pass'));
@@ -592,6 +594,7 @@ define([
         'email_host': emailHost,
         'email_user': emailUser,
         'email_pass': emailPass,
+        'email_ssl': this.emailView.getEmailSSL(),
         'email_send_test': this.emailView.getSendTest(),
       }, {
         success: function() {

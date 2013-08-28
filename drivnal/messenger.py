@@ -28,8 +28,8 @@ class Messenger:
                 self.smtp_port = None
         self.smtp_user = volume.config.email_user
         self.smtp_pass = volume.config.email_pass
-        if volume.config.email_ssl is not None:
-            self.smtp_ssl = volume.config.email_ssl
+        if volume.email_ssl == 'false':
+            self.smtp_ssl = False
         else:
             self.smtp_ssl = True
 
