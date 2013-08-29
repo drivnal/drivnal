@@ -1,12 +1,14 @@
 from constants import *
 import smtplib
 import time
+import threading
 import logging
 
 logger = logging.getLogger(APP_NAME)
 
 class Messenger:
     def __init__(self, volume):
+        self._thread = None
         self.volume_id = volume.id
 
         self.email = volume.config.email
@@ -33,10 +35,9 @@ class Messenger:
         else:
             self.smtp_ssl = True
 
-    def send(self, message):
+    def _send(self, message):
         if not self.email:
             return
-
         message = 'From %s\r\nTo: %s\r\nSubject:%s\r\n\r\n%s' % (
             SMTP_FROM_ADDR, self.email, SMTP_SUBJECT, message)
 
@@ -75,3 +76,9 @@ class Messenger:
                 'smtp_pass': password,
                 'message': message,
             })
+
+    def send(self, message):
+        if self._thread:
+            self._thread.join()
+        self._thread = threading.Thread(target=self._send, args=(message,))
+        self._thread.start()
