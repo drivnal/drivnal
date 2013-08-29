@@ -103,8 +103,7 @@ class Scheduler:
 
     def start(self):
         self.interrupt = None
-        self.thread = threading.Thread(
-            target=self._run)
+        self.thread = threading.Thread(target=self._run)
         self.thread.start()
 
     def stop(self):
