@@ -14,7 +14,8 @@ the previous snapshot and hard links are created for unchanged files. Unchanged
 files are never stored more then once on the snapshot volume. All snapshots
 are independent of the other snapshots and previous snapshots are not required
 to restore files from a snapshot. For more information on how this works read
-the `hard links <//github.com/drivnal/drivnal/wiki/Hard-Links>`_ wiki page.
+the `hard links <https://github.com/drivnal/drivnal/wiki/Hard-Links>`_ wiki
+page.
 
 Development
 -----------
