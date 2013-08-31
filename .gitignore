@@ -9,6 +9,7 @@ Thumbs.db
 *.pyc
 /.vagrant
 /build
+/dist
 /drivnal.egg-info
 /drivnal.db
 /www/node_modules
