@@ -140,10 +140,11 @@ require([
   'jquery',
   'underscore',
   'backbone',
+  'views/loadbar/loadbar',
   'views/header/header',
   'routers/main',
   'initialize'
-], function($, _, Backbone, HeaderView, mainRouter, initialize) {
+], function($, _, Backbone, LoadbarView, HeaderView, mainRouter, initialize) {
   'use strict';
 
   initialize();
@@ -372,6 +373,9 @@ require([
 
   var headerView = new HeaderView();
   $('body').prepend(headerView.render().el);
+
+  window.loadbar = new LoadbarView();
+  $('body').prepend(window.loadbar.render().el);
 
   mainRouter.initialize();
 });
