@@ -19,15 +19,15 @@ the `hard links <//github.com/drivnal/drivnal/wiki/Hard-Links>`_ wiki page.
 Development
 -----------
 
-A python script `server.py` is included in the root directory to run the
+A python script ``server.py`` is included in the root directory to run the
 server from the root dir. The server will use the unbuilt web files,
 modification to the server will be automatically reloaded. Vagrant can also be
 used to safely develop in a virtualized environment, testing the webapp with
 vagrant will not modify the host system. When developing with vagrant the root
-directory will automatically sync to the guest system at `/vagrant` and the
+directory will automatically sync to the guest system at ``/vagrant`` and the
 port 6500 will be forwarded to allow access to the webapp on host system. The
 vagrant setup will also setup collectd to monitor performance of guest system.
-Vagrant `stress` vm is used for stress testing performance with eight backup
+Vagrant ``stress`` vm is used for stress testing performance with eight backup
 volumes.
 
 Development Setup
