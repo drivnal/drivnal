@@ -36,7 +36,7 @@ define([
       this.setProgress(0);
       setTimeout(function() {
         this.defaultTransition();
-      }, 50);
+      }.bind(this), 50);
     },
     setProgress: function(progress) {
       if (this.rolling) {
@@ -54,7 +54,14 @@ define([
       }
       this.setTransition('.main', 'width ' + time + 'ms');
       this.setProgress(progress);
-      setTimeout((this.defaultTransition).bind(this), time);
+      setTimeout(function() {
+        if (progress === 100) {
+          this.clearProgress();
+        }
+        else {
+          this.defaultTransition();
+        }
+      }.bind(this), time);
     },
     startProgressRoll: function(time) {
       if (this.rolling) {
