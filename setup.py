@@ -5,8 +5,8 @@ import copy
 import shlex
 import shutil
 import fileinput
+import drivnal
 
-VERSION = '0.1.14'
 PATCH_DIR = 'build'
 INSTALL_UPSTART = True
 INSTALL_SYSTEMD = True
@@ -56,14 +56,14 @@ for file_name in patch_files:
 
 setup(
     name='drivnal',
-    version=VERSION,
+    version=drivnal.__version__,
     description='Simple snapshot backups',
     long_description=open('README.rst').read(),
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
     download_url='https://github.com/drivnal/drivnal/archive/%s.tar.gz' % (
-        VERSION),
+        drivnal.__version__),
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
     license=open('LICENSE').read(),
