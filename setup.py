@@ -58,6 +58,7 @@ setup(
     name='drivnal',
     version=VERSION,
     description='Simple snapshot backups',
+    long_description=open('README.rst').read(),
     author='Zachary Huff',
     author_email='zach.huff.386@gmail.com',
     url='http://drivnal.com/',
@@ -65,7 +66,7 @@ setup(
         VERSION),
     keywords='backup, snapshot, web interface, rsync',
     packages=['drivnal', 'drivnal.handlers'],
-    license='AGPL3',
+    license=open('LICENSE').read(),
     zip_safe=False,
     install_requires=[
         'flask',
