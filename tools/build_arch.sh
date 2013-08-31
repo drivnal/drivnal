@@ -1,4 +1,4 @@
-VERSION='0.1.14'
+VERSION=`cat ../drivnal/__init__.py | grep __version__ | cut -d\' -f2`
 
 mkdir -p ../build/arch_linux
 cd ../build/arch_linux
