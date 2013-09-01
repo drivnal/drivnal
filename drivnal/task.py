@@ -15,7 +15,7 @@ class Task(DatabaseObject):
     str_columns = ['volume_id', 'type', 'state']
     int_columns = ['time', 'snapshot_id']
     cached_columns = ['volume_id', 'type', 'time', 'snapshot_id']
-    required_columns = ['volume_id', 'type', 'state', 'time', 'snapshot_id']
+    required_columns = ['volume_id', 'type', 'state', 'time']
 
     def __init__(self, id=None, volume=None, snapshot=None):
         if id is None:
