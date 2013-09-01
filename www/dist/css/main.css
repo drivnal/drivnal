@@ -6872,3 +6872,12 @@ button:focus {
 .navbar .nav .active a:hover {
   background-color: #181818;
 }
+.loadbar {
+  background-color: rgba(0, 114, 230, 0.95);
+  box-shadow: 0 0 6px #0065ca;
+  height: 3px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
