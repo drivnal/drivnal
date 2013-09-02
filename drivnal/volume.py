@@ -89,12 +89,6 @@ class Volume(Config):
             'volume_id': self.id,
         })
 
-        if not os.access(self.path, os.W_OK):
-            raise SnapshotPermissionError('Snapshot failed, write access ' + \
-                'denied to volume storage directory. %r' % {
-                    'volume_id': self.id,
-                })
-
         if self.snapshot_pending():
             raise SnapshotAlreadyRunning('Snapshot failed, ' + \
                 'snapshot already running. %r' % {
