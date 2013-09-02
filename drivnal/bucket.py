@@ -4,6 +4,9 @@ import os
 import logging
 
 class Bucket:
+    def __init__(self, path):
+        self.path = path
+
     def get_object(self, path):
         return Object(os.path.join(self.path, path))
 

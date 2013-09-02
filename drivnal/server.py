@@ -4,16 +4,21 @@ import signal
 import time
 from constants import *
 from database import Database
+from config import Config
 
 logger = None
 
-class Server:
+class Server(Config):
+    bool_options = ['debug', 'log_debug', 'scheduler']
+    int_options = ['port']
+    path_options = ['log_path', 'db_path', 'www_path']
+    str_options = ['bind_addr']
+
     def __init__(self):
-        self.config = None
-        self.conf_path = None
+        Config.__init__(self)
         self.app = None
         self.app_db = None
-        self.scheduler = None
+        self._scheduler = None
 
     def _setup_app(self):
         import flask
@@ -23,18 +28,16 @@ class Server:
         logger = self.app.logger
 
     def _setup_conf(self):
-        from config import Config
-        self.config = Config(self.conf_path)
-        self.config.read()
+        self.set_path(self.conf_path)
 
     def _setup_log(self):
-        if self.config.log_debug == 'true':
+        if self.log_debug:
             self.log_level = logging.DEBUG
         else:
             self.log_level = logging.INFO
 
-        if self.config.log_path:
-            self.log_handler = logging.FileHandler(self.config.log_path)
+        if self.log_path:
+            self.log_handler = logging.FileHandler(self.log_path)
         else:
             self.log_handler = logging.StreamHandler()
 
@@ -52,13 +55,13 @@ class Server:
         logger.addHandler(self.log_handler)
 
     def _setup_db(self):
-        self.app_db = Database(self.config.db_path or DEFAULT_DB_PATH)
+        self.app_db = Database(self.db_path or DEFAULT_DB_PATH)
 
     def _setup_handlers(self):
         import handlers
 
     def _setup_static_handler(self):
-        www_path = self.config.www_path or DEFAULT_WWW_PATH
+        www_path = self.www_path or DEFAULT_WWW_PATH
 
         from werkzeug import SharedDataMiddleware
 
@@ -85,7 +88,7 @@ class Server:
         logger.info('Starting server...')
 
         server = cherrypy.wsgiserver.CherryPyWSGIServer(
-            (self.config.bind_addr, int(self.config.port)), self.app)
+            (self.bind_addr, self.port), self.app)
         try:
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
@@ -103,15 +106,14 @@ class Server:
         werkzeug_logger.addHandler(self.log_handler)
 
         try:
-            self.app.run(host=self.config.bind_addr,
-                port=int(self.config.port), threaded=True)
+            self.app.run(host=self.bind_addr, port=self.port, threaded=True)
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self._stop_scheduler()
             logger.info('Stopping server...')
 
     def _run_server(self):
-        if self.config.debug == 'true':
+        if self.debug:
             self._run_wsgi_debug()
         else:
             self._run_wsgi()
@@ -119,16 +121,16 @@ class Server:
     def _start_scheduler(self):
         logger.info('Starting scheduler...')
 
-        if self.config.scheduler != 'false':
+        if self.scheduler or self.scheduler is None:
             from scheduler import Scheduler
-            self.scheduler = Scheduler()
-            self.scheduler.start()
+            self._scheduler = Scheduler()
+            self._scheduler.start()
 
     def _stop_scheduler(self):
         logger.info('Stopping scheduler...')
 
-        if self.scheduler:
-            self.scheduler.stop()
+        if self._scheduler:
+            self._scheduler.stop()
 
     def run_scheduler(self):
         self._setup_conf()

@@ -27,9 +27,9 @@ class Snapshot(Bucket):
         else:
             self.id = int(id)
             self.state = COMPLETE
-        self.volume = volume
-        self.path = os.path.join(self.volume.path, SNAPSHOT_DIR, id)
-        self.log_path = os.path.join(self.volume.path,
+        self.volume_id = volume.id
+        self.path = os.path.join(volume.path, SNAPSHOT_DIR, id)
+        self.log_path = os.path.join(volume.path,
             LOG_DIR, 'snapshot_%s.log' % self.id)
         self.parse_log_file()
 
@@ -38,7 +38,8 @@ class Snapshot(Bucket):
             self.parse_log_file()
 
         if name not in self.__dict__:
-            raise AttributeError('Object instance has no attribute %r' % name)
+            raise AttributeError(
+                'Snapshot instance has no attribute %r' % name)
         return self.__dict__[name]
 
     def parse_log_file(self):
@@ -48,7 +49,7 @@ class Snapshot(Bucket):
         self.speed = None
 
         logger.debug('Parsing log file for snapshot. %r' % {
-            'volume_id': self.volume.id,
+            'volume_id': self.volume_id,
             'snapshot_id': self.id,
         })
 
@@ -69,7 +70,7 @@ class Snapshot(Bucket):
                     else:
                         logger.warning('Failed to get snapshot start ' + \
                             'time from log, line split length invalid. %r' % {
-                                'volume_id': self.volume.id,
+                                'volume_id': self.volume_id,
                                 'snapshot_id': self.id,
                                 'log_line': line,
                             })
@@ -77,7 +78,7 @@ class Snapshot(Bucket):
                 except ValueError:
                     logger.warning('Failed to get snapshot start ' + \
                         'time from log, value error. %r' % {
-                            'volume_id': self.volume.id,
+                            'volume_id': self.volume_id,
                             'snapshot_id': self.id,
                             'log_line': line,
                         })
@@ -116,7 +117,7 @@ class Snapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get sent bytes ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume.id,
+                                    'volume_id': self.volume_id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
@@ -126,7 +127,7 @@ class Snapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get received bytes ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume.id,
+                                    'volume_id': self.volume_id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
@@ -137,13 +138,13 @@ class Snapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get transfer speed ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume.id,
+                                    'volume_id': self.volume_id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
         except IOError:
             logger.debug('Failed to read log file for ' + \
                 'snapshot, IOError. %r' % {
-                    'volume_id': self.volume.id,
+                    'volume_id': self.volume_id,
                     'snapshot_id': self.id,
                 })

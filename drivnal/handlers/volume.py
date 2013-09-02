@@ -7,11 +7,6 @@ import flask
 import os
 
 def _get_volume_object(volume):
-    if volume.email_ssl == 'false':
-        email_ssl = False
-    else:
-        email_ssl = True
-
     return {
         'id': volume.id,
         'name': volume.name or 'Backup Volume',
@@ -28,7 +23,7 @@ def _get_volume_object(volume):
         'email_host': volume.email_host,
         'email_user': volume.email_user,
         'email_pass': volume.email_pass,
-        'email_ssl': email_ssl
+        'email_ssl': volume.email_ssl,
     }
 
 @server.app.route('/volume', methods=['GET'])
@@ -88,10 +83,7 @@ def volume_put_post(volume_id=None):
     volume.email_host = email_host
     volume.email_user = email_user
     volume.email_pass = email_pass
-    if email_ssl:
-        volume.email_ssl = 'true'
-    else:
-        volume.email_ssl = 'false'
+    volume.email_ssl = email_ssl
 
     volume.commit()
 

@@ -4,20 +4,44 @@ import logging
 
 logger = logging.getLogger(APP_NAME)
 
+_RESERVED_ATTRIBUTES = ['bool_options', 'int_options', 'float_options',
+    'path_options', 'str_options', 'list_options', 'all_options']
+
 class Config:
-    def __init__(self, path):
-        self._config_path = path
+    bool_options = []
+    int_options = []
+    float_options = []
+    path_options = []
+    str_options = []
+    list_options = []
+
+    def __init__(self, path=None):
+        self.all_options = self.bool_options + self.int_options + \
+            self.float_options + self.path_options + self.str_options + \
+            self.list_options
+        self._conf_path = path
         self.set_state(CLOSED)
 
     def __setattr__(self, name, value):
-        if name[0] != '_':
+        if name in _RESERVED_ATTRIBUTES:
+            self.__dict__[name] = value
+            return
+
+        if name in self.all_options:
             self.set_state(UNSAVED)
         self.__dict__[name] = value
 
     def __getattr__(self, name):
-        if name[0] == '_':
-            raise AttributeError('Object instance has no attribute %r' % name)
-        return None
+        if name in _RESERVED_ATTRIBUTES:
+            return self.__dict__[name]
+
+        if name in self.all_options:
+            self.load()
+            if name not in self.__dict__:
+                return None
+        if name not in self.__dict__:
+            raise AttributeError('Config instance has no attribute %r' % name)
+        return self.__dict__[name]
 
     def get_state(self):
         return self._state
@@ -25,60 +49,130 @@ class Config:
     def set_state(self, state):
         self._state = state
 
-    def read(self):
-        logger.debug('Reading config.')
+    def get_path(self):
+        return self._conf_path
 
-        with open(self._config_path) as config:
+    def set_path(self, path):
+        self._conf_path = path
+
+    def _encode_line(self, name, value):
+        if name in self.bool_options:
+            value = 'true' if value else 'false'
+        elif name in self.list_options:
+            value = ','.join(value)
+
+        return '%s=%s\n' % (name, value)
+
+    def _decode_bool(self, value):
+        value = value.lower()
+        if value in ['true', 't', 'yes', 'y']:
+            return True
+        elif value in ['false', 'f', 'no', 'n']:
+            return False
+        else:
+            raise TypeError('Value is not boolean')
+
+    def _decode_int(self, value):
+        return int(value)
+
+    def _decode_float(self, value):
+        return float(value)
+
+    def _decode_path(self, value):
+        try:
+            value = os.path.normpath(value)
+        except AttributeError:
+            logger.error('Failed to normalize path. %r' % {
+                'path': value,
+            })
+        return value
+
+    def _decode_list(self, value):
+        return filter(None, value.split(','))
+
+    def _decode_line(self, line):
+        line_split = line.split('=')
+        name = line_split[0]
+        value = '='.join(line_split[1:])
+
+        if name not in self.all_options:
+            raise TypeError('Unknown option')
+
+        if not value:
+            raise TypeError('Empty option')
+
+        if name in self.list_options:
+            values = self._decode_list(value)
+
+            decoder = None
+            if name in self.int_options:
+                decoder = self._decode_int
+            elif name in self.float_options:
+                decoder = self._decode_float
+            elif name in self.bool_options:
+                decoder = self._decode_bool
+            elif name in self.path_options:
+                decoder = self._decode_path
+
+            if decoder:
+                for i, value in enumerate(values):
+                    values[i] = decoder(value)
+
+            value = values
+        elif name in self.str_options:
+            pass
+        elif name in self.int_options:
+            value = self._decode_int(value)
+        elif name in self.float_options:
+            value = self._decode_float(value)
+        elif name in self.bool_options:
+            value = self._decode_bool(value)
+        elif name in self.path_options:
+            value = self._decode_path(value)
+
+        return name, value
+
+    def load(self):
+        if self.get_state() != CLOSED:
+            return
+        logger.debug('Loading config.')
+
+        with open(self._conf_path) as config:
             for line in config:
                 line = line.rstrip('\n')
 
                 if line.strip() == '':
                     continue
-
                 elif line[0] == '#':
                     continue
-
                 elif '=' in line:
-                    line_split = line.split('=')
-
-                    try:
-                        name = line_split[0]
-                        value = '='.join(line_split[1:])
-
-                        # If option name ends with s assume list
-                        if name[-1] == 's' and name[-2:] != 'ss':
-                            value = value.split(',')
-                            value[:] = [x for x in value if x != '']
-
-                    except ValueError:
-                        logger.warning('Ignoring invalid line. %r' % {
-                            'line': line,
-                        })
-                        continue
-                    setattr(self, name, value)
-
+                    pass
                 else:
+                    logger.warning('Ignoring invalid line. %r' % {
+                        'line': line,
+                    })
+                    continue
+
+                try:
+                    name, value = self._decode_line(line)
+                    self.__dict__[name] = value
+                except ValueError:
                     logger.warning('Ignoring invalid line. %r' % {
                         'line': line,
                     })
 
         self.set_state(SAVED)
 
-    def write(self):
-        logger.debug('Writing config.')
+    def commit(self):
+        logger.debug('Committing config.')
 
-        with open(self._config_path, 'w') as config:
-            for name in sorted(vars(self).keys()):
-                value = vars(self)[name]
-
-                if name[0] == '_':
+        with open(self._conf_path, 'w') as config:
+            for name in self.all_options:
+                if name not in self.__dict__:
                     continue
-                # If option name ends with s assume list
-                elif name[-1] == 's' and name[-2:] != 'ss':
-                    value = ','.join(value)
-                elif value is None:
+                value = self.__dict__[name]
+                if value is None:
                     continue
-
-                config.write('%s=%s\n' % (name, value))
+                config.write(self._encode_line(name, value))
 
         self.set_state(SAVED)

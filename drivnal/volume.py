@@ -17,7 +17,16 @@ import logging
 
 logger = logging.getLogger(APP_NAME)
 
-class Volume:
+class Volume(Config):
+    bool_options = ['email_ssl']
+    int_options = ['snapshot_limit', 'bandwidth_limit', 'max_retry']
+    float_options = ['min_free_space', 'max_prune']
+    path_options = ['excludes', 'source_path']
+    str_options = ['id', 'name', 'schedule', 'email', 'email_host',
+        'email_user', 'email_pass', 'origin', 'ssh_user', 'ssh_pass',
+        'ssh_key']
+    list_options = ['excludes']
+
     def __init__(self, path):
         try:
             config_path = os.path.join(path, CONF_FILENAME)
@@ -26,8 +35,8 @@ class Volume:
                 'volume_id': self.id,
             })
             raise
+        Config.__init__(self, config_path)
 
-        self.config = Config(config_path)
         self.orig_path = path
         self.orig_source_path = self.source_path
         self.path = path
@@ -40,17 +49,9 @@ class Volume:
             self.commit()
 
     def __getattr__(self, name):
-        if name in ['id', 'name', 'source_path', 'excludes', 'schedule', \
-                'min_free_space', 'snapshot_limit', 'bandwidth_limit',
-                'email', 'email_host', 'email_user', 'email_pass', 'email_ssl',
-                'max_prune', 'max_retry', 'origin']:
-            self.load()
-        if name in ['snapshots']:
+        if name == 'snapshots':
             self.load_snapshots()
-
-        if name not in self.__dict__:
-            raise AttributeError('Object instance has no attribute %r' % name)
-        return self.__dict__[name]
+        return Config.__getattr__(self, name)
 
     def get_snapshot(self, id):
         for snapshot in self.snapshots:
@@ -148,93 +149,11 @@ class Volume:
         return task
 
     def load(self):
-        logger.debug('Reading volume config.')
-
         try:
-            self.config.read()
+            Config.load(self)
         except IOError:
+            # Config doesnt exists defaults will be used
             pass
-
-        self.id = self.config.id
-        self.name = self.config.name
-        self.source_path = self.config.source_path
-        if self.source_path:
-            try:
-                self.source_path = os.path.normpath(self.source_path)
-            except AttributeError:
-                logger.error('Failed to normalize volume source path. %r' % {
-                    'volume_id': self.id,
-                })
-        self.excludes = self.config.excludes or []
-        for i, exclude in enumerate(self.excludes):
-            try:
-                self.excludes[i] = os.path.normpath(exclude)
-            except AttributeError:
-                logger.error('Failed to normalize volume exclude path. %r' % {
-                    'volume_id': self.id,
-                    'path': exclude,
-                })
-        self.schedule = self.config.schedule
-
-        min_free_space = None
-        if self.config.min_free_space:
-            try:
-                min_free_space = float(self.config.min_free_space)
-            except ValueError:
-                logger.warning(
-                    'Config option min_free_space is invalid. %r' % {
-                        'volume_id': self.id,
-                    })
-        self.min_free_space = min_free_space
-
-        snapshot_limit = None
-        if self.config.snapshot_limit:
-            try:
-                snapshot_limit = int(self.config.snapshot_limit)
-            except ValueError:
-                logger.warning(
-                    'Config option snapshot_limit is invalid. %r' % {
-                        'volume_id': self.id,
-                    })
-        self.snapshot_limit = snapshot_limit
-
-        bandwidth_limit = None
-        if self.config.bandwidth_limit:
-            try:
-                bandwidth_limit = int(self.config.bandwidth_limit)
-            except ValueError:
-                logger.warning(
-                    'Config option bandwidth_limit is invalid. %r' % {
-                        'volume_id': self.id,
-                    })
-        self.bandwidth_limit = bandwidth_limit
-
-        self.email = self.config.email
-        self.email_host = self.config.email_host
-        self.email_user = self.config.email_user
-        self.email_pass = self.config.email_pass
-        self.email_ssl = self.config.email_ssl
-
-        max_prune = None
-        if self.config.max_prune:
-            try:
-                max_prune = float(self.config.max_prune)
-            except ValueError:
-                logger.warning('Config option max_prune is invalid. %r' % {
-                    'volume_id': self.id,
-                })
-        self.max_prune = max_prune
-
-        max_retry = None
-        if self.config.max_retry:
-            try:
-                max_retry = int(self.config.max_retry)
-            except ValueError:
-                logger.warning('Config option max_retry is invalid. %r' % {
-                    'volume_id': self.id,
-                })
-        self.max_retry = max_retry
-
         self.origin = Origin(self)
 
     def load_snapshots(self):
@@ -270,47 +189,8 @@ class Volume:
         return task
 
     def commit(self):
-        retry_config_commit = False
-
-        logger.debug('Writing volume config. %r' % {
-            'volume_id': self.id,
-        })
-
-        self.config.id = self.id
-        self.config.name = self.name
-        self.config.source_path = self.source_path
-        self.config.excludes = self.excludes
-        self.config.schedule = self.schedule
-        self.config.min_free_space = self.min_free_space
-        self.config.snapshot_limit = self.snapshot_limit
-        self.config.bandwidth_limit = self.bandwidth_limit
-        self.config.email = self.email
-        self.config.email_host = self.email_host
-        self.config.email_user = self.email_user
-        self.config.email_pass = self.email_pass
-        self.config.email_ssl = self.email_ssl
-        self.config.max_prune = self.max_prune
-        self.config.max_retry = self.max_retry
-        try:
-            self.config.write()
-        except:
-            # If volume has already been moved write will need
-            # to be done after move
-            if self.orig_path != self.path:
-                logger.debug('Failed to commit config to original ' + \
-                    'volume path in a volume move, retying to new path ' +
-                    'after volume is moved. %r' % {
-                        'volume_id': self.id,
-                    })
-                retry_config_commit = True
-            else:
-                raise
-
+        Config.commit(self)
         Event(type=VOLUMES_UPDATED)
 
         if self.orig_path != self.path:
             self._move_volume()
-
-            if retry_config_commit:
-                self.config.set_path(self.path)
-                self.config.write()

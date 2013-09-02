@@ -11,9 +11,9 @@ class Messenger:
         self._thread = None
         self.volume_id = volume.id
 
-        self.email = volume.config.email
-        if volume.config.email_host:
-            smtp_host_split = volume.config.email_host.split(':')
+        self.email = volume.email
+        if volume.email_host:
+            smtp_host_split = volume.email_host.split(':')
             if len(smtp_host_split) > 1:
                 self.smtp_host = smtp_host_split[0]
                 try:
@@ -28,12 +28,9 @@ class Messenger:
             else:
                 self.smtp_host = smtp_host_split[0]
                 self.smtp_port = None
-        self.smtp_user = volume.config.email_user
-        self.smtp_pass = volume.config.email_pass
-        if volume.email_ssl == 'false':
-            self.smtp_ssl = False
-        else:
-            self.smtp_ssl = True
+        self.smtp_user = volume.email_user
+        self.smtp_pass = volume.email_pass
+        self.smtp_ssl = volume.email_ssl
 
     def _send(self, message):
         if not self.email:
