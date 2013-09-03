@@ -2,7 +2,6 @@ from constants import *
 from exceptions import *
 from task import Task
 from event import Event
-from snapshot import Snapshot
 import os
 import time
 import shlex
@@ -132,7 +131,7 @@ class CreateSnapshot(Task):
         Event(type=VOLUMES_UPDATED)
 
     def run(self):
-        self.snapshot = Snapshot(self.volume)
+        self.snapshot = self.volume.SnapshotClass(self.volume)
         self.orig_snapshot_count = self.volume.get_snapshot_count()
         bandwidth_limit = self.volume.bandwidth_limit
         excludes = self.volume.excludes or []

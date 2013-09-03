@@ -2,7 +2,7 @@ from constants import *
 from exceptions import *
 from config import Config
 from origin import Origin
-from snapshot import Snapshot
+from local_snapshot import LocalSnapshot
 from task import Task
 from event import Event
 from create_snapshot import CreateSnapshot
@@ -26,6 +26,7 @@ class Volume(Config):
         'email_user', 'email_pass', 'origin', 'ssh_host', 'ssh_user',
         'ssh_pass', 'ssh_key']
     list_options = ['excludes']
+    SnapshotClass = LocalSnapshot
 
     def __init__(self, path):
         try:
@@ -161,7 +162,7 @@ class Volume(Config):
             snapshot_names.append(name)
 
         for name in sorted(snapshot_names):
-            self.snapshots.append(Snapshot(self, name))
+            self.snapshots.append(self.SnapshotClass(self, name))
 
     def _move_volume(self):
         logger.debug('Starting move volume task. %r' % {

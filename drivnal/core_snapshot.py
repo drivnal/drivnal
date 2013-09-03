@@ -1,6 +1,5 @@
 from constants import *
 from bucket import Bucket
-from object import Object
 import utils
 import os
 import time
@@ -10,7 +9,7 @@ import logging
 
 logger = logging.getLogger(APP_NAME)
 
-class Snapshot(Bucket):
+class CoreSnapshot(Bucket):
     def __init__(self, volume, dir_name=None):
         self.volume_id = volume.id
         self.volume = volume
@@ -155,52 +154,19 @@ class Snapshot(Bucket):
                     'snapshot_id': self.id,
                 })
 
-
     def _get_path(self):
-        dir_name = str(self.id)
-        if self.state != COMPLETE:
-            dir_name = '%s.%s' % (dir_name, self.state)
-        return os.path.join(self.volume.path, SNAPSHOT_DIR, dir_name)
+        return ''
 
     def _get_log_path(self):
-        return os.path.join(self.volume.path, LOG_DIR,
-            'snapshot_%s.log' % self.id)
+        return ''
 
     def setup_snapshot(self):
-        snapshots_path = os.path.dirname(self.path)
-        if not os.path.isdir(snapshots_path):
-            logger.debug('Creating volume snapshots directory. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.id,
-            })
-            os.mkdir(snapshots_path)
-
-        logs_path = os.path.dirname(self.log_path)
-        if not os.path.isdir(logs_path):
-            logger.debug('Creating volume logs directory. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.id,
-            })
-            os.mkdir(logs_path)
+        pass
 
     def setup_hard_links(self, last_snapshot):
-        if last_snapshot:
-            return ['--link-dest=%s' % last_snapshot.path]
+        pass
 
     def set_state(self, state):
         if self.state == state:
             return
-
-        orig_state = self.state
-        orig_path = self.path
         self.state = state
-
-        try:
-            os.rename(orig_path, self.path)
-        except OSError:
-            logger.exception('Unable to change snapshot state. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.id,
-                'state': self.state,
-            })
-            self.state = orig_state
