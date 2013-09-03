@@ -11,7 +11,6 @@ logger = logging.getLogger(APP_NAME)
 
 class CoreSnapshot(Bucket):
     def __init__(self, volume, dir_name=None):
-        self.volume_id = volume.id
         self.volume = volume
 
         if dir_name:
@@ -54,7 +53,7 @@ class CoreSnapshot(Bucket):
         self.speed = None
 
         logger.debug('Parsing log file for snapshot. %r' % {
-            'volume_id': self.volume_id,
+            'volume_id': self.volume.id,
             'snapshot_id': self.id,
         })
 
@@ -75,7 +74,7 @@ class CoreSnapshot(Bucket):
                     else:
                         logger.warning('Failed to get snapshot start ' + \
                             'time from log, line split length invalid. %r' % {
-                                'volume_id': self.volume_id,
+                                'volume_id': self.volume.id,
                                 'snapshot_id': self.id,
                                 'log_line': line,
                             })
@@ -83,7 +82,7 @@ class CoreSnapshot(Bucket):
                 except ValueError:
                     logger.warning('Failed to get snapshot start ' + \
                         'time from log, value error. %r' % {
-                            'volume_id': self.volume_id,
+                            'volume_id': self.volume.id,
                             'snapshot_id': self.id,
                             'log_line': line,
                         })
@@ -122,7 +121,7 @@ class CoreSnapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get sent bytes ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume_id,
+                                    'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
@@ -132,7 +131,7 @@ class CoreSnapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get received bytes ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume_id,
+                                    'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
@@ -143,14 +142,14 @@ class CoreSnapshot(Bucket):
                         except ValueError:
                             logger.warning('Failed to get transfer speed ' + \
                                 'from snapshot log, value error. %r' % {
-                                    'volume_id': self.volume_id,
+                                    'volume_id': self.volume.id,
                                     'snapshot_id': self.id,
                                     'log_line': line,
                                 })
         except IOError:
             logger.debug('Failed to read log file for ' + \
                 'snapshot, IOError. %r' % {
-                    'volume_id': self.volume_id,
+                    'volume_id': self.volume.id,
                     'snapshot_id': self.id,
                 })
 

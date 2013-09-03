@@ -20,7 +20,7 @@ class LocalSnapshot(CoreSnapshot):
         snapshots_path = os.path.dirname(self.path)
         if not os.path.isdir(snapshots_path):
             logger.debug('Creating volume snapshots directory. %r' % {
-                'volume_id': self.volume_id,
+                'volume_id': self.volume.id,
                 'snapshot_id': self.id,
             })
             os.mkdir(snapshots_path)
@@ -28,7 +28,7 @@ class LocalSnapshot(CoreSnapshot):
         logs_path = os.path.dirname(self.log_path)
         if not os.path.isdir(logs_path):
             logger.debug('Creating volume logs directory. %r' % {
-                'volume_id': self.volume_id,
+                'volume_id': self.volume.id,
                 'snapshot_id': self.id,
             })
             os.mkdir(logs_path)
@@ -49,7 +49,7 @@ class LocalSnapshot(CoreSnapshot):
             os.rename(orig_path, self.path)
         except OSError:
             logger.exception('Unable to change snapshot state. %r' % {
-                'volume_id': self.volume_id,
+                'volume_id': self.volume.id,
                 'snapshot_id': self.id,
                 'state': self.state,
             })
