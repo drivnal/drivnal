@@ -2,6 +2,7 @@ from constants import *
 from exceptions import *
 from task import Task
 from event import Event
+from snapshot import Snapshot
 import os
 import time
 import shlex
@@ -14,49 +15,6 @@ class CreateSnapshot(Task):
     def __init__(self, *kargs, **kwargs):
         Task.__init__(self, *kargs, **kwargs)
         self.type = CREATE_SNAPSHOT
-
-    def _get_free_space(self, path):
-        path_stat = os.statvfs(self.volume.path)
-        return 1 - (1 - float(path_stat.f_bavail) /
-            float(path_stat.f_blocks))
-
-    def _check_no_space_error(self, path, log_path):
-        logger.debug('Checking for no space error on %r.' % self.volume.name)
-
-        with open(log_path) as log:
-            # Get last kilobyte of file
-            log.seek(0, os.SEEK_END)
-            file_size = log.tell()
-            log.seek(max(file_size - 1024, 0))
-            lines = log.readlines()
-
-        no_space_error = False
-        for line in lines:
-            if ': No space left on device (28)' in line and \
-                    'write failed on' in line:
-                no_space_error = True
-
-                # Get destination file path from log then replace snapshot
-                # path with source path to get the source path of file
-                line = line[line.find('write failed on') + 15:line.find(
-                    ': No space left on device (28)')]
-                file_path = shlex.split(line)[0]
-                file_path = file_path.replace(path + '.temp',
-                    self.volume.source_path)
-
-                if os.path.isfile(file_path):
-                    try:
-                        file_stat = os.stat(file_path)
-                        return (no_space_error, file_stat.st_size)
-                    except OSError:
-                        logger.exception('Failed to get size of file, ' + \
-                            'that caused no space error. %r' % {
-                                'volume_id': self.volume_id,
-                                'snapshot_id': self.snapshot_id,
-                            })
-                break
-
-        return (no_space_error, None)
 
     def remove_snapshot(self):
         self.volume.load_snapshots()
@@ -73,7 +31,7 @@ class CreateSnapshot(Task):
             keep_log = True
         self.volume.remove_snapshot(snapshot, keep_log, True)
 
-    def prune_snapshots(self, min_size=None):
+    def prune_snapshots(self):
         snapshots = self.volume.get_snapshots()
         failed_snapshots = self.volume.get_failed_snapshots()
         snapshot_count = self.volume.get_snapshot_count()
@@ -100,16 +58,6 @@ class CreateSnapshot(Task):
                         'removing_snapshot_id': snapshot.id,
                     })
                 self._prune_snapshot(snapshot)
-
-        # If a min space needed is set and percent of volume is greater then
-        # min_free_space use the percent needed + 0.02 for min free space
-        if min_size:
-            path_stat = os.statvfs(self.volume.path)
-            percent_needed = (min_size / float(
-                path_stat.f_bsize * path_stat.f_blocks)) + 0.02
-
-            if not min_free_space or percent_needed > min_free_space:
-                min_free_space = percent_needed
 
         if not min_free_space:
             return True
@@ -184,26 +132,13 @@ class CreateSnapshot(Task):
         Event(type=VOLUMES_UPDATED)
 
     def run(self):
-        self.snapshot_id = int(time.time())
+        self.snapshot = Snapshot(self.volume)
         self.orig_snapshot_count = self.volume.get_snapshot_count()
         bandwidth_limit = self.volume.bandwidth_limit
-        excludes = self.volume.excludes
+        excludes = self.volume.excludes or []
         source_path = self.volume.source_path
-        try:
-            destination_path = os.path.join(self.volume.path,
-                SNAPSHOT_DIR, str(self.snapshot_id))
-        except AttributeError:
-            logger.exception('Failed to join snapshot destination path. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-            })
-        destination_path_temp = destination_path + '.temp'
-        destination_path_failed = destination_path + '.failed'
-        destination_path_warning = destination_path + '.failed'
-        log_path = os.path.join(self.volume.path,
-            LOG_DIR, 'snapshot_%s.log' % self.snapshot_id)
-        max_retry = self.volume.max_retry or DEFAULT_MAX_RETRY
+        destination_path = self.snapshot.path
+        log_path = self.snapshot.log_path
         last_snapshot = self.volume.get_last_snapshot()
 
         logger.info('Creating snapshot. %r' % {
@@ -214,34 +149,12 @@ class CreateSnapshot(Task):
 
         Event(type=VOLUMES_UPDATED)
 
-        snapshots_path = os.path.join(self.volume.path, SNAPSHOT_DIR)
-        logs_path = os.path.join(self.volume.path, LOG_DIR)
-
-        if not os.path.isdir(snapshots_path):
-            logger.debug('Creating volume snapshots directory. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-            })
-            os.mkdir(snapshots_path)
-
-        if not os.path.isdir(logs_path):
-            logger.debug('Creating volume logs directory. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-            })
-            os.mkdir(logs_path)
-
         args = ['rsync', '--archive', '--delete', '--hard-links',
             '--acls', '--quiet', '--xattrs',  '--progress', '--super',
             '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path]
 
         if bandwidth_limit:
             args.append('--bwlimit=%s' % bandwidth_limit)
-
-        if last_snapshot:
-            args.append('--link-dest=%s' % last_snapshot.path)
 
         rsync_source_path = source_path
         if rsync_source_path[-1] != os.sep:
@@ -258,112 +171,54 @@ class CreateSnapshot(Task):
                     continue
                 excludes.append(exclude)
 
-        # If volume is a subdirectory of source path exclude path
-        if os.path.commonprefix(
-                [rsync_source_path, self.volume.path]) == rsync_source_path:
-            logger.debug('Auto excluding volume path from snapshot. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-            })
-            path = os.path.normpath(self.volume.path.replace(
-                rsync_source_path, '', 1)) + os.sep
-            excludes.append(path)
+        auto_excludes = self.volume.get_auto_excludes()
+        if auto_excludes:
+            excludes += auto_excludes
 
-        if excludes:
-            for exclude in excludes:
-                args.append('--exclude=%s' % exclude)
+        for exclude in excludes:
+            args.append('--exclude=%s' % exclude)
+
+        hard_link_args = self.snapshot.setup_hard_links(last_snapshot)
+        if hard_link_args:
+            args += hard_link_args
 
         args.append(rsync_source_path)
-        args.append(destination_path_temp)
+        args.append(destination_path)
 
-        for path in [destination_path, destination_path_temp,
-                destination_path_failed]:
-            if os.path.isdir(path):
-                logger.error('Snapshot failed, snapshot ' + \
-                    'path already exists. %r' % {
-                        'volume_id': self.volume_id,
-                        'snapshot_id': self.snapshot_id,
-                        'task_id': self.id,
-                        'path': path,
-                    })
-                raise SnapshotError
-
+        self.snapshot.setup_snapshot()
         self.prune_snapshots()
 
-        for i in xrange(max_retry):
-            process = subprocess.Popen(args)
-            return_code = None
+        # Start rsync process
+        process = subprocess.Popen(args)
+        return_code = None
 
-            while True:
-                poll = process.poll()
-                if poll is not None:
-                    return_code = poll
-                    break
-                if self.state == ABORTING:
-                    self._abort_process(process)
-                    return
-                time.sleep(0.5)
+        while True:
+            poll = process.poll()
+            if poll is not None:
+                return_code = poll
+                break
+            if self.state == ABORTING:
+                self._abort_process(process)
+                return
+            time.sleep(0.5)
 
-            if return_code != 0 and return_code not in RSYNC_WARN_EXIT_CODES:
-                logger.debug('Command returned non-zero exit status. %r' % {
+        if return_code != 0 and return_code not in RSYNC_WARN_EXIT_CODES:
+            self.snapshot.set_state(FAILED)
+            logger.error('Snapshot failed, command ' + \
+                'returned non-zero exit status. %r' % {
                     'volume_id': self.volume_id,
                     'snapshot_id': self.snapshot_id,
                     'task_id': self.id,
                     'cmd_args': args,
                     'return_code': return_code,
                 })
-
-                # Check if error was from no space
-                no_space_error, last_file_size = self._check_no_space_error(
-                    destination_path, log_path)
-                if no_space_error and i <= max_retry:
-                    # If prune was able to free up space try again
-                    if self.prune_snapshots(last_file_size):
-                        logger.warning('Snapshot did not have required ' + \
-                            'free space, retrying snapshot. %r' % {
-                                'volume_id': self.volume_id,
-                                'snapshot_id': self.snapshot_id,
-                                'task_id': self.id,
-                            })
-                        continue
-
-                try:
-                    os.rename(destination_path_temp, destination_path_failed)
-                except OSError:
-                    logger.exception('Unable to rename failed snapshot. %r' % {
-                        'volume_id': self.volume_id,
-                        'snapshot_id': self.snapshot_id,
-                        'task_id': self.id,
-                    })
-
-                if no_space_error:
-                    logger.error('Snapshot failed, unable ' + \
-                        'to free up required space. %r' % {
-                            'volume_id': self.volume_id,
-                            'snapshot_id': self.snapshot_id,
-                            'task_id': self.id,
-                            'cmd_args': args,
-                            'return_code': return_code,
-                        })
-                    raise SnapshotError
-                else:
-                    logger.error('Snapshot failed, command ' + \
-                        'returned non-zero exit status. %r' % {
-                            'volume_id': self.volume_id,
-                            'snapshot_id': self.snapshot_id,
-                            'task_id': self.id,
-                            'cmd_args': args,
-                            'return_code': return_code,
-                        })
-                    raise SnapshotError
-            break
+            raise SnapshotError
 
         try:
             if return_code == 0:
-                os.rename(destination_path_temp, destination_path)
+                self.snapshot.set_state(COMPLETE)
             else:
-                os.rename(destination_path_temp, destination_path_warning)
+                self.snapshot.set_state(WARNING)
         except OSError:
             logger.exception('Snapshot failed, unable to rename ' + \
                 'snapshot temp directory. %r' % {

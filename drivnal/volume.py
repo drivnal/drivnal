@@ -19,7 +19,7 @@ logger = logging.getLogger(APP_NAME)
 
 class Volume(Config):
     bool_options = ['email_ssl']
-    int_options = ['snapshot_limit', 'bandwidth_limit', 'max_retry']
+    int_options = ['snapshot_limit', 'bandwidth_limit']
     float_options = ['min_free_space', 'max_prune']
     path_options = ['excludes', 'source_path']
     str_options = ['id', 'name', 'schedule', 'email', 'email_host',
@@ -119,10 +119,6 @@ class Volume(Config):
             return True
         return False
 
-    def get_space_free(self):
-        stat = os.statvfs(self.path)
-        return float(stat.f_bavail) / stat.f_blocks
-
     def get_space_used(self):
         return 1 - self.get_space_free()
 
@@ -155,17 +151,12 @@ class Volume(Config):
             'volume_id': self.id,
         })
 
-        snapshots_path = os.path.join(self.path, SNAPSHOT_DIR)
         snapshot_names = []
         self.snapshots = []
 
-        if not os.path.isdir(snapshots_path):
-            return
-
-        for name in os.listdir(snapshots_path):
-            if not os.path.isdir(os.path.join(snapshots_path, name)) or \
-                    not name.replace('.temp', '').replace(
-                        '.failed', '').isdigit() or len(name) < 6:
+        for name in self.list_path(SNAPSHOT_DIR, files=False):
+            if not name.replace('.temp', '').replace(
+                    '.failed', '').isdigit() or len(name) < 6:
                 continue
             snapshot_names.append(name)
 
@@ -188,3 +179,44 @@ class Volume(Config):
 
         if self.orig_path != self.path:
             self._move_volume()
+
+
+    def get_space_free(self):
+        stat = os.statvfs(self.path)
+        return float(stat.f_bavail) / stat.f_blocks
+
+    def list_path(self, path, files=True, dirs=True):
+        path = os.path.join(self.path, path)
+        names = []
+
+        if not os.path.isdir(path):
+            return names
+
+        for name in os.listdir(path):
+            if files and dirs:
+                pass
+            elif not files and dirs:
+                if not os.path.isdir(os.path.join(path, name)):
+                    continue
+            elif files and not dirs:
+                if not os.path.isfile(os.path.join(path, name)):
+                    continue
+            else:
+                continue
+            names.append(name)
+
+        return names
+
+    def get_auto_excludes(self):
+        source_path = self.source_path
+        if source_path[-1] != os.sep:
+            source_path += os.sep
+
+        # If volume is a subdirectory of source path exclude path
+        if os.path.commonprefix([source_path, self.path]) == source_path:
+            logger.debug('Auto excluding volume path from snapshot. %r' % {
+                'volume_id': self.id,
+            })
+            path = os.path.normpath(self.path.replace(
+                source_path, '', 1)) + os.sep
+            return [path]

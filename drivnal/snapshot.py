@@ -11,31 +11,37 @@ import logging
 logger = logging.getLogger(APP_NAME)
 
 class Snapshot(Bucket):
-    def __init__(self, volume, id):
-        if id[-7:] == '.failed':
-            self.id = int(id[:-7])
-            self.state = FAILED
-        elif id[-9:] == '.removing':
-            self.id = int(id[:-9])
-            self.state = REMOVING
-        elif id[-5:] == '.temp':
-            self.id = int(id[:-5])
-            self.state = PENDING
-        elif id[-8:] == '.warning':
-            self.id = int(id[:-8])
-            self.state = WARNING
-        else:
-            self.id = int(id)
-            self.state = COMPLETE
+    def __init__(self, volume, dir_name=None):
         self.volume_id = volume.id
-        self.path = os.path.join(volume.path, SNAPSHOT_DIR, id)
-        self.log_path = os.path.join(volume.path,
-            LOG_DIR, 'snapshot_%s.log' % self.id)
-        self.parse_log_file()
+        self.volume = volume
+
+        if dir_name:
+            if dir_name[-7:] == '.failed':
+                self.id = int(dir_name[:-7])
+                self.state = FAILED
+            elif dir_name[-9:] == '.removing':
+                self.id = int(dir_name[:-9])
+                self.state = REMOVING
+            elif dir_name[-5:] == '.temp':
+                self.id = int(dir_name[:-5])
+                self.state = PENDING
+            elif dir_name[-8:] == '.warning':
+                self.id = int(dir_name[:-8])
+                self.state = WARNING
+            else:
+                self.id = int(dir_name)
+                self.state = COMPLETE
+        else:
+            self.id = int(time.time())
+            self.state = PENDING
 
     def __getattr__(self, name):
         if name in ['runtime', 'sent', 'received', 'speed']:
             self.parse_log_file()
+        elif name == 'path':
+            return self._get_path()
+        elif name == 'log_path':
+            return self._get_log_path()
 
         if name not in self.__dict__:
             raise AttributeError(
@@ -148,3 +154,53 @@ class Snapshot(Bucket):
                     'volume_id': self.volume_id,
                     'snapshot_id': self.id,
                 })
+
+
+    def _get_path(self):
+        dir_name = str(self.id)
+        if self.state != COMPLETE:
+            dir_name = '%s.%s' % (dir_name, self.state)
+        return os.path.join(self.volume.path, SNAPSHOT_DIR, dir_name)
+
+    def _get_log_path(self):
+        return os.path.join(self.volume.path, LOG_DIR,
+            'snapshot_%s.log' % self.id)
+
+    def setup_snapshot(self):
+        snapshots_path = os.path.dirname(self.path)
+        if not os.path.isdir(snapshots_path):
+            logger.debug('Creating volume snapshots directory. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.id,
+            })
+            os.mkdir(snapshots_path)
+
+        logs_path = os.path.dirname(self.log_path)
+        if not os.path.isdir(logs_path):
+            logger.debug('Creating volume logs directory. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.id,
+            })
+            os.mkdir(logs_path)
+
+    def setup_hard_links(self, last_snapshot):
+        if last_snapshot:
+            return ['--link-dest=%s' % last_snapshot.path]
+
+    def set_state(self, state):
+        if self.state == state:
+            return
+
+        orig_state = self.state
+        orig_path = self.path
+        self.state = state
+
+        try:
+            os.rename(orig_path, self.path)
+        except OSError:
+            logger.exception('Unable to change snapshot state. %r' % {
+                'volume_id': self.volume_id,
+                'snapshot_id': self.id,
+                'state': self.state,
+            })
+            self.state = orig_state
