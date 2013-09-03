@@ -2,9 +2,9 @@ from constants import *
 from exceptions import *
 from config import Config
 from origin import Origin
-from local_snapshot import LocalSnapshot
 from task import Task
 from event import Event
+from core_snapshot import CoreSnapshot
 from create_snapshot import CreateSnapshot
 from remove_snapshot import RemoveSnapshot
 from restore_object import RestoreObject
@@ -12,12 +12,11 @@ from move_volume import MoveVolume
 import os
 import time
 import uuid
-import shutil
 import logging
 
 logger = logging.getLogger(APP_NAME)
 
-class Volume(Config):
+class CoreVolume(Config):
     bool_options = ['email_ssl']
     int_options = ['snapshot_limit', 'bandwidth_limit']
     float_options = ['min_free_space', 'max_prune']
@@ -26,7 +25,7 @@ class Volume(Config):
         'email_user', 'email_pass', 'origin', 'ssh_host', 'ssh_user',
         'ssh_pass', 'ssh_key']
     list_options = ['excludes']
-    SnapshotClass = LocalSnapshot
+    SnapshotClass = CoreSnapshot
 
     def __init__(self, path):
         try:
@@ -181,43 +180,11 @@ class Volume(Config):
         if self.orig_path != self.path:
             self._move_volume()
 
-
     def get_space_free(self):
-        stat = os.statvfs(self.path)
-        return float(stat.f_bavail) / stat.f_blocks
+        return 1
 
     def list_path(self, path, files=True, dirs=True):
-        path = os.path.join(self.path, path)
-        names = []
-
-        if not os.path.isdir(path):
-            return names
-
-        for name in os.listdir(path):
-            if files and dirs:
-                pass
-            elif not files and dirs:
-                if not os.path.isdir(os.path.join(path, name)):
-                    continue
-            elif files and not dirs:
-                if not os.path.isfile(os.path.join(path, name)):
-                    continue
-            else:
-                continue
-            names.append(name)
-
-        return names
+        return []
 
     def get_auto_excludes(self):
-        source_path = self.source_path
-        if source_path[-1] != os.sep:
-            source_path += os.sep
-
-        # If volume is a subdirectory of source path exclude path
-        if os.path.commonprefix([source_path, self.path]) == source_path:
-            logger.debug('Auto excluding volume path from snapshot. %r' % {
-                'volume_id': self.id,
-            })
-            path = os.path.normpath(self.path.replace(
-                source_path, '', 1)) + os.sep
-            return [path]
+        pass

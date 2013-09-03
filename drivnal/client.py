@@ -1,6 +1,6 @@
 from constants import *
 from config import Config
-from volume import Volume
+from local_volume import LocalVolume
 from drivnal import server
 from event import Event
 import os
@@ -29,7 +29,7 @@ class Client:
                 continue
 
             try:
-                volume = Volume(path)
+                volume = LocalVolume(path)
                 volumes.append(volume)
             except IOError:
                 logger.debug('Failed to load volume. %r' % {
