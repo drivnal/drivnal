@@ -140,10 +140,14 @@ class CreateSnapshot(Task):
         destination_path = self.snapshot.path
         log_path = self.snapshot.log_path
         last_snapshot = self.volume.get_last_snapshot()
+        last_snapshot_id = None
+        if last_snapshot:
+            last_snapshot_id = last_snapshot.id
 
         logger.info('Creating snapshot. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
+            'last_snapshot_id': last_snapshot_id,
             'task_id': self.id,
         })
 
