@@ -1,6 +1,7 @@
 from constants import *
 from task import Task
 from event import Event
+from drivnal import server
 import os
 import time
 import shlex
@@ -14,10 +15,6 @@ class MoveVolume(Task):
     def __init__(self, *kargs, **kwargs):
         Task.__init__(self, *kargs, **kwargs)
         self.type = MOVE_VOLUME
-
-    def _get_mount(self, path):
-        output = subprocess.check_output(['df', '-P', path])
-        return output.strip().split(' ')[-1]
 
     def _abort_process(self, process):
         for i in xrange(10):
@@ -61,14 +58,26 @@ class MoveVolume(Task):
     def run(self):
         source_path = self.volume.orig_path
         destination_path = self.volume.path
+        move_available = self.volume._move_available(source_path,
+            destination_path)
+        copy_available = self.volume._copy_available(source_path, destination_path)
+
+        if not move_available and not copy_available:
+            raise OSError('Unable to move volume to specified ' + \
+                'location. %r' % {
+                    'volume_id': self.volume_id,
+                    'task_id': self.id,
+                    'source_path': source_path,
+                    'destination_path': destination_path,
+                })
 
         logger.debug('Updating client config with volume path. %r' % {
             'volume_id': self.volume_id,
             'task_id': self.id,
         })
-        self.volume.client.move_volume(self.volume)
+        server.app_db.set('system', 'volumes', self.volume.path, None)
 
-        if self._get_mount(source_path) == self._get_mount(destination_path):
+        if move_available:
             logger.info('Moving volume. %r' % {
                 'volume_id': self.volume_id,
             })
@@ -145,16 +154,17 @@ class MoveVolume(Task):
                         })
 
         if return_code != 0:
-            raise OSError('Volume move failed, command ' + \
-                'returned non-zero exit status. %r' % {
+            raise OSError('Volume move failed, command returned ' + \
+                'non-zero exit status. Updating client config. %r' % {
                     'volume_id': self.volume_id,
                     'task_id': self.id,
                 })
-            self.volume.client.revert_move_volume(self.volume)
+            server.app_db.remove('system', 'volumes', self.volume.path)
         else:
             logger.debug('Volume move complete, updating client config. %r' % {
                 'volume_id': self.volume_id,
                 'task_id': self.id,
             })
+            server.app_db.remove('system', 'volumes', self.volume.orig_path)
 
         Event(type=VOLUMES_UPDATED)

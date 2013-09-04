@@ -1,8 +1,8 @@
 from constants import *
 from config import Config
 from local_volume import LocalVolume
-from drivnal import server
 from event import Event
+from drivnal import server
 import os
 import copy
 import logging
@@ -65,13 +65,3 @@ class Client:
                 server.app_db.remove('system', 'volumes', volume.path)
                 Event(type=VOLUMES_UPDATED)
                 break
-
-    def move_volume(self, volume):
-        # TODO
-        server.app_db.remove('system', 'volumes', volume.orig_path)
-        server.app_db.set('system', 'volumes', volume.path, None)
-
-    def revert_move_volume(self, volume):
-        # TODO
-        server.app_db.remove('system', 'volumes', volume.path)
-        server.app_db.set('system', 'volumes', volume.orig_path, None)
