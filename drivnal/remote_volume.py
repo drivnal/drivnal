@@ -9,6 +9,9 @@ logger = logging.getLogger(APP_NAME)
 class RemoteVolume(CoreVolume):
     SnapshotClass = RemoteSnapshot
 
+    def _get_log_dir(self):
+        return './'
+
     def _get_auto_excludes(self):
         pass
 

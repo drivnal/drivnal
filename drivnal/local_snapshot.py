@@ -13,8 +13,7 @@ class LocalSnapshot(CoreSnapshot):
         return os.path.join(self.volume.path, SNAPSHOT_DIR, dir_name)
 
     def _get_log_path(self):
-        return os.path.join(self.volume.path, LOG_DIR,
-            'snapshot_%s.log' % self.id)
+        return os.path.join(self.volume.log_dir, 'snapshot_%s.log' % self.id)
 
     def setup_snapshot(self):
         snapshots_path = os.path.dirname(self.path)

@@ -10,6 +10,9 @@ logger = logging.getLogger(APP_NAME)
 class LocalVolume(CoreVolume):
     SnapshotClass = LocalSnapshot
 
+    def _get_log_dir(self):
+        return os.path.join(self.path, LOG_DIR)
+
     def _get_auto_excludes(self):
         source_path = self.source_path
         if source_path[-1] != os.sep:

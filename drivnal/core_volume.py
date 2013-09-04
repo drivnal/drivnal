@@ -55,6 +55,8 @@ class CoreVolume(Config):
     def __getattr__(self, name):
         if name == 'snapshots':
             self.load_snapshots()
+        elif name == 'log_dir':
+            return self._get_log_dir()
         return Config.__getattr__(self, name)
 
     def get_snapshot(self, id):
@@ -180,6 +182,9 @@ class CoreVolume(Config):
 
         if self.orig_path != self.path:
             self._move_volume()
+
+    def _get_log_dir(self):
+        return './'
 
     def _get_auto_excludes(self):
         pass
