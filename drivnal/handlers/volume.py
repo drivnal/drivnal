@@ -13,7 +13,7 @@ def _get_volume_object(volume):
         'path': volume.path,
         'source_path': volume.source_path,
         'percent_used': volume.get_space_used(),
-        'excludes': volume.excludes,
+        'excludes': volume.excludes or [],
         'schedule': volume.schedule or 0,
         'min_free_space': volume.min_free_space or 0,
         'snapshot_limit': volume.snapshot_limit,
@@ -64,7 +64,7 @@ def volume_put_post(volume_id=None):
     if volume_id:
         volume = client.get_volume(volume_id)
     else:
-        volume = client.create_volume(os.path.normpath(path))
+        volume = client.add_volume(os.path.normpath(path))
         if volume.source_path:
             return utils.jsonify({})
 

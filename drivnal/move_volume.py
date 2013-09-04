@@ -62,15 +62,23 @@ class MoveVolume(Task):
         source_path = self.volume.orig_path
         destination_path = self.volume.path
 
+        logger.debug('Updating client config with volume path. %r' % {
+            'volume_id': self.volume_id,
+            'task_id': self.id,
+        })
+        self.volume.client.move_volume(self.volume)
+
         if self._get_mount(source_path) == self._get_mount(destination_path):
             logger.info('Moving volume. %r' % {
                 'volume_id': self.volume_id,
             })
 
-            args = ['find', source_path, '-mindepth', '1', '-maxdepth', '1',
-                '-exec', 'mv', '-t', destination_path, '--', '{}', ';']
+            source_path += os.sep + '*'
 
-            process = subprocess.Popen(args)
+            # String required for bash to expand /*
+            args = 'mv %s %s' % (source_path, destination_path)
+
+            process = subprocess.Popen(args, shell=True)
             return_code = None
 
             while True:
@@ -142,11 +150,11 @@ class MoveVolume(Task):
                     'volume_id': self.volume_id,
                     'task_id': self.id,
                 })
+            self.volume.client.revert_move_volume(self.volume)
         else:
-            logger.debug('Volume move complete, committing config. %r' % {
+            logger.debug('Volume move complete, updating client config. %r' % {
                 'volume_id': self.volume_id,
                 'task_id': self.id,
             })
-            self.volume.client.commit()
 
         Event(type=VOLUMES_UPDATED)

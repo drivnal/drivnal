@@ -1,20 +1,16 @@
 from drivnal.constants import *
 from drivnal.client import Client
+from drivnal.event import Event
 import drivnal.utils as utils
 from drivnal import server
 import time
 import uuid
 
+@server.app.route('/event/<int:last_event>', methods=['GET'])
 @server.app.route('/event/<volume_id>/<int:last_event>', methods=['GET'])
-def event_get(volume_id, last_event):
+def event_get(volume_id=None, last_event=0):
     client = Client()
     volume = client.get_volume(volume_id)
-
-    if not volume:
-        return utils.jsonify({
-            'error': VOLUME_NOT_FOUND,
-            'error_msg': VOLUME_NOT_FOUND_MSG,
-        }, 404)
 
     if not last_event:
         events = [
@@ -29,7 +25,7 @@ def event_get(volume_id, last_event):
     for i in xrange(int(10 / 0.5)):
         events = []
 
-        for event in volume.get_events(last_event):
+        for event in Event.get_events(volume, last_event):
             events.append({
                 'id': event.id,
                 'type': event.type,

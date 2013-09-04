@@ -29,7 +29,7 @@ class Client:
                 continue
 
             try:
-                volume = LocalVolume(path)
+                volume = LocalVolume(self, path)
                 volumes.append(volume)
             except IOError:
                 logger.debug('Failed to load volume. %r' % {
@@ -38,12 +38,12 @@ class Client:
 
         return volumes
 
-    def create_volume(self, path):
-        logger.debug('Creating volume.')
+    def add_volume(self, path):
+        logger.debug('Adding volume.')
 
         if not os.path.isdir(path):
             os.mkdir(path)
-        volume = Volume(path)
+        volume = LocalVolume(self, path, create=True)
 
         logger.debug('Adding volume path to database. %r' % {
             'volume_id': volume.id,
@@ -65,3 +65,13 @@ class Client:
                 server.app_db.remove('system', 'volumes', volume.path)
                 Event(type=VOLUMES_UPDATED)
                 break
+
+    def move_volume(self, volume):
+        # TODO
+        server.app_db.remove('system', 'volumes', volume.orig_path)
+        server.app_db.set('system', 'volumes', volume.path, None)
+
+    def revert_move_volume(self, volume):
+        # TODO
+        server.app_db.remove('system', 'volumes', volume.path)
+        server.app_db.set('system', 'volumes', volume.orig_path, None)

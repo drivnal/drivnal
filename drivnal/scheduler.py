@@ -51,6 +51,8 @@ class Scheduler:
             })
 
     def _check_volume_schedule(self, localtime, volume):
+        if not volume.schedule:
+            return
         schedule = volume.schedule.lower()
 
         if schedule == 'none':

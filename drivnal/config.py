@@ -36,7 +36,8 @@ class Config:
             return self.__dict__[name]
 
         if name in self.all_options:
-            self.load()
+            if self.get_state() == CLOSED:
+                self.load()
             if name not in self.__dict__:
                 return None
         if name not in self.__dict__:
@@ -70,7 +71,7 @@ class Config:
         elif value in ['false', 'f', 'no', 'n']:
             return False
         else:
-            raise TypeError('Value is not boolean')
+            raise ValueError('Value is not boolean')
 
     def _decode_int(self, value):
         return int(value)
@@ -96,10 +97,10 @@ class Config:
         value = '='.join(line_split[1:])
 
         if name not in self.all_options:
-            raise TypeError('Unknown option')
+            raise ValueError('Unknown option')
 
         if not value:
-            raise TypeError('Empty option')
+            raise ValueError('Empty option')
 
         if name in self.list_options:
             values = self._decode_list(value)
@@ -133,9 +134,8 @@ class Config:
         return name, value
 
     def load(self):
-        if self.get_state() != CLOSED:
-            return
         logger.debug('Loading config.')
+        self.set_state(SAVED)
 
         with open(self._conf_path) as config:
             for line in config:
@@ -160,8 +160,6 @@ class Config:
                     logger.warning('Ignoring invalid line. %r' % {
                         'line': line,
                     })
-
-        self.set_state(SAVED)
 
     def commit(self):
         logger.debug('Committing config.')

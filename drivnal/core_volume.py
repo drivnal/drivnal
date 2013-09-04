@@ -22,12 +22,12 @@ class CoreVolume(Config):
     float_options = ['min_free_space', 'max_prune']
     path_options = ['excludes', 'source_path']
     str_options = ['id', 'name', 'schedule', 'email', 'email_host',
-        'email_user', 'email_pass', 'origin', 'ssh_host', 'ssh_user',
-        'ssh_pass', 'ssh_key']
+        'email_user', 'email_pass', 'ssh_host', 'ssh_user', 'ssh_pass',
+        'ssh_key']
     list_options = ['excludes']
     SnapshotClass = CoreSnapshot
 
-    def __init__(self, path):
+    def __init__(self, client, path, create=False):
         try:
             config_path = os.path.join(path, CONF_FILENAME)
         except AttributeError:
@@ -37,16 +37,20 @@ class CoreVolume(Config):
             raise
         Config.__init__(self, config_path)
 
+        self.client = client
         self.orig_path = path
         self.orig_source_path = self.source_path
         self.path = path
 
         if not self.id:
-            self.id = uuid.uuid4().hex
-            logger.debug('Setting new volume uuid. %r' % {
-                'volume_id': self.id,
-            })
-            self.commit()
+            if create:
+                self.id = uuid.uuid4().hex
+                logger.debug('Setting new volume uuid. %r' % {
+                    'volume_id': self.id,
+                })
+                self.commit()
+            else:
+                raise IOError('Volume doesnt exists')
 
     def __getattr__(self, name):
         if name == 'snapshots':
@@ -124,9 +128,6 @@ class CoreVolume(Config):
 
     def get_tasks(self):
         return Task.get_tasks(self)
-
-    def get_events(self, last_time):
-        return Event.get_events(self, last_time)
 
     def restore_object(self, objects, destination_path):
         logger.debug('Starting restore object task. %r' % {
