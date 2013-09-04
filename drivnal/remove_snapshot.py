@@ -68,22 +68,7 @@ class RemoveSnapshot(Task):
             if os.path.isfile(self.snapshot.log_path):
                 os.remove(self.snapshot.log_path)
 
-        if not os.path.isdir(self.snapshot.path):
-            return
-
-        snapshot_path_temp = '%s.removing' % self.snapshot.path
-        snapshot_path_failed = '%s.failed' % self.snapshot.path
-
-        try:
-            os.rename(self.snapshot.path, snapshot_path_temp)
-        except OSError:
-            logging.error('Snapshot remove failed, ' + \
-                'unable to rename snapshot temp directory. %r' % {
-                    'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot_id,
-                    'task_id': self.id,
-                })
-            raise
+        self.snapshot.set_state(REMOVING)
 
         logger.debug('Removing snapshot directory. %r' % {
             'volume_id': self.volume_id,
@@ -91,7 +76,7 @@ class RemoveSnapshot(Task):
             'task_id': self.id,
         })
 
-        args = ['rm', '-rf', snapshot_path_temp]
+        args = ['rm', '-rf', self.snapshot.path]
 
         process = subprocess.Popen(args)
         return_code = None
@@ -111,7 +96,5 @@ class RemoveSnapshot(Task):
                 self._abort_process(process)
                 return
             time.sleep(0.5)
-
-        time.sleep(5)
 
         Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
