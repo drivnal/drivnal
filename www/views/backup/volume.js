@@ -537,6 +537,7 @@ define([
     onClickCancel: function() {
       this.hideSettings(function() {
         this.resetSetttings();
+        this.trigger('update');
       }.bind(this));
     },
     onClickSave: function() {

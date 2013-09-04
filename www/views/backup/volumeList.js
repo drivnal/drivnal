@@ -20,6 +20,7 @@ define([
       this.listenTo(this.collection, 'add', this.add);
       this.listenTo(this.collection, 'reset', this.onReset);
       this.views = [];
+      this.newVolumeView = null;
     },
     render: function() {
       this.$el.html(this.template());
@@ -99,7 +100,15 @@ define([
     },
     add: function(model) {
       var volumeView = new VolumeView({model: model});
-      this.views.push(volumeView);
+      if (model.get('id') === null) {
+        if (this.newVolumeView) {
+          return;
+        }
+        this.newVolumeView = volumeView;
+      }
+      else {
+        this.views.push(volumeView);
+      }
       this.listenTo(volumeView, 'select', this.select);
       this.listenTo(volumeView, 'update', this.update);
       this.listenTo(volumeView, 'updateSize', this.updateSize);
@@ -166,14 +175,15 @@ define([
         newModels.push(collection.models[i].get('id'));
       }
 
+      // Remove new volume view if settings are not open
+      if (this.newVolumeView && !this.newVolumeView.isSettings()) {
+        this.removeItem(this.newVolumeView);
+        this.newVolumeView = null;
+      }
+
       // Remove elements that no longer exists
       for (i = 0; i < this.views.length; i++) {
         if (newModels.indexOf(this.views[i].model.get('id')) === -1) {
-          // Do not remove new volume if the settings panel is open
-          if (this.views[i].model.get('id') === null &&
-              this.views[i].isSettings()) {
-            continue;
-          }
 
           // Remove item from dom and array
           this.removeItem(this.views[i]);
