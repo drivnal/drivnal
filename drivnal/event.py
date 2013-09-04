@@ -56,7 +56,7 @@ class Event(DatabaseObject):
         cur_time = int(time.time() * 1000)
 
         if volume:
-            volume_id = volume.id,
+            volume_id = volume.id
             logger.debug('Getting events for volume. %r' % {
                 'volume_id': volume_id,
             })
