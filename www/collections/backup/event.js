@@ -11,7 +11,14 @@ define([
       this.processedEvents = [];
     },
     url: function() {
-      return '/event/' + this.getVolume() + '/' + this.lastEventTime;
+      var url = '/event';
+      if (this.getVolume()) {
+        url += '/' + this.getVolume();
+      }
+      if (this.lastEventTime) {
+        url += '/' + this.lastEventTime;
+      }
+      return url;
     },
     setVolume: function(volume) {
       this.lastEventTime = 0;
@@ -21,10 +28,6 @@ define([
       return this.volume;
     },
     callFetch: function(uuid) {
-      if (!this.getVolume()) {
-        return;
-      }
-
       this.fetch({
         reset: true,
         success: function(collection) {

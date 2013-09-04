@@ -6,9 +6,11 @@ from drivnal import server
 import time
 import uuid
 
+@server.app.route('/event', methods=['GET'])
 @server.app.route('/event/<int:last_event>', methods=['GET'])
+@server.app.route('/event/<volume_id>', methods=['GET'])
 @server.app.route('/event/<volume_id>/<int:last_event>', methods=['GET'])
-def event_get(volume_id=None, last_event=0):
+def event_get(volume_id=None, last_event=None):
     client = Client()
     volume = client.get_volume(volume_id)
 
