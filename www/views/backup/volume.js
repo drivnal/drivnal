@@ -385,7 +385,7 @@ define([
       this.$('.open-settings').roll(450);
 
       this.$('.settings').slideDown({
-        duration: 250,
+        duration: 350,
         step: (this.updateSize).bind(this),
         complete: function() {
           // Path remove icon is hidden by default
@@ -409,7 +409,7 @@ define([
       this.emailView.setSendTest(false);
 
       this.$('.settings').slideUp({
-        duration: 250,
+        duration: 350,
         step: (this.updateSize).bind(this),
         complete: function() {
           this.updateSize();
