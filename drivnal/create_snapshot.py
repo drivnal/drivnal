@@ -16,13 +16,7 @@ class CreateSnapshot(Task):
         self.type = CREATE_SNAPSHOT
 
     def remove_snapshot(self):
-        self.volume.load_snapshots()
-        snapshot = self.volume.get_snapshot(self.snapshot_id)
-        if snapshot:
-            self.volume.remove_snapshot(snapshot, block=True)
-        else:
-            logger.debug('Failed to remove snapshot, snapshot id does ' + \
-                'not exists.')
+        self.volume.remove_snapshot(self.snapshot, block=True)
 
     def _prune_snapshot(self, snapshot):
         keep_log = False
@@ -44,7 +38,7 @@ class CreateSnapshot(Task):
 
         logger.debug('Pruning snapshots. %r' % {
             'volume_id': self.volume_id,
-            'snapshot_id': self.snapshot_id,
+            'snapshot_id': self.snapshot.id,
         })
 
         if snapshot_limit:
@@ -53,7 +47,7 @@ class CreateSnapshot(Task):
                 logger.info('Exceeding snapshot limit, auto removing ' + \
                     'snapshot. %r' % {
                         'volume_id': self.volume_id,
-                        'snapshot_id': self.snapshot_id,
+                        'snapshot_id': self.snapshot.id,
                         'removing_snapshot_id': snapshot.id,
                     })
                 self._prune_snapshot(snapshot)
@@ -66,7 +60,7 @@ class CreateSnapshot(Task):
                 return True
             logger.info('Auto removing failed snapshot. %r' % {
                 'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
+                'snapshot_id': self.snapshot.id,
                 'removing_snapshot_id': snapshot.id,
             })
             self._prune_snapshot(snapshot)
@@ -78,7 +72,7 @@ class CreateSnapshot(Task):
                 return True
             logger.info('Volume low on space, auto removing snapshot. %r' % {
                 'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
+                'snapshot_id': self.snapshot.id,
                 'removing_snapshot_id': snapshot.id,
             })
             self._prune_snapshot(snapshot)
@@ -95,7 +89,7 @@ class CreateSnapshot(Task):
             process.terminate()
             logger.debug('Terminating snapshot process. %r' % {
                 'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
+                'snapshot_id': self.snapshot.id,
                 'pid': process.pid,
             })
             time.sleep(1)
@@ -107,7 +101,7 @@ class CreateSnapshot(Task):
                 process.kill()
                 logger.debug('Killing snapshot process. %r' % {
                     'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot_id,
+                    'snapshot_id': self.snapshot.id,
                     'pid': process.pid,
                 })
                 time.sleep(0.5)
@@ -117,13 +111,13 @@ class CreateSnapshot(Task):
         if process.poll() is None:
             logger.error('Failed to abort snapshot process. %r' % {
                 'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
+                'snapshot_id': self.snapshot.id,
                 'pid': process.pid,
             })
 
         logger.warning('Snapshot aborted, removing aborted snapshot. %r' % {
             'volume_id': self.volume_id,
-            'snapshot_id': self.snapshot_id,
+            'snapshot_id': self.snapshot.id,
         })
 
         self.remove_snapshot()
@@ -145,7 +139,7 @@ class CreateSnapshot(Task):
 
         logger.info('Creating snapshot. %r' % {
             'volume_id': self.volume_id,
-            'snapshot_id': self.snapshot_id,
+            'snapshot_id': self.snapshot.id,
             'last_snapshot_id': last_snapshot_id,
             'task_id': self.id,
         })
@@ -166,7 +160,7 @@ class CreateSnapshot(Task):
         if rsync_source_path == os.sep:
             logger.debug('Auto excluding default paths for root backup. %r' % {
                 'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
+                'snapshot_id': self.snapshot.id,
                 'task_id': self.id,
             })
             for exclude in DEFAULT_ROOT_EXCLUDES:
@@ -174,7 +168,7 @@ class CreateSnapshot(Task):
                     continue
                 excludes.append(exclude)
 
-        auto_excludes = self.volume.get_auto_excludes()
+        auto_excludes = self.volume._get_auto_excludes()
         if auto_excludes:
             excludes += auto_excludes
 
@@ -210,7 +204,7 @@ class CreateSnapshot(Task):
             logger.error('Snapshot failed, command ' + \
                 'returned non-zero exit status. %r' % {
                     'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot_id,
+                    'snapshot_id': self.snapshot.id,
                     'task_id': self.id,
                     'cmd_args': args,
                     'return_code': return_code,
@@ -226,7 +220,7 @@ class CreateSnapshot(Task):
             logger.exception('Snapshot failed, unable to rename ' + \
                 'snapshot temp directory. %r' % {
                     'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot_id,
+                    'snapshot_id': self.snapshot.id,
                     'task_id': self.id,
                 })
             raise SnapshotError
