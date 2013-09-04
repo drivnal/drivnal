@@ -508,11 +508,11 @@ define([
     },
     resetSetttings: function() {
       this.nameView.setValue(this.model.get('name'));
-      this.resetExcludePathViews();
       this.sourePathView.setValue(this.model.get('source_path'));
       this.sourePathView.hidePathSelect();
       this.pathView.setValue(this.model.get('path'));
       this.pathView.hidePathSelect();
+      this.resetExcludePathViews();
       this.scheduleView.setValue(this.model.get('schedule'));
       this.minFreeSpaceView.setValue(this.model.get('min_free_space') * 100);
       this.snapshotLimit.setValue(this.model.get('snapshot_limit'));
@@ -537,7 +537,6 @@ define([
     onClickCancel: function() {
       this.hideSettings(function() {
         this.resetSetttings();
-        this.trigger('update');
       }.bind(this));
     },
     onClickSave: function() {
