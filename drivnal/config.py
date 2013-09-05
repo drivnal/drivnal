@@ -24,23 +24,20 @@ class Config:
 
     def __setattr__(self, name, value):
         if name in _RESERVED_ATTRIBUTES:
-            self.__dict__[name] = value
-            return
-
-        if name in self.all_options:
+            pass
+        elif name in self.all_options:
             self.set_state(UNSAVED)
         self.__dict__[name] = value
 
     def __getattr__(self, name):
         if name in _RESERVED_ATTRIBUTES:
-            return self.__dict__[name]
-
-        if name in self.all_options:
+            pass
+        elif name in self.all_options:
             if self.get_state() == CLOSED:
                 self.load()
             if name not in self.__dict__:
                 return None
-        if name not in self.__dict__:
+        elif name not in self.__dict__:
             raise AttributeError('Config instance has no attribute %r' % name)
         return self.__dict__[name]
 
