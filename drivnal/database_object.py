@@ -3,7 +3,6 @@ from drivnal import server
 import logging
 
 logger = logging.getLogger(APP_NAME)
-
 _RESERVED_ATTRIBUTES = ['column_family', 'bool_columns', 'int_columns',
     'float_columns', 'str_columns', 'cached_columns', 'required_columns',
     'all_columns', 'id']

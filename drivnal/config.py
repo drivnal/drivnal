@@ -3,7 +3,6 @@ import os
 import logging
 
 logger = logging.getLogger(APP_NAME)
-
 _RESERVED_ATTRIBUTES = ['bool_options', 'int_options', 'float_options',
     'path_options', 'str_options', 'list_options', 'all_options']
 
