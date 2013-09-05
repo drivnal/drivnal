@@ -52,7 +52,6 @@ class MoveVolume(Task):
             'task_id': self.id,
         })
 
-        self.remove_snapshot()
         self.aborted()
 
     def run(self):
