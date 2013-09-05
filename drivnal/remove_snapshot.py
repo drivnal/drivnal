@@ -1,5 +1,5 @@
 from constants import *
-from task import Task
+from exec_task import ExecTask
 from event import Event
 import os
 import time
@@ -10,50 +10,11 @@ import subprocess
 
 logger = logging.getLogger(APP_NAME)
 
-class RemoveSnapshot(Task):
+class RemoveSnapshot(ExecTask):
     type = REMOVE_SNAPSHOT
 
-    def _abort_process(self, process):
-        for i in xrange(10):
-            process.terminate()
-            logger.debug('Terminating snapshot remove process. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-            time.sleep(1)
-            if process.poll() is not None:
-                break
-
-        if process.poll() is None:
-            for i in xrange(30):
-                process.kill()
-                logger.debug('Killing snapshot remove process. %r' % {
-                    'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot_id,
-                    'task_id': self.id,
-                    'pid': process.pid,
-                })
-                time.sleep(0.5)
-                if process.poll() is not None:
-                    break
-
-        if process.poll() is None:
-            logger.error('Failed to abort snapshot remove process. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-
-        logger.warning('Snapshot remove aborted. %r' % {
-            'volume_id': self.volume_id,
-            'snapshot_id': self.snapshot_id,
-            'task_id': self.id,
-        })
-
-        self.aborted()
+    def _pre_aborted(self):
+        self.snapshot.set_state(FAILED)
 
     def run(self, keep_log=False):
         if not keep_log:
@@ -75,24 +36,5 @@ class RemoveSnapshot(Task):
         })
 
         args = ['rm', '-rf', self.snapshot.path]
-
-        process = subprocess.Popen(args)
-        return_code = None
-
-        while True:
-            poll = process.poll()
-            if poll is not None:
-                return_code = poll
-                break
-            if self.state == ABORTING:
-                # Attempt to set snapshot as failed
-                try:
-                    os.rename(snapshot_path_temp, snapshot_path_failed)
-                except OSError:
-                    pass
-
-                self._abort_process(process)
-                return
-            time.sleep(0.5)
-
+        self._exec(args)
         Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
