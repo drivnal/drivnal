@@ -1,6 +1,6 @@
 from constants import *
 from exceptions import *
-from task import Task
+from exec_task import ExecTask
 from event import Event
 import os
 import time
@@ -10,9 +10,10 @@ import subprocess
 
 logger = logging.getLogger(APP_NAME)
 
-class CreateSnapshot(Task):
+class CreateSnapshot(ExecTask):
     def __init__(self, *kargs, **kwargs):
-        Task.__init__(self, *kargs, **kwargs)
+        ExecTask.__init__(self, *kargs, **kwargs)
+        # TODO
         self.type = CREATE_SNAPSHOT
 
     def remove_snapshot(self):
@@ -84,44 +85,10 @@ class CreateSnapshot(Task):
             return True
         return False
 
-    def _abort_process(self, process):
-        for i in xrange(10):
-            process.terminate()
-            logger.debug('Terminating snapshot process. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot.id,
-                'pid': process.pid,
-            })
-            time.sleep(1)
-            if process.poll() is not None:
-                break
-
-        if process.poll() is None:
-            for i in xrange(30):
-                process.kill()
-                logger.debug('Killing snapshot process. %r' % {
-                    'volume_id': self.volume_id,
-                    'snapshot_id': self.snapshot.id,
-                    'pid': process.pid,
-                })
-                time.sleep(0.5)
-                if process.poll() is not None:
-                    break
-
-        if process.poll() is None:
-            logger.error('Failed to abort snapshot process. %r' % {
-                'volume_id': self.volume_id,
-                'snapshot_id': self.snapshot.id,
-                'pid': process.pid,
-            })
-
-        logger.warning('Snapshot aborted, removing aborted snapshot. %r' % {
-            'volume_id': self.volume_id,
-            'snapshot_id': self.snapshot.id,
-        })
-
+    def _pre_aborted(self):
         self.remove_snapshot()
-        self.aborted()
+
+    def _post_aborted(self):
         Event(type=VOLUMES_UPDATED)
 
     def run(self):
@@ -186,18 +153,9 @@ class CreateSnapshot(Task):
         self.prune_snapshots()
 
         # Start rsync process
-        process = subprocess.Popen(args)
-        return_code = None
-
-        while True:
-            poll = process.poll()
-            if poll is not None:
-                return_code = poll
-                break
-            if self.state == ABORTING:
-                self._abort_process(process)
-                return
-            time.sleep(0.5)
+        return_code = self._exec(args)
+        if return_code is None:
+            return
 
         if return_code != 0 and return_code not in RSYNC_WARN_EXIT_CODES:
             self.snapshot.set_state(FAILED)
