@@ -61,8 +61,8 @@ class ExecTask(Task):
         self.aborted()
         self._post_aborted()
 
-    def _exec(self, args, env=None):
-        self.process = subprocess.Popen(args, env=env)
+    def _exec(self, args, env=None, shell=False):
+        self.process = subprocess.Popen(args, env=env, shell=shell)
         return_code = None
 
         while True:
