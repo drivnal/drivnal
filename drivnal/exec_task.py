@@ -56,6 +56,7 @@ class ExecTask(Task):
             'snapshot_id': self.snapshot_id,
             'task_type': self.type,
         })
+
         self._pre_aborted()
         self.aborted()
         self._post_aborted()
