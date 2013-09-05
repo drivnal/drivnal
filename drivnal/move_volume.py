@@ -1,5 +1,5 @@
 from constants import *
-from task import Task
+from exec_task import ExecTask
 from event import Event
 from drivnal import server
 import os
@@ -11,46 +11,8 @@ import subprocess
 
 logger = logging.getLogger(APP_NAME)
 
-class MoveVolume(Task):
+class MoveVolume(ExecTask):
     type = MOVE_VOLUME
-
-    def _abort_process(self, process):
-        for i in xrange(10):
-            process.terminate()
-            logger.debug('Terminating volume move process. %r' % {
-                'volume_id': self.volume_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-            time.sleep(1)
-            if process.poll() is not None:
-                break
-
-        if process.poll() is None:
-            for i in xrange(30):
-                process.kill()
-                logger.debug('Killing volume move process. %r' % {
-                    'volume_id': self.volume_id,
-                    'task_id': self.id,
-                    'pid': process.pid,
-                })
-                time.sleep(0.5)
-                if process.poll() is not None:
-                    break
-
-        if process.poll() is None:
-            logger.error('Failed to abort volume move process. %r' % {
-                'volume_id': self.volume_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-
-        logger.warning('Volume move aborted. %r' % {
-            'volume_id': self.volume_id,
-            'task_id': self.id,
-        })
-
-        self.aborted()
 
     def run(self):
         source_path = self.volume.orig_path
@@ -84,18 +46,9 @@ class MoveVolume(Task):
             # String required for bash to expand /*
             args = 'mv %s %s' % (source_path, destination_path)
 
-            process = subprocess.Popen(args, shell=True)
-            return_code = None
-
-            while True:
-                poll = process.poll()
-                if poll is not None:
-                    return_code = poll
-                    break
-                if self.state == ABORTING:
-                    self._abort_process(process)
-                    return
-                time.sleep(0.5)
+            return_code = self._exec(args, shell=True)
+            if return_code is None:
+                return
 
         else:
             logger.info('Copying volume. %r' % {
@@ -117,18 +70,9 @@ class MoveVolume(Task):
                 '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
                 rsync_source_path, rsync_destination_path]
 
-            process = subprocess.Popen(args)
-            return_code = None
-
-            while True:
-                poll = process.poll()
-                if poll is not None:
-                    return_code = poll
-                    break
-                if self.state == ABORTING:
-                    self._abort_process(process)
-                    return
-                time.sleep(0.5)
+            return_code = self._exec(args)
+            if return_code is None:
+                return
 
             logger.debug('Removing previous copy of volume. %r' % {
                 'volume_id': self.volume_id,
