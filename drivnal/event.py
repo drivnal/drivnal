@@ -15,6 +15,8 @@ class Event(DatabaseObject):
     required_columns = ['volume_id', 'type', 'time']
 
     def __init__(self, id=None, volume_id=None, type=None):
+        DatabaseObject.__init__(self)
+
         if id is None:
             self.id = uuid.uuid4().hex
             self.type = type

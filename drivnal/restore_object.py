@@ -8,9 +8,7 @@ import subprocess
 logger = logging.getLogger(APP_NAME)
 
 class RestoreObject(Task):
-    def __init__(self, *kargs, **kwargs):
-        Task.__init__(self, *kargs, **kwargs)
-        self.type = RESTORE_OBJECT
+    type = RESTORE_OBJECT
 
     def _abort_process(self, process):
         for i in xrange(10):

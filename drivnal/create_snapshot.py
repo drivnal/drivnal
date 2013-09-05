@@ -11,10 +11,7 @@ import subprocess
 logger = logging.getLogger(APP_NAME)
 
 class CreateSnapshot(ExecTask):
-    def __init__(self, *kargs, **kwargs):
-        ExecTask.__init__(self, *kargs, **kwargs)
-        # TODO
-        self.type = CREATE_SNAPSHOT
+    type = CREATE_SNAPSHOT
 
     def remove_snapshot(self):
         self.volume.remove_snapshot(self.snapshot, block=True)

@@ -12,9 +12,7 @@ import subprocess
 logger = logging.getLogger(APP_NAME)
 
 class MoveVolume(Task):
-    def __init__(self, *kargs, **kwargs):
-        Task.__init__(self, *kargs, **kwargs)
-        self.type = MOVE_VOLUME
+    type = MOVE_VOLUME
 
     def _abort_process(self, process):
         for i in xrange(10):

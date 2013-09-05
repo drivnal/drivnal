@@ -18,13 +18,17 @@ class Task(DatabaseObject):
     required_columns = ['volume_id', 'type', 'state', 'time']
 
     def __init__(self, id=None, volume=None, snapshot=None):
+        DatabaseObject.__init__(self)
+
         if id is None:
             self.id = uuid.uuid4().hex
-            self.type = None
+            # Transfer the class attribute to the database
+            self.type = self.type
             self.state = None
             self.time = None
             self.volume_id = None
             _task_threads[self.id] = None
+
         else:
             self.id = id
 

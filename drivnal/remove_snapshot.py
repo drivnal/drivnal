@@ -11,9 +11,7 @@ import subprocess
 logger = logging.getLogger(APP_NAME)
 
 class RemoveSnapshot(Task):
-    def __init__(self, *kargs, **kwargs):
-        Task.__init__(self, *kargs, **kwargs)
-        self.type = REMOVE_SNAPSHOT
+    type = REMOVE_SNAPSHOT
 
     def _abort_process(self, process):
         for i in xrange(10):
