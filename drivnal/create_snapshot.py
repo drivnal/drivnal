@@ -149,7 +149,6 @@ class CreateSnapshot(ExecTask):
         self.snapshot.setup_snapshot()
         self.prune_snapshots()
 
-        # Start rsync process
         return_code = self._exec(args)
         if return_code is None:
             return
