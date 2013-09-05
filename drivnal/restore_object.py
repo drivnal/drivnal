@@ -1,5 +1,5 @@
 from constants import *
-from task import Task
+from exec_task import ExecTask
 import os
 import time
 import logging
@@ -7,46 +7,8 @@ import subprocess
 
 logger = logging.getLogger(APP_NAME)
 
-class RestoreObject(Task):
+class RestoreObject(ExecTask):
     type = RESTORE_OBJECT
-
-    def _abort_process(self, process):
-        for i in xrange(10):
-            process.terminate()
-            logger.debug('Terminating restore process. %r' % {
-                'volume_id': self.volume_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-            time.sleep(1)
-            if process.poll() is not None:
-                break
-
-        if process.poll() is None:
-            for i in xrange(30):
-                process.kill()
-                logger.debug('Killing restore process. %r' % {
-                    'volume_id': self.volume_id,
-                    'task_id': self.id,
-                    'pid': process.pid,
-                })
-                time.sleep(0.5)
-                if process.poll() is not None:
-                    break
-
-        if process.poll() is None:
-            logger.error('Failed to abort restore process. %r' % {
-                'volume_id': self.volume_id,
-                'task_id': self.id,
-                'pid': process.pid,
-            })
-
-        logger.warning('Restore object aborted. %r' % {
-            'volume_id': self.volume_id,
-            'task_id': self.id,
-        })
-
-        self.aborted()
 
     def run(self, objects, destination_path):
         logger.info('Restoring objects. %r' % {
@@ -63,18 +25,9 @@ class RestoreObject(Task):
                 '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
                 obj.path, destination_path]
 
-            process = subprocess.Popen(args)
-            return_code = None
-
-            while True:
-                poll = process.poll()
-                if poll is not None:
-                    return_code = poll
-                    break
-                if self.state == ABORTING:
-                    self._abort_process(process)
-                    return
-                time.sleep(0.5)
+            return_code = self._exec(args)
+            if return_code is None:
+                return
 
             if return_code != 0:
                 raise OSError('Object restore failed, command ' + \
