@@ -58,14 +58,14 @@ define([
         this.$('.remove').removeClass('icon-remove');
         this.$('.remove').addClass('icon-plus');
         this.$('.remove').show();
-        this.$('.item-box').addClass('removing');
+        this.$('.item-box').addClass('item-removing');
         this.removing = true;
       }
       else if (!state && this.removing) {
         this.$('.remove').removeClass('icon-plus');
         this.$('.remove').addClass('icon-remove');
         this.$('.remove').hide();
-        this.$('.item-box').removeClass('removing');
+        this.$('.item-box').removeClass('item-removing');
         this.removing = false;
       }
     },
