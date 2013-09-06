@@ -74,7 +74,7 @@ class CoreVolume(Config):
     def get_snapshots(self):
         snapshots = []
         for snapshot in self.snapshots:
-            if snapshot.state in [WARNING, COMPLETE]:
+            if snapshot.state in [REMOVING, WARNING, COMPLETE]:
                 snapshots.append(snapshot)
         return snapshots
 
@@ -158,8 +158,7 @@ class CoreVolume(Config):
         self.snapshots = []
 
         for name in self.list_path(SNAPSHOT_DIR, files=False):
-            if not name.replace('.temp', '').replace(
-                    '.failed', '').isdigit() or len(name) < 6:
+            if not name[:8].isdigit() or len(name) < 6:
                 continue
             snapshot_names.append(name)
 
