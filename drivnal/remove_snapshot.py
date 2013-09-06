@@ -17,6 +17,8 @@ class RemoveSnapshot(ExecTask):
         self.snapshot.set_state(FAILED)
 
     def run(self, keep_log=False):
+        self.snapshot.set_state(REMOVING)
+
         if not keep_log:
             logger.debug('Removing snapshot log file. %r' % {
                 'volume_id': self.volume_id,
@@ -26,8 +28,6 @@ class RemoveSnapshot(ExecTask):
 
             if os.path.isfile(self.snapshot.log_path):
                 os.remove(self.snapshot.log_path)
-
-        self.snapshot.set_state(REMOVING)
 
         logger.debug('Removing snapshot directory. %r' % {
             'volume_id': self.volume_id,
