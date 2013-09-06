@@ -86,7 +86,7 @@ class DatabaseObject:
 
         if valid:
             if 'remove' in columns:
-                logger.info('Prevented removal of partially complete' + \
+                logger.debug('Prevented removal of partially complete' + \
                     ' %s. %r' % (db_obj.column_family, {
                         'event_id': row,
                     }))
