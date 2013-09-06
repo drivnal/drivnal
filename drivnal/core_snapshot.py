@@ -20,8 +20,8 @@ class CoreSnapshot(Bucket):
             elif dir_name[-9:] == '.%s' % REMOVING:
                 self.id = int(dir_name[:-9])
                 self.state = REMOVING
-            elif dir_name[-5:] == '.%s' % PENDING:
-                self.id = int(dir_name[:-5])
+            elif dir_name[-8:] == '.%s' % PENDING:
+                self.id = int(dir_name[:-8])
                 self.state = PENDING
             elif dir_name[-8:] == '.%s' % WARNING:
                 self.id = int(dir_name[:-8])
