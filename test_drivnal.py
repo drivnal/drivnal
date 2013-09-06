@@ -21,35 +21,36 @@ class Database(unittest.TestCase):
         self._db = database.Database(TEMP_DATABSE_PATH)
 
     def tearDown(self):
+        self._db.close()
         os.remove(TEMP_DATABSE_PATH)
 
     def _fill_column_family(self, num):
-        for i in xrange(3):
-            for x in xrange(3):
+        for i in xrange(5):
+            for x in xrange(5):
                 self._db.set('column_family_%s' % num, 'row_%s' % i,
                     'column_%s' % x, 'value_%s' % x)
 
-        for i in xrange(3):
-            for x in xrange(3):
+        for i in xrange(5):
+            for x in xrange(5):
                 value = self._db.get('column_family_%s' % num,
                     'row_%s' % i, 'column_%s' % x)
                 self.assertEqual(value, 'value_%s' % x)
 
-        for i in xrange(3):
-            for x in xrange(3):
+        for i in xrange(5):
+            for x in xrange(5):
                 self._db.remove('column_family_%s' % num,
                     'row_%s' % i, 'column_%s' % x)
 
-        for i in xrange(3):
-            for x in xrange(3):
+        for i in xrange(5):
+            for x in xrange(5):
                 value = self._db.get('column_family_%s' % num,
                     'row_%s' % i, 'column_%s' % x)
                 self.assertEqual(value, None)
 
     def test_database(self):
-        for i in xrange(3):
+        for i in xrange(2):
             threads = []
-            for x in xrange(10):
+            for x in xrange(300):
                 thread = threading.Thread(target=self._fill_column_family,
                     args=(x,))
                 thread.start()

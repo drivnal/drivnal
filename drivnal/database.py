@@ -3,6 +3,7 @@ import threading
 import logging
 import copy
 import urlparse
+import time
 
 logger = logging.getLogger(APP_NAME)
 
@@ -21,6 +22,9 @@ class RedisBackend:
         })
         import redis
         self._client = redis.Redis(host=host, port=port, db=db)
+
+    def close(self):
+        pass
 
     def get(self, key):
         value = self._client.get(key)
@@ -46,9 +50,6 @@ class RedisBackend:
         keys = self._client.keys(prefix)
         return keys
 
-    def sync(self):
-        pass
-
 class BerkeleyBackend:
     def __init__(self, db_path):
         logger.info('Opening berkeley database... %r' % {
@@ -62,6 +63,21 @@ class BerkeleyBackend:
 
         self._client = bsddb.db.DB()
         self._client.open(db_path, bsddb.db.DB_HASH, bsddb.db.DB_CREATE)
+        self._sync_lock = threading.Lock()
+        self._sync_interrupt = False
+        self._sync_thread = threading.Thread(target=self._sync_loop)
+        self._sync_thread.start()
+
+    def _sync_loop(self):
+        while not self._sync_interrupt:
+            self.sync()
+            time.sleep(0.5)
+        self.sync()
+
+    def close(self):
+        logger.info('Closing berkeley database...')
+        self._sync_interrupt = True
+        self._sync_thread.join()
 
     def get(self, key):
         return self._client.get(key=key)
@@ -76,12 +92,21 @@ class BerkeleyBackend:
         return self._client.keys()
 
     def sync(self):
-        self._client.sync()
+        if self._sync_lock.locked():
+            return
+        self._sync_lock.acquire()
+        try:
+            self._client.sync()
+        finally:
+            self._sync_lock.release()
 
 class DebugBackend:
     def __init__(self):
         logger.info('Creating debug database...')
         self._data = {}
+
+    def close(self):
+        pass
 
     def get(self, key):
         if key in self._data:
@@ -99,9 +124,6 @@ class DebugBackend:
         for key in self._data:
             keys.append(key)
         return keys
-
-    def sync(self):
-        pass
 
 class Database:
     def __init__(self, db_path):
@@ -154,7 +176,6 @@ class Database:
         self._db_lock.acquire()
         try:
             self._db.set(key, value)
-            self._db.sync()
         finally:
             self._db_lock.release()
 
@@ -162,7 +183,6 @@ class Database:
         self._db_lock.acquire()
         try:
             self._db.remove(key)
-            self._db.sync()
         except bsddb.db.DBNotFoundError:
             pass
         finally:
@@ -176,9 +196,11 @@ class Database:
             for key in self._db.keys(prefix):
                 if key.startswith(prefix):
                     self._db.remove(key)
-            self._db.sync()
         finally:
             self._db_lock.release()
+
+    def close(self):
+        self._db.close()
 
     def get(self, column_family, row=None, column=None):
         if not row and column:

@@ -57,6 +57,9 @@ class Server(Config):
     def _setup_db(self):
         self.app_db = Database(self.db_path or DEFAULT_DB_PATH)
 
+    def _close_db(self):
+        self.app_db.close()
+
     def _setup_handlers(self):
         import handlers
 
@@ -96,6 +99,7 @@ class Server(Config):
             self._stop_scheduler()
             logger.info('Stopping server...')
             server.stop()
+            self._close_db()
 
     def _run_wsgi_debug(self):
         logger.info('Starting debug server...')
@@ -110,6 +114,8 @@ class Server(Config):
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self._stop_scheduler()
+            # Possible data loss here db closing before debug server
+            self._close_db()
             logger.info('Stopping server...')
 
     def _run_server(self):
@@ -144,6 +150,7 @@ class Server(Config):
                 time.sleep(1)
         finally:
             self._stop_scheduler()
+            self._close_db()
 
     def run_server(self):
         self._setup_all()
