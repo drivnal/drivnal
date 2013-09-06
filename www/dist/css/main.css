@@ -6806,7 +6806,7 @@ button:focus {
   width: -o-calc(38% - 6px);
   width: calc(38% - 6px);
   min-width: 449px;
-  margin-top: 6px;
+  margin-top: 10px;
   position: absolute;
   z-index: 5;
   border: 1px solid #0072e6;
