@@ -51,7 +51,7 @@ class ExecTask(Task):
                 'pid': self.process.pid,
             })
 
-        logger.warning('Task aborted, removing aborted task. %r' % {
+        logger.warning('Task aborted. %r' % {
             'volume_id': self.volume_id,
             'snapshot_id': self.snapshot_id,
             'task_type': self.type,
