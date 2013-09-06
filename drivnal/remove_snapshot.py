@@ -18,6 +18,7 @@ class RemoveSnapshot(ExecTask):
 
     def run(self, keep_log=False):
         self.snapshot.set_state(REMOVING)
+        Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
 
         if not keep_log:
             logger.debug('Removing snapshot log file. %r' % {
