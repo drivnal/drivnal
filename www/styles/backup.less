@@ -390,15 +390,18 @@
   background-color: @item-pending-active-bg;
 }
 
-.backup .item-box.aborting .item {
+.backup .item-box.aborting .item,
+.backup .item-box.removing .item {
   background-color: @item-aborting-bg;
 }
 
-.backup .item-box.aborting .item:hover {
+.backup .item-box.aborting .item:hover,
+.backup .item-box.removing .item:hover {
   background-color: @item-aborting-hover-bg;
 }
 
-.backup .item-box.aborting.selected .item {
+.backup .item-box.aborting.selected .item,
+.backup .item-box.removing.selected .item {
   background-color: @item-aborting-active-bg;
 }
 
@@ -488,7 +491,8 @@
   border-bottom: @item-pending-box-border;
 }
 
-.backup .item-box.aborting .info {
+.backup .item-box.aborting .info,
+.backup .item-box.removing .info {
   background-color: @item-aborting-box-bg;
   border-left: @item-aborting-box-border;
   border-right: @item-aborting-box-border;
