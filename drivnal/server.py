@@ -16,9 +16,9 @@ class Server(Config):
 
     def __init__(self):
         Config.__init__(self)
+        self._scheduler = None
         self.app = None
         self.app_db = None
-        self._scheduler = None
 
     def _setup_app(self):
         import flask
@@ -142,8 +142,6 @@ class Server(Config):
         try:
             while True:
                 time.sleep(1)
-        except:
-            pass
         finally:
             self._stop_scheduler()
 
