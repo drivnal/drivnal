@@ -14,16 +14,16 @@ class CoreSnapshot(Bucket):
         self.volume = volume
 
         if dir_name:
-            if dir_name[-7:] == '.failed':
+            if dir_name[-7:] == '.%s' % FAILED:
                 self.id = int(dir_name[:-7])
                 self.state = FAILED
-            elif dir_name[-9:] == '.removing':
+            elif dir_name[-9:] == '.%s' % REMOVING:
                 self.id = int(dir_name[:-9])
                 self.state = REMOVING
-            elif dir_name[-5:] == '.temp':
+            elif dir_name[-5:] == '.%s' % PENDING:
                 self.id = int(dir_name[:-5])
                 self.state = PENDING
-            elif dir_name[-8:] == '.warning':
+            elif dir_name[-8:] == '.%s' % WARNING:
                 self.id = int(dir_name[:-8])
                 self.state = WARNING
             else:
