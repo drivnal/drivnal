@@ -24,7 +24,7 @@ def event_get(volume_id=None, last_event=None):
         ]
         return utils.jsonify(events)
 
-    for i in xrange(int(10 / 0.5)):
+    for i in xrange(int(10 / 0.1)):
         events = []
 
         for event in Event.get_events(volume, last_event):
@@ -38,6 +38,6 @@ def event_get(volume_id=None, last_event=None):
         if len(events):
             return utils.jsonify(events)
 
-        time.sleep(0.5)
+        time.sleep(0.1)
 
     return utils.jsonify([])
