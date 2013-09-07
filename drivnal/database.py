@@ -100,9 +100,9 @@ class BerkeleyBackend:
         finally:
             self._sync_lock.release()
 
-class DebugBackend:
+class MemoryBackend:
     def __init__(self):
-        logger.info('Creating debug database...')
+        logger.info('Creating memory database...')
         self._data = {}
 
     def close(self):
@@ -130,7 +130,7 @@ class Database:
         self._db_lock = threading.Lock()
 
         if db_path is None or db_path == 'none':
-            self._db = DebugBackend()
+            self._db = MemoryBackend()
         elif db_path.startswith('redis://'):
             parse = urlparse.urlparse(db_path)
             if len(parse.netloc.split(':')) > 1:
