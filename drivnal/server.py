@@ -55,9 +55,11 @@ class Server(Config):
         logger.addHandler(self.log_handler)
 
     def _setup_db(self):
+        self.mem_db = Database(None)
         self.app_db = Database(self.db_path or DEFAULT_DB_PATH)
 
     def _close_db(self):
+        self.mem_db.close()
         self.app_db.close()
 
     def _setup_handlers(self):
