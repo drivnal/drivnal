@@ -53,40 +53,48 @@ class CoreVolume(Config):
                 raise IOError('Volume doesnt exists')
 
     def __getattr__(self, name):
-        if name == 'snapshots':
+        if name == '_snapshot_names':
             self.load_snapshots()
         elif name == 'log_dir':
             return self._get_log_dir()
         return Config.__getattr__(self, name)
 
+    def get_origin(self):
+        return Origin(self)
+
     def get_snapshot(self, id):
-        for snapshot in self.snapshots:
+        for name in self._snapshot_names:
+            snapshot = self.SnapshotClass(self, name)
             if snapshot.id == id:
                 return snapshot
 
     def get_failed_snapshots(self):
         snapshots = []
-        for snapshot in self.snapshots:
+        for name in self._snapshot_names:
+            snapshot = self.SnapshotClass(self, name)
             if snapshot.state == FAILED:
                 snapshots.append(snapshot)
         return snapshots
 
     def get_snapshots(self):
         snapshots = []
-        for snapshot in self.snapshots:
+        for name in self._snapshot_names:
+            snapshot = self.SnapshotClass(self, name)
             if snapshot.state in [REMOVING, WARNING, COMPLETE]:
                 snapshots.append(snapshot)
         return snapshots
 
     def get_snapshot_count(self):
         count = 0
-        for snapshot in self.snapshots:
+        for name in self._snapshot_names:
+            snapshot = self.SnapshotClass(self, name)
             if snapshot.state == COMPLETE:
                 count += 1
         return count
 
     def get_last_snapshot(self):
-        for snapshot in reversed(self.snapshots):
+        for name in self._snapshot_names:
+            snapshot = self.SnapshotClass(self, name)
             if snapshot.state in [WARNING, COMPLETE]:
                 return snapshot
 
@@ -147,7 +155,6 @@ class CoreVolume(Config):
         except IOError:
             # Config doesnt exists defaults will be used
             pass
-        self.origin = Origin(self)
 
     def load_snapshots(self):
         logger.debug('Loading snapshots. %r' % {
@@ -155,15 +162,12 @@ class CoreVolume(Config):
         })
 
         snapshot_names = []
-        self.snapshots = []
 
         for name in self.list_path(SNAPSHOT_DIR, files=False):
             if not name[:8].isdigit() or len(name) < 6:
                 continue
             snapshot_names.append(name)
-
-        for name in sorted(snapshot_names):
-            self.snapshots.append(self.SnapshotClass(self, name))
+        self._snapshot_names = sorted(snapshot_names)
 
     def _move_volume(self):
         logger.debug('Starting move volume task. %r' % {

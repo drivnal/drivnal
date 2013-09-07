@@ -18,7 +18,7 @@ def object_get(volume_id, snapshot_id, path=None):
         }, 404)
 
     if snapshot_id == 'origin':
-        bucket = volume.origin
+        bucket = volume.get_origin()
     else:
         bucket = volume.get_snapshot(int(snapshot_id))
 
