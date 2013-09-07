@@ -5,7 +5,7 @@ if (type && type.indexOf('directory') !== -1) {
   isDir = true;
   titleClass = 'dir';
 }
-else if (syntax) {
+else if (syntax && size <= 1048576) {
   titleClass = 'text';
 }
 %>
