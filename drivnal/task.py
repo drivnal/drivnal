@@ -1,6 +1,5 @@
 from constants import *
 from event import Event
-from drivnal import server
 from database_object import DatabaseObject
 import threading
 import logging
@@ -89,7 +88,7 @@ class Task(DatabaseObject):
         })
         # Volume id will be removed in next call
         volume_id = self.volume_id
-        server.app_db.remove(self.column_family, self.id)
+        self.db.remove(self.column_family, self.id)
         Event(volume_id=volume_id, type=TASKS_UPDATED)
 
     def run(self, *args, **kwargs):
@@ -144,7 +143,7 @@ class Task(DatabaseObject):
         tasks_dict = {}
         tasks_time = []
 
-        tasks_query = server.app_db.get(Task.column_family)
+        tasks_query = Task.db.get(Task.column_family)
         for task_id in tasks_query:
             task = tasks_query[task_id]
 
@@ -170,7 +169,7 @@ class Task(DatabaseObject):
                     'from database. %r' % {
                 'task_id': task_id,
             })
-            server.app_db.remove(Task.column_family, task_id)
+            Task.db.remove(Task.column_family, task_id)
 
     @staticmethod
     def _get_tasks(volume, type, states=[]):
@@ -182,7 +181,7 @@ class Task(DatabaseObject):
             'volume_id': volume.id,
         })
 
-        tasks_query = server.app_db.get(Task.column_family)
+        tasks_query = Task.db.get(Task.column_family)
         for task_id in tasks_query:
             task = tasks_query[task_id]
 

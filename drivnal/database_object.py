@@ -8,6 +8,7 @@ _RESERVED_ATTRIBUTES = ['column_family', 'bool_columns', 'int_columns',
     'all_columns', 'id']
 
 class DatabaseObject:
+    db = server.app_db
     column_family = 'column_family'
     bool_columns = []
     int_columns = []
@@ -27,13 +28,13 @@ class DatabaseObject:
                 self.__dict__[name] = value
 
             if name in self.int_columns or name in self.float_columns:
-                server.app_db.set(self.column_family,
+                self.db.set(self.column_family,
                     self.id, name, str(value))
             elif name in self.bool_columns:
-                server.app_db.set(self.column_family,
+                self.db.set(self.column_family,
                     self.id, name, 't' if value else 'f')
             else:
-                server.app_db.set(self.column_family,
+                self.db.set(self.column_family,
                     self.id, name, value)
         else:
             self.__dict__[name] = value
@@ -45,7 +46,7 @@ class DatabaseObject:
             if name in self.cached_columns and name in self.__dict__:
                 return self.__dict__[name]
 
-            value = server.app_db.get(self.column_family, self.id, name)
+            value = self.db.get(self.column_family, self.id, name)
 
             if name in self.int_columns:
                 if value:
@@ -90,7 +91,7 @@ class DatabaseObject:
                     ' %s. %r' % (db_obj.column_family, {
                         'event_id': row,
                     }))
-                server.app_db.remove(db_obj.column_family, row, 'remove')
+                db_obj.db.remove(db_obj.column_family, row, 'remove')
         else:
             # Remove broken rows
             if 'remove' in columns:
@@ -98,7 +99,7 @@ class DatabaseObject:
                     'database. %r') % (db_obj.column_family, {
                         '%s_id' % db_obj.column_family: row,
                     }))
-                server.app_db.remove(db_obj.column_family, row)
+                db_obj.db.remove(db_obj.column_family, row)
             else:
                 logger.debug(('Queueing removal of broken %s from' + \
                     ' database. %r') % (db_obj.column_family, {
@@ -107,6 +108,6 @@ class DatabaseObject:
                 # Its possible row is currently being created and will
                 # be valid once created. Wait for next db clean to
                 # revalidate and remove row.
-                server.app_db.set(db_obj.column_family, row, 'remove', 'true')
+                db_obj.db.set(db_obj.column_family, row, 'remove', 'true')
 
         return valid
