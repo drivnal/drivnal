@@ -33,7 +33,9 @@ class Scheduler:
                 logger.exception('Scheduler failed to check schedule.')
 
             try:
-                self.clean_database()
+                # Clean database every 10 min
+                if (int(time.mktime(localtime)) / 60) % 10 == 0:
+                    self.clean_database()
             except:
                 logger.exception('Scheduler failed to clean database.')
 
