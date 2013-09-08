@@ -301,10 +301,6 @@ define([
           this.updateSize();
         }.bind(this)
       });
-
-      for (i = 0; i < this.views.length; i++) {
-        this.views[i].rollStorage();
-      }
     },
     isVolumes: function() {
       if (this.$('.backup-volumes').hasClass('open')) {
