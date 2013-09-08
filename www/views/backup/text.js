@@ -48,11 +48,7 @@ define([
     },
     template: _.template(textTemplate),
     initialize: function(options) {
-      this.model = new TextModel({
-        id: options.id,
-        volume: options.volume,
-        snapshot: options.snapshot
-      });
+      this.model = new TextModel(options);
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
