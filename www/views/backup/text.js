@@ -40,6 +40,7 @@ define([
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
+    type: null,
     events: {
       'mouseover .close-viewer': 'addIconWhite',
       'mouseout .close-viewer': 'removeIconWhite',
@@ -47,6 +48,9 @@ define([
     },
     template: _.template(textTemplate),
     render: function() {
+      if (this.type) {
+        this.$el.addClass(this.type);
+      }
       this.$el.html(this.template(this.model.toJSON()));
       SyntaxHighlighter.highlight(null, this.$('pre')[0]);
       this.$el.fadeIn(400);

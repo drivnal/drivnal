@@ -771,13 +771,16 @@
 }
 
 .backup .text-viewer-box {
-  .width-calc(~'38% - 6px');
-  min-width: @object-drop-min-width;
   margin-top: 10px;
   position: absolute;
   z-index: 5;
   border: @box-border;
   background-color: @default-bg;
+}
+
+.backup .text-viewer-box.object {
+  .width-calc(~'38% - 6px');
+  min-width: @object-drop-min-width;
 }
 
 .backup .text-viewer-box .title {
