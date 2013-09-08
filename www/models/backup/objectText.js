@@ -4,7 +4,7 @@ define([
   'backbone'
 ], function($, _, Backbone) {
   'use strict';
-  var TextModel = Backbone.Model.extend({
+  var ObjectTextModel = Backbone.Model.extend({
     initialize: function(options) {
       this.volume = options.volume;
       this.snapshot = options.snapshot;
@@ -25,5 +25,5 @@ define([
     }
   });
 
-  return TextModel;
+  return ObjectTextModel;
 });
