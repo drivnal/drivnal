@@ -30,14 +30,13 @@ define([
   'shBrushTypeScript',
   'shBrushVb',
   'shBrushXml',
-  'models/backup/text',
   'text!templates/backup/text.html'
 ], function($, _, Backbone, SyntaxHighlighter, BrushAppleScript, BrushAS3,
     BrushBash, BrushColdFusion, BrushCpp, BrushCSharp, BrushCss, BrushDelphi,
     BrushDiff, BrushErlang, BrushGroovy, BrushHaxe, BrushJava, BrushJavaFX,
     BrushJScript, BrushPerl, BrushPhp, BrushPlain, BrushPowerShell,
     BrushPython, BrushRuby, BrushSass, BrushScala, BrushSql, BrushTypeScript,
-    BrushVb, BrushXml, TextModel, textTemplate) {
+    BrushVb, BrushXml, textTemplate) {
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
@@ -47,9 +46,6 @@ define([
       'click .close-viewer': 'onClickClose'
     },
     template: _.template(textTemplate),
-    initialize: function(options) {
-      this.model = new TextModel(options);
-    },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       SyntaxHighlighter.highlight(null, this.$('pre')[0]);

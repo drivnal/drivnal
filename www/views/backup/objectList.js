@@ -7,9 +7,10 @@ define([
   'views/backup/objectPathList',
   'views/backup/objectDrop',
   'views/backup/text',
+  'models/backup/text',
   'text!templates/backup/objectList.html'
 ], function($, _, Backbone, ObjectCollection, ObjectView, ObjectPathListView,
-    ObjectDropView, TextView, objectListTemplate) {
+    ObjectDropView, TextView, TextModel, objectListTemplate) {
   'use strict';
   var ObjectListView = Backbone.View.extend({
     className: 'object-list  no-select',
@@ -258,10 +259,16 @@ define([
       }
       path += objectView.model.get('id');
 
-      this.textView = new TextView({
+      var snapshot = this.collection.getSnapshot();
+      var model = new TextModel({
         id: path,
         volume: this.collection.getVolume(),
-        snapshot: this.collection.getSnapshot()
+        snapshot: this.collection.getSnapshot(),
+        subText: (snapshot ? formatTime(snapshot) : 'Current')
+      });
+
+      this.textView = new TextView({
+        model: model
       });
 
       this.textView.model.fetch({
