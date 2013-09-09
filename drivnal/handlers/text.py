@@ -2,8 +2,6 @@ from drivnal.constants import *
 from drivnal.client import Client
 import drivnal.utils as utils
 from drivnal import server
-import os
-import flask
 
 @server.app.route('/text/<volume_id>/<snapshot_id>/<path:path>',
     methods=['GET'])
