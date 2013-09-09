@@ -15,11 +15,13 @@ class RedisBackend:
             port = 6379
         if db is None:
             db = 0
+
         logger.info('Connecting to redis database... %r' % {
             'host': host,
             'port': port,
             'db': db,
         })
+
         import redis
         self._client = redis.Redis(host=host, port=port, db=db)
 
