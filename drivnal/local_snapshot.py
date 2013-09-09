@@ -15,6 +15,16 @@ class LocalSnapshot(CoreSnapshot):
     def _get_log_path(self):
         return os.path.join(self.volume.log_dir, 'snapshot_%s.log' % self.id)
 
+    def read_log(self):
+        try:
+            with open(self.log_path) as file_data:
+                return file_data.read()
+        except OSError, error:
+            logger.warning('Failed to read file. %r' % {
+                'error': error,
+            })
+            return
+
     def setup_snapshot(self):
         snapshots_path = os.path.dirname(self.path)
         if not os.path.isdir(snapshots_path):
