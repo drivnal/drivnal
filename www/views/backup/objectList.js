@@ -193,7 +193,6 @@ define([
         }
       }
 
-      // TODO Create view for drag box
       var dragBox = $('<div>' + dragBoxText + '</div>');
       dragBox.addClass('backup').addClass('drag-box');
 
