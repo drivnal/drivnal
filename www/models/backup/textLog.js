@@ -4,14 +4,15 @@ define([
   'backbone'
 ], function($, _, Backbone) {
   'use strict';
-  var TextLogSnapshotModel = Backbone.Model.extend({
+  var TextLogModel = Backbone.Model.extend({
     initialize: function(options) {
       this.volume = options.volume;
+      this.type = options.type;
     },
     url: function() {
-      return '/log/snapshot/' + this.volume + '/' + this.get('id');
+      return '/log/' + this.type + '/' + this.volume + '/' + this.get('id');
     }
   });
 
-  return TextLogSnapshotModel;
+  return TextLogModel;
 });
