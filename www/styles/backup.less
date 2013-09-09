@@ -780,7 +780,13 @@
 
 .backup .text-viewer-box.object {
   .width-calc(~'38% - 6px');
-  min-width: @object-drop-min-width;
+  min-width: @object-text-view-min-width;
+}
+
+.backup .text-viewer-box.log {
+  margin-left: 10px;
+  .width-calc(~'62% - 16px');
+  min-width: @log-text-view-min-width;
 }
 
 .backup .text-viewer-box .title {
