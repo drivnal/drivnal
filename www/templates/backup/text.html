@@ -1,7 +1,15 @@
+<%
+if (typeof subText === 'undefined') {
+  var subText = '';
+}
+else {
+  subText = '(' + subText + ')';
+}
+%>
 <div class="title">
   <span class="id-text"><%= id %></span>
   <i class="close-viewer icon-remove no-select"></i>
-  <span class="sub-text"><%= '(' + subText + ')' %></span>
+  <span class="sub-text"><%= subText %></span>
 </div>
 <div class="data">
   <pre class="brush: <%= syntax %>; toolbar: false;"><%= data %></pre>
