@@ -283,7 +283,6 @@ define([
       if (this.isVolumes()) {
         return;
       }
-      var i;
       var elements = this.$('.backup-volumes li').not('.current-volume');
 
       this.$('.backup-volumes').addClass('open');

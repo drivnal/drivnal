@@ -263,7 +263,7 @@ define([
         id: path,
         volume: this.collection.getVolume(),
         snapshot: this.collection.getSnapshot(),
-        subText: (snapshot ? formatTime(snapshot) : 'Current')
+        subText: (snapshot ? window.formatTime(snapshot) : 'Current')
       });
 
       this.textView = new TextObjectView({
