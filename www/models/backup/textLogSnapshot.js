@@ -7,10 +7,9 @@ define([
   var TextLogSnapshotModel = Backbone.Model.extend({
     initialize: function(options) {
       this.volume = options.volume;
-      this.snapshot = options.snapshot;
     },
     url: function() {
-      return '/log/snapshot/' + this.volume + '/' + this.snapshot;
+      return '/log/snapshot/' + this.volume + '/' + this.get('id');
     }
   });
 
