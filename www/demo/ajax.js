@@ -293,7 +293,7 @@ define([
       id: typeId,
       syntax: 'shell',
       data: demoData.logs[type]
-    }
+    };
 
     if (!data.data) {
       request.error({
