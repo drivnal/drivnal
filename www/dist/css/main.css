@@ -6535,17 +6535,21 @@ button:focus {
   margin-left: 26px;
   float: left;
 }
-.backup .item-box .toggle-info {
-  margin-top: -21px;
-  margin-right: 20px;
+.backup .item-box .view-log,
+.backup .item-box .toggle-info,
+.backup .item-box .icon {
   float: right;
   display: none;
+  margin-top: -21px;
+}
+.backup .item-box .view-log {
+  margin-right: 36px;
+}
+.backup .item-box .toggle-info {
+  margin-right: 20px;
 }
 .backup .item-box .icon {
-  margin-top: -21px;
   margin-right: 5px;
-  float: right;
-  display: none;
 }
 .backup .item-box .task-title {
   font-size: 1.2em;
@@ -6815,12 +6819,34 @@ button:focus {
   border: 1px solid #0072e6;
   background-color: #ffffff;
 }
+.backup .text-viewer-box .data .plaintext {
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+.backup .text-viewer-box .data .plaintext pre {
+  font-size: 0.85em;
+  line-height: 13px;
+  color: #000000;
+  background-color: #ffffff;
+  border: none;
+  padding: 3px;
+  white-space: pre;
+  float: left;
+}
 .backup .text-viewer-box.object {
   width: -webkit-calc(38% - 6px);
   width: -moz-calc(38% - 6px);
   width: -o-calc(38% - 6px);
   width: calc(38% - 6px);
   min-width: 449px;
+}
+.backup .text-viewer-box.log {
+  margin-left: 10px;
+  width: -webkit-calc(62% - 16px);
+  width: -moz-calc(62% - 16px);
+  width: -o-calc(62% - 16px);
+  width: calc(62% - 16px);
+  min-width: 728px;
 }
 .backup .text-viewer-box .title {
   font-size: 1.25em;
