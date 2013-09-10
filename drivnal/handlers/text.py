@@ -28,10 +28,14 @@ def text_get(volume_id, snapshot_id, path=None):
 
     object = bucket.get_object(path)
     object.get_syntax()
+    syntax = object.syntax
+    if object.syntax and object.size > 1048576:
+        syntax = ''
+
     object_data = {
         'id': object.name,
         'type': object.type,
-        'syntax': object.syntax,
+        'syntax': syntax,
         'data': object.read(),
     }
 
