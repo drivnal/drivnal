@@ -46,6 +46,16 @@ class CoreSnapshot(Bucket):
                 'Snapshot instance has no attribute %r' % name)
         return self.__dict__[name]
 
+    def read_log(self):
+        try:
+            with open(self.log_path) as file_data:
+                return file_data.read()
+        except OSError, error:
+            logger.warning('Failed to read file. %r' % {
+                'error': error,
+            })
+            return
+
     def parse_log_file(self):
         self.runtime = None
         self.sent = None
