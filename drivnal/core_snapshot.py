@@ -46,12 +46,25 @@ class CoreSnapshot(Bucket):
                 'Snapshot instance has no attribute %r' % name)
         return self.__dict__[name]
 
-    def read_log(self):
+    def log_read(self):
         try:
             with open(self.log_path) as file_data:
                 return file_data.read()
         except OSError, error:
-            logger.warning('Failed to read file. %r' % {
+            logger.warning('Failed to read snapshot log file. %r' % {
+                'volume_id': self.volume.id,
+                'snapshot_id': self.id,
+                'error': error,
+            })
+            return
+
+    def log_size(self):
+        try:
+            return os.path.getsize(self.log_path)
+        except OSError, error:
+            logger.warning('Failed to get snapshot log file size. %r' % {
+                'volume_id': self.volume.id,
+                'snapshot_id': self.id,
                 'error': error,
             })
             return
