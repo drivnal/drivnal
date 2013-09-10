@@ -132,7 +132,8 @@ define([
         sent: '52.12 MB',
         speed: '24.10 MB/sec',
         state: 'complete',
-        volume: volumeId
+        volume: volumeId,
+        has_log: true
       });
 
       demoData.volumes[volumeId].snapshot_pending = false;
@@ -287,6 +288,26 @@ define([
   };
   routes['GET+text'] = textGet;
 
+  var logGet = function(request, type, volumeId, typeId) {
+    var data = {
+      id: typeId,
+      syntax: 'shell',
+      data: demoData.logs[type]
+    }
+
+    if (!data.data) {
+      request.error({
+        status: 404,
+      });
+      return;
+    }
+
+    setTimeout(function() {
+      request.success(data);
+    }, responseDelay);
+  };
+  routes['GET+log'] = logGet;
+
   var taskGet = function(request, volumeId) {
     var i;
     var task;
@@ -302,7 +323,8 @@ define([
         volume: volumeId,
         volume_name: volumeName,
         state: task.state,
-        time: task.time
+        time: task.time,
+        has_log: false
       });
     }
 
