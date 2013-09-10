@@ -17,11 +17,10 @@ else {
 </div>
 <div class="data">
   <% if (syntax) { %>
-    <pre class="brush: <%= syntax %>; toolbar: false;"><%= data %></pre>
+    <div class="editor"><%= data %></div>
   <% } else { %>
     <div class="plaintext">
       <pre><%= data %></pre>
-    </div<
+    </div>
   <% } %>
-  </pre>
 </div>

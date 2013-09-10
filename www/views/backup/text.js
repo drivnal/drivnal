@@ -2,41 +2,9 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'shCore',
-  'shBrushAppleScript',
-  'shBrushAS3',
-  'shBrushBash',
-  'shBrushColdFusion',
-  'shBrushCpp',
-  'shBrushCSharp',
-  'shBrushCss',
-  'shBrushDelphi',
-  'shBrushDiff',
-  'shBrushErlang',
-  'shBrushGroovy',
-  'shBrushHaxe',
-  'shBrushJava',
-  'shBrushJavaFX',
-  'shBrushJScript',
-  'shBrushPerl',
-  'shBrushPhp',
-  'shBrushPlain',
-  'shBrushPowerShell',
-  'shBrushPython',
-  'shBrushRuby',
-  'shBrushSass',
-  'shBrushScala',
-  'shBrushSql',
-  'shBrushTypeScript',
-  'shBrushVb',
-  'shBrushXml',
+  'ace/ace',
   'text!templates/backup/text.html'
-], function($, _, Backbone, SyntaxHighlighter, BrushAppleScript, BrushAS3,
-    BrushBash, BrushColdFusion, BrushCpp, BrushCSharp, BrushCss, BrushDelphi,
-    BrushDiff, BrushErlang, BrushGroovy, BrushHaxe, BrushJava, BrushJavaFX,
-    BrushJScript, BrushPerl, BrushPhp, BrushPlain, BrushPowerShell,
-    BrushPython, BrushRuby, BrushSass, BrushScala, BrushSql, BrushTypeScript,
-    BrushVb, BrushXml, textTemplate) {
+], function($, _, Backbone, ace, textTemplate) {
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
@@ -52,7 +20,16 @@ define([
         this.$el.addClass(this.type);
       }
       this.$el.html(this.template(this.model.toJSON()));
-      SyntaxHighlighter.highlight(null, this.$('pre')[0]);
+
+      if (this.$('.editor').length) {
+        var editor = ace.edit(this.$('.editor')[0]);
+        editor.setTheme('ace/theme/github');
+        // editor.setTheme('ace/theme/monokai');
+        //editor.setTheme('ace/theme/twilight');
+        editor.setReadOnly(true);
+        editor.getSession().setMode('ace/mode/' + this.model.get('syntax'));
+      }
+
       this.$el.fadeIn(400);
       return this;
     },
