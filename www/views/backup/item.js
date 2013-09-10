@@ -11,8 +11,8 @@ define([
     events: {
       'mouseover': 'onMouseOver',
       'mouseout': 'onMouseOut',
-      'mouseover .toggle-info, .icon': 'addIconWhite',
-      'mouseout .toggle-info, .icon': 'removeIconWhite',
+      'mouseover .view-log, .toggle-info, .icon': 'addIconWhite',
+      'mouseout .view-log, .toggle-info, .icon': 'removeIconWhite',
       'click .item': 'onClick'
     },
     template: _.template(itemTemplate),
@@ -73,10 +73,14 @@ define([
       return this.removing;
     },
     onMouseOver: function() {
+      if (this.model.get('has_log')) {
+        this.$('.view-log').show();
+      }
       this.$('.toggle-info').show();
       this.$('.' + this.getIconClass()).show();
     },
     onMouseOut: function() {
+      this.$('.view-log').hide();
       this.$('.toggle-info').hide();
       this.$('.icon-stop').hide();
       this.$('.icon-remove').hide();
@@ -88,7 +92,10 @@ define([
       this.$(evt.target).removeClass('icon-white');
     },
     onClick: function(evt) {
-      if ($(evt.target).hasClass('toggle-info')) {
+      if ($(evt.target).hasClass('view-log')) {
+        this.trigger('viewLog', this.model.get('id'));
+      }
+      else if ($(evt.target).hasClass('toggle-info')) {
         this.toggleInfo();
       }
       else if ($(evt.target).hasClass('icon')) {

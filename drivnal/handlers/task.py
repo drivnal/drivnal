@@ -29,6 +29,7 @@ def task_get(volume_id):
             'type': task.type,
             'state': task.state,
             'time': task.time,
+            'has_log': False,
         }
 
         if task.snapshot_id:

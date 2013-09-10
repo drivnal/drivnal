@@ -241,6 +241,7 @@ define([
         this.views.splice(i, 0, modelView);
         this.listenTo(modelView, 'select', this.onSelect);
         this.listenTo(modelView, 'remove', this.onRemove);
+        this.listenTo(modelView, 'viewLog', this.onLogView);
         modelView.render().$el.hide();
 
         if (i === 0) {
@@ -357,6 +358,8 @@ define([
       else {
         this.hideRemove();
       }
+    },
+    onLogView: function() {
     },
     onNewSnapshot: function() {
       if (!this.collection.getVolume()) {

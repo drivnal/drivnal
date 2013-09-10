@@ -26,6 +26,7 @@ def snapshot_get(volume_id):
             'received': snapshot.received,
             'speed': snapshot.speed,
             'runtime': snapshot.runtime,
+            'has_log': True,
         })
 
     return utils.jsonify(snapshots)
