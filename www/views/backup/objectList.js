@@ -263,7 +263,6 @@ define([
         id: path,
         volume: this.collection.getVolume(),
         snapshot: this.collection.getSnapshot(),
-        title: path,
         subText: (snapshot ? window.formatTime(snapshot) : 'Current')
       });
 

@@ -1,4 +1,8 @@
 <%
+if (typeof title === 'undefined') {
+  var title = id;
+}
+
 if (typeof subText === 'undefined') {
   var subText = '';
 }
