@@ -22,7 +22,7 @@ class Object:
             try:
                 file_stat = os.stat(self.path)
                 self.size = file_stat.st_size
-                self.time = file_stat.st_mtime
+                self.time = int(file_stat.st_mtime)
                 self.readable = bool(file_stat.st_mode & stat.S_IROTH)
             except OSError:
                 self.size = None
