@@ -24,7 +24,8 @@ def event_get(volume_id=None, last_event=None):
         ]
         return utils.jsonify(events)
 
-    for i in xrange(int(10 / 0.1)):
+    run_time = 0
+    while run_time <= 10 and not server.interrupt:
         events = []
 
         for event in Event.get_events(volume, last_event):
@@ -38,6 +39,7 @@ def event_get(volume_id=None, last_event=None):
         if len(events):
             return utils.jsonify(events)
 
+        run_time += 0.1
         time.sleep(0.1)
 
     return utils.jsonify([])

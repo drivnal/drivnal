@@ -19,6 +19,7 @@ class Server(Config):
         self._scheduler = None
         self.app = None
         self.app_db = None
+        self.interrupt = False
 
     def _setup_app(self):
         import flask
@@ -98,6 +99,7 @@ class Server(Config):
             server.start()
         except (KeyboardInterrupt, SystemExit), exc:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
+            self.interrupt = True
             self._stop_scheduler()
             logger.info('Stopping server...')
             server.stop()
@@ -115,6 +117,7 @@ class Server(Config):
             self.app.run(host=self.bind_addr, port=self.port, threaded=True)
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
+            self.interrupt = True
             self._stop_scheduler()
             # Possible data loss here db closing before debug server
             self._close_db()
