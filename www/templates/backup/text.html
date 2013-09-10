@@ -12,5 +12,12 @@ else {
   <span class="sub-text"><%= subText %></span>
 </div>
 <div class="data">
-  <pre class="brush: <%= syntax %>; toolbar: false;"><%= data %></pre>
+  <% if (syntax) { %>
+    <pre class="brush: <%= syntax %>; toolbar: false;"><%= data %></pre>
+  <% } else { %>
+    <div class="plaintext">
+      <pre><%= data %></pre>
+    </div<
+  <% } %>
+  </pre>
 </div>

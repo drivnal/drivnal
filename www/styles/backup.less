@@ -452,18 +452,24 @@
   float: left;
 }
 
-.backup .item-box .toggle-info {
-  margin-top: -21px;
-  margin-right: 20px;
+.backup .item-box .view-log,
+.backup .item-box .toggle-info,
+.backup .item-box .icon {
   float: right;
   display: none;
+  margin-top: -21px;
+}
+
+.backup .item-box .view-log {
+  margin-right: 36px;
+}
+
+.backup .item-box .toggle-info {
+  margin-right: 20px;
 }
 
 .backup .item-box .icon {
-  margin-top: -21px;
   margin-right: 5px;
-  float: right;
-  display: none;
 }
 
 .backup .item-box .task-title {
@@ -776,6 +782,22 @@
   z-index: 5;
   border: @box-border;
   background-color: @default-bg;
+}
+
+.backup .text-viewer-box .data .plaintext {
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.backup .text-viewer-box .data .plaintext pre {
+  font-size: 0.85em;
+  line-height: 13px;
+  color: @black-fg;
+  background-color: @default-bg;
+  border: none;
+  padding: 3px;
+  white-space: pre;
+  float: left;
 }
 
 .backup .text-viewer-box.object {
