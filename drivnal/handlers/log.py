@@ -25,10 +25,16 @@ def log_get(type, volume_id, type_id):
                 'error_msg': SNAPSHOT_NOT_FOUND_MSG,
             }, 404)
 
+        # Log files > 1mb load slow with syntax highlighter
+        if snapshot.log_size() > 1048576:
+            syntax = ''
+        else:
+            syntax = 'shell'
+
         data = {
             'id': snapshot.id,
-            'syntax': 'shell',
-            'data': snapshot.read_log(),
+            'syntax': syntax,
+            'data': snapshot.log_read(),
         }
 
     elif type == 'task':
