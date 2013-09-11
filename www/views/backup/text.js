@@ -48,9 +48,6 @@ define([
         return;
       }
       if (this.editor.getTheme() === 'ace/theme/github') {
-        this.editor.setTheme('ace/theme/monokai');
-      }
-      else if (this.editor.getTheme() === 'ace/theme/monokai') {
         this.editor.setTheme('ace/theme/twilight');
       }
       else {
