@@ -291,7 +291,7 @@ define([
   var logGet = function(request, type, volumeId, typeId) {
     var data = {
       id: typeId,
-      syntax: 'shell',
+      syntax: 'sh',
       data: demoData.logs[type]
     };
 
