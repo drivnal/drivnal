@@ -19,13 +19,13 @@ define([
     removeTitle: 'Delete Selected Snapshots',
     selectable: true,
     defaultOpen: true,
-    onLogView: function(snapshot) {
+    onLogView: function(snapshotId) {
       var model = new TextLogModel({
-        id: snapshot,
+        id: snapshotId,
         volume: this.collection.getVolume(),
         type: 'snapshot',
         title: 'Snapshot Log',
-        subText: window.formatTime(snapshot)
+        subText: window.formatTime(snapshotId)
       });
 
       this.textView = new TextLogView({
