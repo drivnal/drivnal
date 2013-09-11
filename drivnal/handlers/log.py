@@ -38,7 +38,24 @@ def log_get(type, volume_id, type_id):
 
     elif type == 'task':
         task_id = type_id
-        # TODO
+        task = volume.get_task(task_id.encode())
+
+        if not task:
+            return utils.jsonify({
+                'error': TASK_NOT_FOUND,
+                'error_msg': TASK_NOT_FOUND_MSG,
+            }, 404)
+
+        if task.log_size() > MAX_TEXT_SIZE:
+            syntax = ''
+        else:
+            syntax = 'sh'
+
+        data = {
+            'id': task.id,
+            'syntax': syntax,
+            'data': task.log_read(),
+        }
 
     if not data:
         return utils.jsonify({
