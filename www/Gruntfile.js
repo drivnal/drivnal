@@ -413,6 +413,13 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/js/require.min.js': 'vendor/require/require.min.js',
+          'dist/js/worker-coffee.js': 'vendor/ace/worker-coffee.js',
+          'dist/js/worker-css.js': 'vendor/ace/worker-css.js',
+          'dist/js/worker-javascript.js': 'vendor/ace/worker-javascript.js',
+          'dist/js/worker-json.js': 'vendor/ace/worker-json.js',
+          'dist/js/worker-lua.js': 'vendor/ace/worker-lua.js',
+          'dist/js/worker-php.js': 'vendor/ace/worker-php.js',
+          'dist/js/worker-xquery.js': 'vendor/ace/worker-xquery.js',
           'dist/favicon.ico': 'img/favicon.ico',
           'dist/robots.txt': 'root/robots.txt',
           'dist/index.html': 'root/index.html'
