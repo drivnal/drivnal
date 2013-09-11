@@ -29,9 +29,8 @@ def text_get(volume_id, snapshot_id, path=None):
     object = bucket.get_object(path)
     object.get_syntax()
 
-    # Text files > 1mb load slow with syntax highlighter
     syntax = object.syntax
-    if object.syntax and object.size > 1048576:
+    if object.syntax and object.size > MAX_TEXT_SIZE:
         syntax = ''
 
     object_data = {
