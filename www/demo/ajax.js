@@ -291,9 +291,22 @@ define([
   var logGet = function(request, type, volumeId, typeId) {
     var data = {
       id: typeId,
-      syntax: 'sh',
-      data: demoData.logs[type]
+      syntax: 'sh'
     };
+
+    if (type === 'snapshot') {
+      data.data = demoData.logs['create_snapshot'];
+    }
+    else if (type === 'task') {
+      var i;
+      var task;
+      for (i = 0; i < demoData.tasks[volumeId].length; i++) {
+        task = demoData.tasks[volumeId][i];
+        if (task.id === typeId) {
+          data.data = demoData.logs[task.type];
+        }
+      }
+    }
 
     if (!data.data) {
       request.error({
@@ -324,7 +337,8 @@ define([
         volume_name: volumeName,
         state: task.state,
         time: task.time,
-        has_log: false
+        has_log: (task.type === 'create_snapshot' ||
+          task.type === 'restore_object') ? true : false
       });
     }
 
