@@ -5,13 +5,14 @@ import threading
 import logging
 import time
 import uuid
+import os
 
 logger = logging.getLogger(APP_NAME)
 _task_threads = {}
 
 class Task(DatabaseObject):
     column_family = 'tasks'
-    str_columns = ['volume_id', 'type', 'state']
+    str_columns = ['volume_id', 'type', 'state', 'log_path']
     int_columns = ['time', 'snapshot_id']
     cached_columns = ['volume_id', 'type', 'time', 'snapshot_id']
     required_columns = ['volume_id', 'type', 'state', 'time']
@@ -63,6 +64,33 @@ class Task(DatabaseObject):
 
         if name == 'state' and value:
             Event(volume_id=self.volume_id, type=TASKS_UPDATED)
+
+    def log_read(self):
+        if not self.log_path:
+            return
+        try:
+            with open(self.log_path) as file_data:
+                return file_data.read()
+        except OSError, error:
+            logger.warning('Failed to read task log file. %r' % {
+                'volume_id': self.volume_id,
+                'task_id': self.id,
+                'error': error,
+            })
+            return
+
+    def log_size(self):
+        if not self.log_path:
+            return
+        try:
+            return os.path.getsize(self.log_path)
+        except OSError, error:
+            logger.warning('Failed to get task log file size. %r' % {
+                'volume_id': self.volume_id,
+                'task_id': self.id,
+                'error': error,
+            })
+            return
 
     def abort(self):
         logger.debug('Aborting task. %r' % {
