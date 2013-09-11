@@ -25,7 +25,7 @@ define([
         var editor = ace.edit(this.$('.editor')[0]);
         editor.setTheme('ace/theme/github');
         // editor.setTheme('ace/theme/monokai');
-        //editor.setTheme('ace/theme/twilight');
+        // editor.setTheme('ace/theme/twilight');
         editor.setReadOnly(true);
         editor.getSession().setMode('ace/mode/' + this.model.get('syntax'));
       }
