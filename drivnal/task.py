@@ -190,7 +190,6 @@ class Task(DatabaseObject):
                 continue
 
             task['time'] = int(task['time'])
-
             if type and task['type'] != type:
                 continue
             if task['volume_id'] != volume.id:
@@ -212,6 +211,17 @@ class Task(DatabaseObject):
             tasks.append(tasks_dict[task_time_id])
 
         return tasks
+
+    @staticmethod
+    def get_task(task_id):
+        logger.debug('Getting task. %r' % {
+            'task_id': task_id,
+        })
+
+        task = Task.db.get(Task.column_family, task_id)
+        if task:
+            if DatabaseObject.validate(Task, task_id, task):
+                return Task(id=task_id)
 
     @staticmethod
     def get_tasks(volume, type=None):

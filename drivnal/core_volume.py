@@ -136,6 +136,9 @@ class CoreVolume(Config):
     def get_space_used(self):
         return 1 - self.get_space_free()
 
+    def get_task(self, task_id):
+        return Task.get_task(task_id)
+
     def get_tasks(self):
         return Task.get_tasks(self)
 
