@@ -10,8 +10,9 @@ define([
     className: 'text-viewer-box',
     type: null,
     events: {
-      'mouseover .close-viewer': 'addIconWhite',
-      'mouseout .close-viewer': 'removeIconWhite',
+      'mouseover .change-theme, .close-viewer': 'addIconWhite',
+      'mouseout .change-theme, .close-viewer': 'removeIconWhite',
+      'click .change-theme': 'onChangeTheme',
       'click .close-viewer': 'onClickClose'
     },
     template: _.template(textTemplate),
@@ -21,13 +22,16 @@ define([
       }
       this.$el.html(this.template(this.model.toJSON()));
 
+      this.$('.change-theme').tooltip({
+        title: 'Toggle theme'
+      });
+
       if (this.$('.editor').length) {
-        var editor = ace.edit(this.$('.editor')[0]);
-        editor.setTheme('ace/theme/github');
-        // editor.setTheme('ace/theme/monokai');
-        // editor.setTheme('ace/theme/twilight');
-        editor.setReadOnly(true);
-        editor.getSession().setMode('ace/mode/' + this.model.get('syntax'));
+        this.editor = ace.edit(this.$('.editor')[0]);
+        this.editor.setTheme('ace/theme/github');
+        this.editor.setReadOnly(true);
+        this.editor.getSession().setMode(
+          'ace/mode/' + this.model.get('syntax'));
       }
 
       this.$el.fadeIn(400);
@@ -38,6 +42,20 @@ define([
     },
     removeIconWhite: function(evt) {
       this.$(evt.target).removeClass('icon-white');
+    },
+    onChangeTheme: function() {
+      if (!this.editor) {
+        return;
+      }
+      if (this.editor.getTheme() === 'ace/theme/github') {
+        this.editor.setTheme('ace/theme/monokai');
+      }
+      else if (this.editor.getTheme() === 'ace/theme/monokai') {
+        this.editor.setTheme('ace/theme/twilight');
+      }
+      else {
+        this.editor.setTheme('ace/theme/github');
+      }
     },
     onClickClose: function() {
       this.$('.close-viewer').roll(400);
