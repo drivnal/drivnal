@@ -35,6 +35,13 @@ data_files = [
     ('/usr/share/drivnal/www/css', ['www/dist/css/main.css']),
     ('/usr/share/drivnal/www/js', ['www/dist/js/main.js']),
     ('/usr/share/drivnal/www/js', ['www/dist/js/require.min.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-coffee.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-css.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-javascript.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-json.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-lua.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-php.js']),
+    ('/usr/share/drivnal/www/js', ['www/dist/js/worker-xquery.js']),
 ]
 
 patch_files = []
