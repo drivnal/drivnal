@@ -295,7 +295,7 @@ define([
     };
 
     if (type === 'snapshot') {
-      data.data = demoData.logs['create_snapshot'];
+      data.data = demoData.logs.create_snapshot;
     }
     else if (type === 'task') {
       var i;
