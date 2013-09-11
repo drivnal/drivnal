@@ -28,7 +28,7 @@ define([
 
       if (this.$('.editor').length) {
         this.editor = ace.edit(this.$('.editor')[0]);
-        this.editor.setTheme('ace/theme/github');
+        this.editor.setTheme('ace/theme/chrome');
         this.editor.setReadOnly(true);
         this.editor.getSession().setMode(
           'ace/mode/' + this.model.get('syntax'));
@@ -47,11 +47,11 @@ define([
       if (!this.editor) {
         return;
       }
-      if (this.editor.getTheme() === 'ace/theme/github') {
+      if (this.editor.getTheme() === 'ace/theme/chrome') {
         this.editor.setTheme('ace/theme/twilight');
       }
       else {
-        this.editor.setTheme('ace/theme/github');
+        this.editor.setTheme('ace/theme/chrome');
       }
     },
     onClickClose: function() {
