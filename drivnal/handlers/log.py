@@ -29,7 +29,7 @@ def log_get(type, volume_id, type_id):
         if snapshot.log_size() > 1048576:
             syntax = ''
         else:
-            syntax = 'shell'
+            syntax = 'sh'
 
         data = {
             'id': snapshot.id,
