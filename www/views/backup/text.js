@@ -128,7 +128,7 @@ define([
       this.$el.html(this.template(this.model.toJSON()));
 
       this.$('.change-theme').tooltip({
-        title: 'Toggle theme'
+        title: 'Change theme'
       });
 
       if (this.$('.editor').length) {
