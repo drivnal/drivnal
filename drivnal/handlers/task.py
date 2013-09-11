@@ -33,6 +33,9 @@ def task_get(volume_id):
         }
 
         if task.snapshot_id:
+            snapshot = volume.get_snapshot(task.snapshot_id)
+            if snapshot and os.path.isfile(snapshot.log_path):
+                task_data['has_log'] = True
             task_data['snapshot_id'] = task.snapshot_id
 
         tasks.append(task_data)
