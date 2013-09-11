@@ -29,8 +29,12 @@ def task_get(volume_id):
             'type': task.type,
             'state': task.state,
             'time': task.time,
-            'has_log': True if task.log_path else False,
+            'has_log': False,
         }
+
+        if task.log_path:
+            if os.path.isfile(task.log_path):
+                task_data['has_log'] = True
 
         if task.snapshot_id:
             task_data['snapshot_id'] = task.snapshot_id
