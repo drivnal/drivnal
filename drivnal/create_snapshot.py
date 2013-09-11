@@ -88,6 +88,7 @@ class CreateSnapshot(ExecTask):
 
     def run(self):
         self.snapshot = self.volume.SnapshotClass(self.volume)
+        self.snapshot_id = self.snapshot.id
         self.orig_snapshot_count = self.volume.get_snapshot_count()
         bandwidth_limit = self.volume.bandwidth_limit
         excludes = self.volume.excludes or []
