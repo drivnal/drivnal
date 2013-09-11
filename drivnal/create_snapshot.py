@@ -94,7 +94,7 @@ class CreateSnapshot(ExecTask):
         excludes = self.volume.excludes or []
         source_path = self.volume.source_path
         destination_path = self.snapshot.path
-        log_path = self.snapshot.log_path
+        self.log_path = self.snapshot.log_path
         last_snapshot = self.volume.get_last_snapshot()
         last_snapshot_id = None
         if last_snapshot:
@@ -111,7 +111,7 @@ class CreateSnapshot(ExecTask):
 
         args = ['rsync', '--archive', '--delete', '--hard-links',
             '--acls', '--quiet', '--xattrs',  '--progress', '--super',
-            '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path]
+            '--log-file-format=%o \"%f\" %l', '--log-file=%s' % self.log_path]
 
         if bandwidth_limit:
             args.append('--bwlimit=%s' % bandwidth_limit)

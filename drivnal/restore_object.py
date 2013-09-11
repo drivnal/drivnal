@@ -16,13 +16,14 @@ class RestoreObject(ExecTask):
             'task_id': self.id,
         })
 
-        log_path = os.path.join(self.volume.path,
+        self.log_path = os.path.join(self.volume.path,
             LOG_DIR, 'restore_%s.log' % int(time.time()))
 
         for obj in objects:
             args = ['rsync', '--archive', '--hard-links', '--acls',
                 '--quiet', '--xattrs',  '--progress', '--super',
-                '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
+                '--log-file-format=%o \"%f\" %l',
+                '--log-file=%s' % self.log_path,
                 obj.path, destination_path]
 
             return_code = self._exec(args)
