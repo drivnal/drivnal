@@ -83,6 +83,7 @@ define([
   'aceModeVelocity',
   'aceModeVerilog',
   'aceModeXml',
+  'aceModeXquery',
   'aceModeYaml',
   'aceThemeAmbiance',
   'aceThemeChrome',
@@ -107,8 +108,8 @@ define([
     AceModeScala, AceModeScheme, AceModeScss, AceModeSh, AceModeSql,
     AceModeSvg, AceModeTcl, AceModeTex, AceModeText, AceModeToml, AceModeTwig,
     AceModeTypescript, AceModeVbscript, AceModeVelocity, AceModeVerilog,
-    AceModeXml, AceModeYaml, AceThemeAmbiance, AceThemeChrome, AceThemeGithub,
-    AceThemeMonokai, AceThemeTwilight, textTemplate) {
+    AceModeXml, aceModeXquery, AceModeYaml, AceThemeAmbiance, AceThemeChrome,
+    AceThemeGithub, AceThemeMonokai, AceThemeTwilight, textTemplate) {
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',

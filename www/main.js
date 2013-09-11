@@ -141,6 +141,7 @@ require.config({
     aceModeVelocity: 'vendor/ace/mode-velocity',
     aceModeVerilog: 'vendor/ace/mode-verilog',
     aceModeXml: 'vendor/ace/mode-xml',
+    aceModeXquery: 'vendor/ace/mode-xquery',
     aceModeYaml: 'vendor/ace/mode-yaml',
     aceThemeAmbiance: 'vendor/ace/theme-ambiance',
     aceThemeChrome: 'vendor/ace/theme-chrome',
