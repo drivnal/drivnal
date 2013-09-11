@@ -90,25 +90,25 @@ define([
   'aceThemeMonokai',
   'aceThemeTwilight',
   'text!templates/backup/text.html'
-], function($, _, Backbone, ace, aceModeAbap, aceModeActionscript, aceModeAda,
-    aceModeAsciidoc, aceModeAssemblyX86, aceModeAutohotkey, aceModeBatchfile,
-    aceModeCcpp, aceModeClojure, aceModeCobol, aceModeCoffee,
-    aceModeColdfusion, aceModeCsharp, aceModeCss, aceModeD, aceModeDart,
-    aceModeDiff, aceModeDjango, aceModeDot, aceModeErlang, aceModeForth,
-    aceModeFtl, aceModeGlsl, aceModeGolang, aceModeGroovy, aceModeHaml,
-    aceModeHaskell, aceModeHaxe, aceModeHtml, aceModeHtmlRuby, aceModeIni,
-    aceModeJava, aceModeJavascript, aceModeJson, aceModeJsp, aceModeJsx,
-    aceModeJulia, aceModeLatex, aceModeLess, aceModeLisp, aceModeLivescript,
-    aceModeLsl, aceModeLua, aceModeLuapage, aceModeLucene, aceModeMakefile,
-    aceModeMarkdown, aceModeMatlab, aceModeMysql, aceModeObjectivec,
-    aceModeOcaml, aceModePascal, aceModePerl, aceModePhp, aceModePlainText,
-    aceModePowershell, aceModeProlog, aceModeProperties, aceModePython,
-    aceModeR, aceModeRhtml, aceModeRuby, aceModeRust, aceModeSass,
-    aceModeScala, aceModeScheme, aceModeScss, aceModeSh, aceModeSql,
-    aceModeSvg, aceModeTcl, aceModeTex, aceModeText, aceModeToml, aceModeTwig,
-    aceModeTypescript, aceModeVbscript, aceModeVelocity, aceModeVerilog,
-    aceModeXml, aceModeYaml, aceThemeAmbiance, aceThemeChrome, aceThemeGithub,
-    aceThemeMonokai, aceThemeTwilight, textTemplate) {
+], function($, _, Backbone, Ace, AceModeAbap, AceModeActionscript, AceModeAda,
+    AceModeAsciidoc, AceModeAssemblyX86, AceModeAutohotkey, AceModeBatchfile,
+    AceModeCcpp, AceModeClojure, AceModeCobol, AceModeCoffee,
+    AceModeColdfusion, AceModeCsharp, AceModeCss, AceModeD, AceModeDart,
+    AceModeDiff, AceModeDjango, AceModeDot, AceModeErlang, AceModeForth,
+    AceModeFtl, AceModeGlsl, AceModeGolang, AceModeGroovy, AceModeHaml,
+    AceModeHaskell, AceModeHaxe, AceModeHtml, AceModeHtmlRuby, AceModeIni,
+    AceModeJava, AceModeJavascript, AceModeJson, AceModeJsp, AceModeJsx,
+    AceModeJulia, AceModeLatex, AceModeLess, AceModeLisp, AceModeLivescript,
+    AceModeLsl, AceModeLua, AceModeLuapage, AceModeLucene, AceModeMakefile,
+    AceModeMarkdown, AceModeMatlab, AceModeMysql, AceModeObjectivec,
+    AceModeOcaml, AceModePascal, AceModePerl, AceModePhp, AceModePlainText,
+    AceModePowershell, AceModeProlog, AceModeProperties, AceModePython,
+    AceModeR, AceModeRhtml, AceModeRuby, AceModeRust, AceModeSass,
+    AceModeScala, AceModeScheme, AceModeScss, AceModeSh, AceModeSql,
+    AceModeSvg, AceModeTcl, AceModeTex, AceModeText, AceModeToml, AceModeTwig,
+    AceModeTypescript, AceModeVbscript, AceModeVelocity, AceModeVerilog,
+    AceModeXml, AceModeYaml, AceThemeAmbiance, AceThemeChrome, AceThemeGithub,
+    AceThemeMonokai, AceThemeTwilight, textTemplate) {
   'use strict';
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
@@ -131,7 +131,7 @@ define([
       });
 
       if (this.$('.editor').length) {
-        this.editor = ace.edit(this.$('.editor')[0]);
+        this.editor = Ace.edit(this.$('.editor')[0]);
         this.editor.setTheme('ace/theme/chrome');
         this.editor.setReadOnly(true);
         this.editor.getSession().setMode(
