@@ -14,7 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define :testing
 
   config.vm.define :stress do |stress|
-    config.vm.provider "virtualbox" do |v|
+    stress.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
