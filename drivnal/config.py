@@ -92,40 +92,44 @@ class Config:
         name = line_split[0]
         value = '='.join(line_split[1:])
 
-        if name not in self.all_options:
-            raise ValueError('Unknown option')
+        if value:
+            if name not in self.all_options:
+                raise ValueError('Unknown option')
 
-        if not value:
-            raise ValueError('Empty option')
+            if not value:
+                raise ValueError('Empty option')
 
-        if name in self.list_options:
-            values = self._decode_list(value)
+            if name in self.list_options:
+                values = self._decode_list(value)
 
-            decoder = None
-            if name in self.int_options:
-                decoder = self._decode_int
+                decoder = None
+                if name in self.int_options:
+                    decoder = self._decode_int
+                elif name in self.float_options:
+                    decoder = self._decode_float
+                elif name in self.bool_options:
+                    decoder = self._decode_bool
+                elif name in self.path_options:
+                    decoder = self._decode_path
+
+                if decoder:
+                    for i, value in enumerate(values):
+                        values[i] = decoder(value)
+
+                value = values
+            elif name in self.str_options:
+                pass
+            elif name in self.int_options:
+                value = self._decode_int(value)
             elif name in self.float_options:
-                decoder = self._decode_float
+                value = self._decode_float(value)
             elif name in self.bool_options:
-                decoder = self._decode_bool
+                value = self._decode_bool(value)
             elif name in self.path_options:
-                decoder = self._decode_path
+                value = self._decode_path(value)
 
-            if decoder:
-                for i, value in enumerate(values):
-                    values[i] = decoder(value)
-
-            value = values
-        elif name in self.str_options:
-            pass
-        elif name in self.int_options:
-            value = self._decode_int(value)
-        elif name in self.float_options:
-            value = self._decode_float(value)
-        elif name in self.bool_options:
-            value = self._decode_bool(value)
-        elif name in self.path_options:
-            value = self._decode_path(value)
+        else:
+            value = None
 
         return name, value
 
