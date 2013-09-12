@@ -182,10 +182,7 @@ class CoreSnapshot(Bucket):
     def _get_log_path(self):
         return ''
 
-    def setup_snapshot(self):
-        pass
-
-    def setup_hard_links(self, last_snapshot):
+    def _setup_snapshot(self, last_snapshot):
         pass
 
     def set_state(self, state):

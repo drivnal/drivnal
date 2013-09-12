@@ -15,7 +15,7 @@ class LocalSnapshot(CoreSnapshot):
     def _get_log_path(self):
         return os.path.join(self.volume.log_dir, 'snapshot_%s.log' % self.id)
 
-    def setup_snapshot(self):
+    def _setup_snapshot(self, last_snapshot):
         snapshots_path = os.path.dirname(self.path)
         if not os.path.isdir(snapshots_path):
             logger.debug('Creating volume snapshots directory. %r' % {
@@ -32,7 +32,6 @@ class LocalSnapshot(CoreSnapshot):
             })
             os.mkdir(logs_path)
 
-    def setup_hard_links(self, last_snapshot):
         if last_snapshot:
             return ['--link-dest=%s' % last_snapshot.path]
 

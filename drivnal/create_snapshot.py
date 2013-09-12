@@ -138,14 +138,13 @@ class CreateSnapshot(ExecTask):
         for exclude in excludes:
             args.append('--exclude=%s' % exclude)
 
-        hard_link_args = self.snapshot.setup_hard_links(last_snapshot)
-        if hard_link_args:
-            args += hard_link_args
+        setup_args = self.snapshot._setup_snapshot(last_snapshot)
+        if setup_args:
+            args += setup_args
 
         args.append(rsync_source_path)
         args.append(destination_path)
 
-        self.snapshot.setup_snapshot()
         self.prune_snapshots()
 
         return_code = self._exec(args)
