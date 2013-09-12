@@ -10,7 +10,7 @@ class LocalSnapshot(CoreSnapshot):
         dir_name = str(self.id)
         if self.state != COMPLETE:
             dir_name = '%s.%s' % (dir_name, self.state)
-        return os.path.join(self.volume.path, SNAPSHOT_DIR, dir_name)
+        return os.path.join(self.volume.path, SNAPSHOT_DIR, dir_name) + os.sep
 
     def _get_log_path(self):
         return os.path.join(self.volume.log_dir, 'snapshot_%s.log' % self.id)
