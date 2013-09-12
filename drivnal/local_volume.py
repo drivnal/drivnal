@@ -23,7 +23,7 @@ class LocalVolume(CoreVolume):
             logger.debug('Auto excluding volume path from snapshot. %r' % {
                 'volume_id': self.id,
             })
-            path = os.path.normpath(self.path.replace(
+            path = os.sep + os.path.normpath(self.path.replace(
                 source_path, '', 1)) + os.sep
             return [path]
 
