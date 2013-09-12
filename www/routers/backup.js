@@ -14,8 +14,8 @@ define([
       this.data = data;
     },
     backups: function() {
-      $('header .links').removeClass('active');
-      $('header .backups-link').addClass('active');
+      $('header .nav li').removeClass('active');
+      $('header .backups').addClass('active');
 
       if (this.data.view) {
         this.data.view.remove();

@@ -13,8 +13,8 @@ define([
       this.data = data;
     },
     about: function() {
-      $('header .links').removeClass('active');
-      $('header .about-link').addClass('active');
+      $('header .nav li').removeClass('active');
+      $('header .about').addClass('active');
 
       if (this.data.view) {
         this.data.view.remove();
