@@ -22,8 +22,7 @@ class CoreVolume(Config):
     float_options = ['min_free_space', 'max_prune']
     path_options = ['excludes', 'source_path']
     str_options = ['id', 'name', 'schedule', 'email', 'email_host',
-        'email_user', 'email_pass', 'ssh_host', 'ssh_user', 'ssh_pass',
-        'ssh_key']
+        'email_user', 'email_pass', 'ssh_host', 'ssh_user', 'ssh_key']
     list_options = ['excludes']
     SnapshotClass = CoreSnapshot
 
