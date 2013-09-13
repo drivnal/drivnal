@@ -6,7 +6,11 @@ logger = logging.getLogger(APP_NAME)
 
 class RemoteSnapshot(CoreSnapshot):
     def _get_path(self):
-        return ''
+        dir_name = str(self.id)
+        if self.state != COMPLETE:
+            dir_name = '%s.%s' % (dir_name, self.state)
+        return '%s@%s%s' % (self.volume.ssh_user, self.volume.ssh_path,
+            os.sep + os.path.join(SNAPSHOT_DIR, dir_name) + os.sep)
 
     def _get_log_path(self):
         return ''
