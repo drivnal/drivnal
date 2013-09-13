@@ -13,7 +13,7 @@ class RemoteSnapshot(CoreSnapshot):
             os.sep + os.path.join(SNAPSHOT_DIR, dir_name) + os.sep)
 
     def _get_log_path(self):
-        return ''
+        return os.path.join(self.volume.log_dir, 'snapshot_%s.log' % self.id)
 
     def _setup_snapshot(self, last_snapshot):
         pass
