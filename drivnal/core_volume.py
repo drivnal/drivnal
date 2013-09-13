@@ -92,7 +92,7 @@ class CoreVolume(Config):
         return count
 
     def get_last_snapshot(self):
-        for name in self._snapshot_names:
+        for name in reversed(self._snapshot_names):
             snapshot = self.SnapshotClass(self, name)
             if snapshot.state in [WARNING, COMPLETE]:
                 return snapshot
