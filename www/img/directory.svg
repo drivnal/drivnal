@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="31.678384"
-     inkscape:cx="3.9595829"
+     inkscape:cx="-1.6278233"
      inkscape:cy="5.1381866"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -59,16 +59,16 @@
     <g
        transform="translate(-125.71429,95.36218)"
        id="folder-close"
-       style="fill:#525252;fill-opacity:1">
+       style="fill:#757575;fill-opacity:1">
       <rect
-         style="fill:#525252;fill-opacity:1"
+         style="fill:#757575;fill-opacity:1"
          id="rect344"
          height="8"
          width="12"
          y="154"
          x="414" />
       <path
-         style="fill:#525252;fill-opacity:1"
+         style="fill:#757575;fill-opacity:1"
          inkscape:connector-curvature="0"
          id="path346"
          d="m 421,152 c 0,-0.5 -0.5,-1 -1,-1 h -3 c -0.5,0 -1,0.5 -1,1 h -2 v 1 h 12 v -1 h -5 z" />

@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.2"
-     inkscape:cx="-9.1231481"
-     inkscape:cy="2.3281571"
+     inkscape:cx="-10.462434"
+     inkscape:cy="2.1495857"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -37,8 +37,8 @@
      fit-margin-bottom="0"
      inkscape:window-width="1127"
      inkscape:window-height="763"
-     inkscape:window-x="240"
-     inkscape:window-y="213"
+     inkscape:window-x="545"
+     inkscape:window-y="196"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata4423">
@@ -60,13 +60,13 @@
     <g
        transform="translate(64.80714,215.26933)"
        id="file"
-       style="fill:#525252;fill-opacity:1">
+       style="fill:#4686e7;fill-opacity:1">
       <polygon
-         style="fill:#525252;fill-opacity:1"
+         style="fill:#4686e7;fill-opacity:1"
          id="polygon740"
          points="64,58 61,55 61,58 " />
       <path
-         style="fill:#525252;fill-opacity:1"
+         style="fill:#4686e7;fill-opacity:1"
          inkscape:connector-curvature="0"
          id="path742"
          d="M 60,54 H 55.2 C 55.1,54 55,54.1 55,54.2 v 11.5 c 0,0.1 0.1,0.2 0.2,0.2 h 8.5 c 0.1,0 0.2,-0.1 0.2,-0.2 V 59 h -4 v -5 z" />
