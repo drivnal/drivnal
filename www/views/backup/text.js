@@ -111,6 +111,8 @@ define([
     AceModeXml, aceModeXquery, AceModeYaml, AceThemeAmbiance, AceThemeChrome,
     AceThemeGithub, AceThemeMonokai, AceThemeTwilight, textTemplate) {
   'use strict';
+  var theme = 'ace/theme/chrome';
+
   var TextView = Backbone.View.extend({
     className: 'text-viewer-box',
     type: null,
@@ -133,7 +135,7 @@ define([
 
       if (this.$('.editor').length) {
         this.editor = Ace.edit(this.$('.editor')[0]);
-        this.editor.setTheme('ace/theme/chrome');
+        this.editor.setTheme(theme);
         this.editor.setReadOnly(true);
         this.editor.getSession().setMode(
           'ace/mode/' + this.model.get('syntax'));
@@ -153,10 +155,12 @@ define([
         return;
       }
       if (this.editor.getTheme() === 'ace/theme/chrome') {
-        this.editor.setTheme('ace/theme/twilight');
+        theme = 'ace/theme/twilight';
+        this.editor.setTheme(theme);
       }
       else {
-        this.editor.setTheme('ace/theme/chrome');
+        theme = 'ace/theme/chrome';
+        this.editor.setTheme(theme);
       }
     },
     onClickClose: function() {
