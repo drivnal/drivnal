@@ -477,11 +477,11 @@ require([
     setTimeout(function() {
       clearTimeout(timer);
 
-      $(this).css('-webkit-transform', 'rotate(0deg)');
-      $(this).css('-moz-transform', 'rotate(0deg)');
-      $(this).css('-ms-transform', 'rotate(0deg)');
-      $(this).css('-o-transform', 'rotate(0deg)');
-      $(this).css('transform', 'rotate(0deg)');
+      $(this).css('-webkit-transform', 'none');
+      $(this).css('-moz-transform', 'none');
+      $(this).css('-ms-transform', 'none');
+      $(this).css('-o-transform', 'none');
+      $(this).css('transform', 'none');
 
       if (complete) {
         complete();
