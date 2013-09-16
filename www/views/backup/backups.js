@@ -14,14 +14,20 @@ define([
   var BackupsView = Backbone.View.extend({
     template: _.template(backupsTemplate),
     render: function() {
+      this.children = [];
       this.$el.html(this.template());
 
       this.volumes = new VolumeListView();
+      this.children.push(this.volumes);
       this.snapshots = new SnapshotListView();
+      this.children.push(this.snapshots);
       this.tasks = new TaskListView();
+      this.children.push(this.tasks);
       this.events = new EventCollection();
       this.past = new ObjectListView();
+      this.children.push(this.past);
       this.origin = new ObjectListView();
+      this.children.push(this.origin);
       this.past.initSnapshot(this.origin);
 
       this.listenTo(this.volumes, 'changeVolume', this.changeVolume);
@@ -54,10 +60,9 @@ define([
 
       return this;
     },
-    remove: function() {
+    deinitialize: function() {
       this.events.stop();
       $(window).unbind('resize.backups');
-      Backbone.View.prototype.remove.call(this);
     },
     enableEvents: function() {
       this.eventsDisabled = false;
@@ -153,7 +158,7 @@ define([
       _.each(snapshots, function(snapshot) {
         snapshot.model.destroy({
           success: function() {
-            snapshot.remove();
+            snapshot.destroy();
           }
         });
       });

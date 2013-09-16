@@ -25,8 +25,12 @@ define([
 
       this.collection = new PathCollection();
       this.listenTo(this.collection, 'reset', this.onReset);
+      this.children = [];
       this.views = [];
       this.showError = false;
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template({
@@ -79,7 +83,7 @@ define([
         complete: function() {
           this.updateSize();
           this.trigger('remove');
-          this.remove();
+          this.destroy();
         }.bind(this)
       });
     },
@@ -89,7 +93,7 @@ define([
       var volumePathView;
 
       for (i = 0; i < this.views.length; i++) {
-        this.views[i].remove();
+        this.views[i].destroy();
       }
       this.views = [];
       for (i = 0; i < collection.models.length; i++) {

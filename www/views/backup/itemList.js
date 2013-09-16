@@ -24,10 +24,14 @@ define([
       $.extend(this.events, this.defaultEvents);
       this.collection = new this.collectionClass();
       this.listenTo(this.collection, 'reset', this.onReset);
+      this.children = [];
       this.views = [];
       this.removing = [];
       this.notification = false;
       this.currentVolume = null;
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template({
@@ -147,7 +151,7 @@ define([
       view.$el.slideUp({
         duration: 250,
         complete: function() {
-          view.remove();
+          view.destroy();
         }.bind(this)
       });
     },

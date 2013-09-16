@@ -19,12 +19,17 @@ define([
       'click .select-header .select': 'globalSelect'
     },
     initialize: function() {
+      this.children = [];
       this.views = [];
       this.selected = [];
       this.collection = new ObjectCollection();
       this.listenTo(this.collection, 'reset', this.onReset);
       this.pathList = new ObjectPathListView();
+      this.children.push(this.pathList);
       this.listenTo(this.pathList, 'changePath', this.onChangePath);
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template());
@@ -100,7 +105,7 @@ define([
       var objectView;
 
       for (i = 0; i < this.views.length; i++) {
-        this.views[i].remove();
+        this.views[i].destroy();
       }
       this.views = [];
       this.selected = [];
@@ -175,6 +180,7 @@ define([
       }
 
       var objectDropView = new ObjectDropView();
+      this.children.push(objectDropView);
       this.origin.$el.parent().prepend(objectDropView.render().el);
       this.updateSize();
 
@@ -222,7 +228,11 @@ define([
         $(document).unbind('mousemove.objectList');
         $(document).unbind('mouseup.objectList');
         $(dragBox).remove();
-        objectDropView.remove();
+        var index = this.children.indexOf(objectDropView);
+        if (index !== -1) {
+          this.children.splice(index, 1);
+        }
+        objectDropView.destroy();
         if (objectDropView.isHover()) {
           var selectedObjectIds = [];
 
@@ -266,6 +276,13 @@ define([
         subText: (snapshot ? window.formatTime(snapshot) : 'Current')
       });
 
+      if (this.textView) {
+        var index = this.children.indexOf(this.textView);
+        if (index !== -1) {
+          this.children.splice(index, 1);
+        }
+        this.textView.destroy();
+      }
       this.textView = new TextObjectView({
         model: model
       });

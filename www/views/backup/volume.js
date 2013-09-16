@@ -40,7 +40,73 @@ define([
       'mouseover .open-settings': 'onMouseOverSettings'
     },
     initialize: function() {
+      this.children = [];
       this.excludeViews = [];
+
+      this.nameView = new VolumeSettingName({
+        value: this.model.get('name')
+      });
+      this.children.push(this.nameView);
+
+      this.sourePathView = new VolumePathSelectSourcePathView({
+        value: this.model.get('source_path')
+      });
+      this.children.push(this.sourePathView);
+      this.listenTo(this.sourePathView, 'updateSize', this.updateSize);
+      this.listenTo(this.sourePathView, 'change', function(path) {
+        // When source path change exclude paths must be cleared
+        this.resetExcludePathViews(path, []);
+      }.bind(this));
+
+      this.pathView = new VolumePathSelectPathView({
+        value: this.model.get('path')
+      });
+      this.children.push(this.pathView);
+      this.listenTo(this.pathView, 'updateSize', this.updateSize);
+
+      this.scheduleView = new VolumeSliderScheduleView({
+        value: this.model.get('schedule')
+      });
+      this.children.push(this.scheduleView);
+
+      this.minFreeSpaceView = new VolumeSliderMinFreeSpaceView({
+        value: this.model.get('min_free_space') * 100
+      });
+      this.children.push(this.minFreeSpaceView);
+
+      this.snapshotLimit = new VolumeSliderSnapshotLimitView({
+        value: this.model.get('snapshot_limit')
+      });
+      this.children.push(this.snapshotLimit);
+
+      this.bandwidthLimitView = new VolumeSliderBandwidthLimitView({
+        value: this.model.get('bandwidth_limit')
+      });
+      this.children.push(this.bandwidthLimitView);
+
+      this.emailView = new VolumeSettingEmailView({
+        value: this.model.get('email')
+      });
+      this.children.push(this.emailView);
+      this.listenTo(this.emailView, 'change', this.onEmailChange);
+
+      this.emailHostView = new VolumeSettingEmailHostView({
+        value: this.model.get('email_host')
+      });
+      this.children.push(this.emailHostView);
+
+      this.emailUserView = new VolumeSettingEmailUserView({
+        value: this.model.get('email_user')
+      });
+      this.children.push(this.emailUserView);
+
+      this.emailPassView = new VolumeSettingEmailPassView({
+        value: this.model.get('email_pass')
+      });
+      this.children.push(this.emailPassView);
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.excludeViews);
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
@@ -68,72 +134,25 @@ define([
         title: 'Volume is 0% full'
       });
 
-      this.nameView = new VolumeSettingName({
-        value: this.model.get('name')
-      });
       this.$('.setting-name').html(this.nameView.render().el);
-
-      this.sourePathView = new VolumePathSelectSourcePathView({
-        value: this.model.get('source_path')
-      });
-      this.listenTo(this.sourePathView, 'updateSize', this.updateSize);
-      this.listenTo(this.sourePathView, 'change', function(path) {
-        // When source path change exclude paths must be cleared
-        this.resetExcludePathViews(path, []);
-      }.bind(this));
       this.$('.setting-source-path').html(this.sourePathView.render().el);
-
-      this.pathView = new VolumePathSelectPathView({
-        value: this.model.get('path')
-      });
-      this.listenTo(this.pathView, 'updateSize', this.updateSize);
       this.$('.setting-path').html(this.pathView.render().el);
 
       this.resetExcludePathViews();
 
-      this.scheduleView = new VolumeSliderScheduleView({
-        value: this.model.get('schedule')
-      });
       this.$('.setting-schedule').html(this.scheduleView.render().el);
-
-      this.minFreeSpaceView = new VolumeSliderMinFreeSpaceView({
-        value: this.model.get('min_free_space') * 100
-      });
       this.$('.setting-min-free-space').html(
         this.minFreeSpaceView.render().el);
-
-      this.snapshotLimit = new VolumeSliderSnapshotLimitView({
-        value: this.model.get('snapshot_limit')
-      });
       this.$('.setting-snapshot-limit').html(
         this.snapshotLimit.render().el);
-
-      this.bandwidthLimitView = new VolumeSliderBandwidthLimitView({
-        value: this.model.get('bandwidth_limit')
-      });
       this.$('.setting-bandwidth-limit').html(
         this.bandwidthLimitView.render().el);
 
-      this.emailView = new VolumeSettingEmailView({
-        value: this.model.get('email')
-      });
-      this.listenTo(this.emailView, 'change', this.onEmailChange);
       this.$('.setting-email').html(this.emailView.render().el);
       this.emailView.setEmailSSL(this.model.get('email_ssl'));
 
-      this.emailHostView = new VolumeSettingEmailHostView({
-        value: this.model.get('email_host')
-      });
       this.$('.setting-email-host').html(this.emailHostView.render().el);
-
-      this.emailUserView = new VolumeSettingEmailUserView({
-        value: this.model.get('email_user')
-      });
       this.$('.setting-email-user').html(this.emailUserView.render().el);
-
-      this.emailPassView = new VolumeSettingEmailPassView({
-        value: this.model.get('email_pass')
-      });
       this.$('.setting-email-pass').html(this.emailPassView.render().el);
 
       this.$('.remove-volume').tooltip({
@@ -320,7 +339,7 @@ define([
       sourcePath = sourcePath || this.model.get('source_path');
 
       for (i = 0; i < this.excludeViews.length; i++) {
-        this.excludeViews[i].remove();
+        this.excludeViews[i].destroy();
       }
       this.excludeViews = [];
       for (i = 0; i < excludes.length; i++) {

@@ -18,7 +18,7 @@ define([
       $('header .backups').addClass('active');
 
       if (this.data.view) {
-        this.data.view.remove();
+        this.data.view.destroy();
       }
       this.data.view = new BackupsView();
       $(this.data.element).fadeOut(400, function() {

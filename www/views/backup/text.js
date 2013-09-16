@@ -123,6 +123,11 @@ define([
       'click .close-viewer': 'onClickClose'
     },
     template: _.template(textTemplate),
+    deinitialize: function() {
+      this.model.clear({
+        silent: true
+      });
+    },
     render: function() {
       if (this.type) {
         this.$el.addClass(this.type);
@@ -166,7 +171,7 @@ define([
     onClickClose: function() {
       this.$('.close-viewer').roll(400);
       this.$el.fadeOut(400, function() {
-        this.remove();
+        this.destroy();
       }.bind(this));
     }
   });

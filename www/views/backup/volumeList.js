@@ -19,8 +19,12 @@ define([
       this.collection = new VolumeCollection();
       this.listenTo(this.collection, 'add', this.add);
       this.listenTo(this.collection, 'reset', this.onReset);
+      this.children = [];
       this.views = [];
       this.newVolumeView = null;
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template());
@@ -145,7 +149,7 @@ define([
     removeItem: function(view) {
       if (this.currentVolume.model.get('id') === view.model.get('id')) {
         view.$el.hide();
-        view.remove();
+        view.destroy();
         this.updateSize();
         this.currentVolume = undefined;
         return;
@@ -155,7 +159,7 @@ define([
         duration: 250,
         step: (this.updateSize).bind(this),
         complete: function() {
-          view.remove();
+          view.destroy();
           this.updateSize();
         }.bind(this)
       });

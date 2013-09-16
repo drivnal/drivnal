@@ -17,7 +17,7 @@ define([
       $('header .about').addClass('active');
 
       if (this.data.view) {
-        this.data.view.remove();
+        this.data.view.destroy();
       }
       this.data.view = new AboutView();
       $(this.data.element).fadeOut(400, function() {

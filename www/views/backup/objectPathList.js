@@ -10,7 +10,11 @@ define([
     className: 'object-list-path',
     template: _.template(objectListTemplate),
     initialize: function() {
+      this.children = [];
       this.views = [];
+    },
+    deinitialize: function() {
+      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html();
@@ -28,7 +32,7 @@ define([
         paths = [snapshot];
       }
       for (i = 0; i < this.views.length; i++) {
-        this.views[i].remove();
+        this.views[i].destroy();
       }
       this.views = [];
       if (!snapshot) {

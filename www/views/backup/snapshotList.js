@@ -28,9 +28,17 @@ define([
         subText: window.formatTime(snapshotId)
       });
 
+      if (this.textView) {
+        var index = this.children.indexOf(this.textView);
+        if (index !== -1) {
+          this.children.splice(index, 1);
+        }
+        this.textView.destroy();
+      }
       this.textView = new TextLogView({
         model: model
       });
+      this.children.push(this.textView);
 
       this.textView.model.fetch({
         success: function() {
