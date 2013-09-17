@@ -25,12 +25,8 @@ define([
 
       this.collection = new PathCollection();
       this.listenTo(this.collection, 'reset', this.onReset);
-      this.children = [];
       this.views = [];
       this.showError = false;
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template({
@@ -103,6 +99,7 @@ define([
           continue;
         }
         volumePathView = new VolumePathView({model: collection.models[i]});
+        this.addView(volumePathView);
         this.views.push(volumePathView);
         this.listenTo(volumePathView, 'changePath', this.changePath);
         this.$('.path-list').append(volumePathView.render().el);

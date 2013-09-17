@@ -14,20 +14,19 @@ define([
   var BackupsView = Backbone.View.extend({
     template: _.template(backupsTemplate),
     render: function() {
-      this.children = [];
       this.$el.html(this.template());
 
       this.volumes = new VolumeListView();
-      this.children.push(this.volumes);
+      this.addView(this.volumes);
       this.snapshots = new SnapshotListView();
-      this.children.push(this.snapshots);
+      this.addView(this.snapshots);
       this.tasks = new TaskListView();
-      this.children.push(this.tasks);
+      this.addView(this.tasks);
       this.events = new EventCollection();
       this.past = new ObjectListView();
-      this.children.push(this.past);
+      this.addView(this.past);
       this.origin = new ObjectListView();
-      this.children.push(this.origin);
+      this.addView(this.origin);
       this.past.initSnapshot(this.origin);
 
       this.listenTo(this.volumes, 'changeVolume', this.changeVolume);

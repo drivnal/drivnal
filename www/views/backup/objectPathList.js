@@ -10,11 +10,7 @@ define([
     className: 'object-list-path',
     template: _.template(objectListTemplate),
     initialize: function() {
-      this.children = [];
       this.views = [];
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html();
@@ -44,6 +40,7 @@ define([
           fullPath: paths.slice(1, i + 1),
           last: (i + 1 === paths.length)
         });
+        this.addView(objectPathView);
         this.listenTo(objectPathView, 'changePath', this.onChangePath);
         this.views.push(objectPathView);
         this.$el.append(objectPathView.render().el);

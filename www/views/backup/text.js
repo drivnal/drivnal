@@ -123,11 +123,6 @@ define([
       'click .close-viewer': 'onClickClose'
     },
     template: _.template(textTemplate),
-    deinitialize: function() {
-      this.model.clear({
-        silent: true
-      });
-    },
     render: function() {
       if (this.type) {
         this.$el.addClass(this.type);

@@ -28,21 +28,13 @@ define([
         subText: window.formatTime(snapshotId)
       });
 
-      if (this.textView) {
-        var index = this.children.indexOf(this.textView);
-        if (index !== -1) {
-          this.children.splice(index, 1);
-        }
-        this.textView.destroy();
-      }
-      this.textView = new TextLogView({
+      var textView = new TextLogView({
         model: model
       });
-      this.children.push(this.textView);
-
-      this.textView.model.fetch({
+      this.addView(textView);
+      textView.model.fetch({
         success: function() {
-          this.$el.parent().parent().prepend(this.textView.render().el);
+          this.$el.parent().parent().prepend(textView.render().el);
           this.updateSize();
         }.bind(this)
       });

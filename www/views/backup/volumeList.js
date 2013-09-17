@@ -19,12 +19,8 @@ define([
       this.collection = new VolumeCollection();
       this.listenTo(this.collection, 'add', this.add);
       this.listenTo(this.collection, 'reset', this.onReset);
-      this.children = [];
       this.views = [];
       this.newVolumeView = null;
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template());
@@ -103,7 +99,10 @@ define([
       }
     },
     add: function(model) {
-      var volumeView = new VolumeView({model: model});
+      var volumeView = new VolumeView({
+        model: model
+      });
+      this.addView(volumeView);
       if (model.get('id') === null) {
         if (this.newVolumeView) {
           return;

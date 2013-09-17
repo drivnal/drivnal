@@ -19,17 +19,13 @@ define([
       'click .select-header .select': 'globalSelect'
     },
     initialize: function() {
-      this.children = [];
       this.views = [];
       this.selected = [];
       this.collection = new ObjectCollection();
       this.listenTo(this.collection, 'reset', this.onReset);
       this.pathList = new ObjectPathListView();
-      this.children.push(this.pathList);
+      this.addView(this.pathList);
       this.listenTo(this.pathList, 'changePath', this.onChangePath);
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template());
@@ -112,6 +108,7 @@ define([
       this.$('.select-header .select').removeClass('selected');
       for (i = 0; i < collection.models.length; i++) {
         objectView = new ObjectView({model: collection.models[i]});
+        this.addView(objectView);
         this.views.push(objectView);
         this.listenTo(objectView, 'select', this.onSelect);
         this.listenTo(objectView, 'drag', this.onDrag);
@@ -180,7 +177,7 @@ define([
       }
 
       var objectDropView = new ObjectDropView();
-      this.children.push(objectDropView);
+      this.addView(objectDropView);
       this.origin.$el.parent().prepend(objectDropView.render().el);
       this.updateSize();
 
@@ -228,10 +225,6 @@ define([
         $(document).unbind('mousemove.objectList');
         $(document).unbind('mouseup.objectList');
         $(dragBox).remove();
-        var index = this.children.indexOf(objectDropView);
-        if (index !== -1) {
-          this.children.splice(index, 1);
-        }
         objectDropView.destroy();
         if (objectDropView.isHover()) {
           var selectedObjectIds = [];
@@ -276,20 +269,13 @@ define([
         subText: (snapshot ? window.formatTime(snapshot) : 'Current')
       });
 
-      if (this.textView) {
-        var index = this.children.indexOf(this.textView);
-        if (index !== -1) {
-          this.children.splice(index, 1);
-        }
-        this.textView.destroy();
-      }
-      this.textView = new TextObjectView({
+      var textView = new TextObjectView({
         model: model
       });
-
-      this.textView.model.fetch({
+      this.addView(textView);
+      textView.model.fetch({
         success: function() {
-          this.$el.parent().prepend(this.textView.render().el);
+          this.$el.parent().prepend(textView.render().el);
           this.updateSize();
         }.bind(this)
       });

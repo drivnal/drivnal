@@ -40,18 +40,17 @@ define([
       'mouseover .open-settings': 'onMouseOverSettings'
     },
     initialize: function() {
-      this.children = [];
       this.excludeViews = [];
 
       this.nameView = new VolumeSettingName({
         value: this.model.get('name')
       });
-      this.children.push(this.nameView);
+      this.addView(this.nameView);
 
       this.sourePathView = new VolumePathSelectSourcePathView({
         value: this.model.get('source_path')
       });
-      this.children.push(this.sourePathView);
+      this.addView(this.sourePathView);
       this.listenTo(this.sourePathView, 'updateSize', this.updateSize);
       this.listenTo(this.sourePathView, 'change', function(path) {
         // When source path change exclude paths must be cleared
@@ -61,52 +60,49 @@ define([
       this.pathView = new VolumePathSelectPathView({
         value: this.model.get('path')
       });
-      this.children.push(this.pathView);
+      this.addView(this.pathView);
       this.listenTo(this.pathView, 'updateSize', this.updateSize);
 
       this.scheduleView = new VolumeSliderScheduleView({
         value: this.model.get('schedule')
       });
-      this.children.push(this.scheduleView);
+      this.addView(this.scheduleView);
 
       this.minFreeSpaceView = new VolumeSliderMinFreeSpaceView({
         value: this.model.get('min_free_space') * 100
       });
-      this.children.push(this.minFreeSpaceView);
+      this.addView(this.minFreeSpaceView);
 
       this.snapshotLimit = new VolumeSliderSnapshotLimitView({
         value: this.model.get('snapshot_limit')
       });
-      this.children.push(this.snapshotLimit);
+      this.addView(this.snapshotLimit);
 
       this.bandwidthLimitView = new VolumeSliderBandwidthLimitView({
         value: this.model.get('bandwidth_limit')
       });
-      this.children.push(this.bandwidthLimitView);
+      this.addView(this.bandwidthLimitView);
 
       this.emailView = new VolumeSettingEmailView({
         value: this.model.get('email')
       });
-      this.children.push(this.emailView);
+      this.addView(this.emailView);
       this.listenTo(this.emailView, 'change', this.onEmailChange);
 
       this.emailHostView = new VolumeSettingEmailHostView({
         value: this.model.get('email_host')
       });
-      this.children.push(this.emailHostView);
+      this.addView(this.emailHostView);
 
       this.emailUserView = new VolumeSettingEmailUserView({
         value: this.model.get('email_user')
       });
-      this.children.push(this.emailUserView);
+      this.addView(this.emailUserView);
 
       this.emailPassView = new VolumeSettingEmailPassView({
         value: this.model.get('email_pass')
       });
-      this.children.push(this.emailPassView);
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.excludeViews);
+      this.addView(this.emailPassView);
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
@@ -356,6 +352,7 @@ define([
         removable: true,
         last: last
       });
+      this.addView(excludeView);
       this.listenTo(excludeView, 'updateSize', this.updateSize);
 
       if (last) {

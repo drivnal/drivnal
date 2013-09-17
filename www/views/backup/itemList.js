@@ -24,14 +24,10 @@ define([
       $.extend(this.events, this.defaultEvents);
       this.collection = new this.collectionClass();
       this.listenTo(this.collection, 'reset', this.onReset);
-      this.children = [];
       this.views = [];
       this.removing = [];
       this.notification = false;
       this.currentVolume = null;
-    },
-    deinitialize: function() {
-      this.children = this.children.concat(this.views);
     },
     render: function() {
       this.$el.html(this.template({
@@ -242,6 +238,7 @@ define([
         }
 
         modelView = new this.viewClass({model: collection.models[i]});
+        this.addView(modelView);
         this.views.splice(i, 0, modelView);
         this.listenTo(modelView, 'select', this.onSelect);
         this.listenTo(modelView, 'remove', this.onRemove);
