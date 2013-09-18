@@ -19,6 +19,7 @@ class Server(Config):
         self._scheduler = None
         self.app = None
         self.app_db = None
+        self.mem_db = None
         self.interrupt = False
 
     def _setup_app(self):
