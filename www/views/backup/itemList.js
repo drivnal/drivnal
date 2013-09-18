@@ -13,8 +13,10 @@ define([
     viewClass: ItemView,
     title: 'Items',
     removeTitle: 'Remove Select Items',
+    eventType: null,
     selectable: false,
     defaultOpen: false,
+    notifications: false,
     events: {},
     defaultEvents: {
       'click .list-title': 'onClickTitle',
@@ -24,9 +26,16 @@ define([
       $.extend(this.events, this.defaultEvents);
       this.collection = new this.collectionClass();
       this.listenTo(this.collection, 'reset', this.onReset);
+      if (this.eventType) {
+        this.listenTo(window.events, this.eventType, function(volume) {
+          if (volume !== this.collection.getVolume()) {
+            return;
+          }
+          this.update(this.notifications);
+        }.bind(this));
+      }
       this.views = [];
       this.removing = [];
-      this.notification = false;
       this.currentVolume = null;
     },
     render: function() {

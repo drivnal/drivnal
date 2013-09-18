@@ -1,5 +1,6 @@
 from constants import *
 from exec_task import ExecTask
+from event import Event
 import os
 import time
 import logging
@@ -36,3 +37,5 @@ class RestoreObject(ExecTask):
                         'volume_id': self.volume_id,
                         'snapshot_id': snapshot_id,
                     })
+
+        Event(volume_id=self.volume_id, type=ORIGIN_UPDATED)

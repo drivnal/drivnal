@@ -6,10 +6,9 @@ define([
   'views/backup/snapshotList',
   'views/backup/taskList',
   'views/backup/objectList',
-  'collections/backup/event',
   'text!templates/backup/backups.html'
 ], function($, _, Backbone, VolumeListView, SnapshotListView, TaskListView,
-    ObjectListView, EventCollection, backupsTemplate) {
+    ObjectListView, backupsTemplate) {
   'use strict';
   var BackupsView = Backbone.View.extend({
     template: _.template(backupsTemplate),
@@ -22,12 +21,12 @@ define([
       this.addView(this.snapshots);
       this.tasks = new TaskListView();
       this.addView(this.tasks);
-      this.events = new EventCollection();
-      this.past = new ObjectListView();
-      this.addView(this.past);
       this.origin = new ObjectListView();
       this.addView(this.origin);
-      this.past.initSnapshot(this.origin);
+      this.past = new ObjectListView({
+        originView: this.origin
+      });
+      this.addView(this.past);
 
       this.listenTo(this.volumes, 'changeVolume', this.changeVolume);
       this.listenTo(this.volumes, 'updateSize', this.updateSize);
@@ -60,32 +59,7 @@ define([
       return this;
     },
     deinitialize: function() {
-      this.events.stop();
       $(window).unbind('resize.backups');
-    },
-    enableEvents: function() {
-      this.eventsDisabled = false;
-      if (this.events) {
-        this.events.start((this.onEvent).bind(this));
-      }
-    },
-    disableEvents: function() {
-      this.eventsDisabled = true;
-      if (this.events) {
-        this.stop();
-      }
-    },
-    onEvent: function(eventType) {
-      if (eventType === 'volumes_updated') {
-        this.volumes.update();
-      }
-      else if (eventType === 'snapshots_updated') {
-        this.snapshots.update();
-      }
-      else if (eventType === 'tasks_updated') {
-        this.tasks.update(true);
-        this.origin.update();
-      }
     },
     snapshotsOpen: function() {
       this.tasks.hideItems();
@@ -134,11 +108,6 @@ define([
 
       this.tasks.collection.setVolume(volume);
       this.tasks.update();
-
-      this.events.setVolume(volume);
-      if (!this.eventsDisabled) {
-        this.events.start((this.onEvent).bind(this));
-      }
 
       this.past.collection.setVolume(volume);
       this.past.collection.setSnapshot(null);

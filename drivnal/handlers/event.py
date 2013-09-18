@@ -8,12 +8,7 @@ import uuid
 
 @server.app.route('/event', methods=['GET'])
 @server.app.route('/event/<int:last_event>', methods=['GET'])
-@server.app.route('/event/<volume_id>', methods=['GET'])
-@server.app.route('/event/<volume_id>/<int:last_event>', methods=['GET'])
-def event_get(volume_id=None, last_event=None):
-    client = Client()
-    volume = client.get_volume(volume_id)
-
+def event_get(last_event=None):
     if not last_event:
         events = [
             {
@@ -25,16 +20,18 @@ def event_get(volume_id=None, last_event=None):
         return utils.jsonify(events)
 
     run_time = 0
-    while run_time <= 10 and not server.interrupt:
+    while run_time <= 30 and not server.interrupt:
         events = []
 
-        for event in Event.get_events(volume, last_event):
-            events.append({
+        for event in Event.get_events(last_event):
+            event_data = {
                 'id': event.id,
                 'type': event.type,
                 'time': event.time,
-                'volume_id': event.volume_id,
-            })
+            }
+            if event.volume_id:
+                event_data['volume_id'] = event.volume_id
+            events.append(event_data)
 
         if len(events):
             return utils.jsonify(events)

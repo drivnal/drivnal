@@ -294,11 +294,13 @@ require([
   'jquery',
   'underscore',
   'backbone',
+  'collections/backup/event',
   'views/loadbar/loadbar',
   'views/header/header',
   'routers/main',
   'initialize'
-], function($, _, Backbone, LoadbarView, HeaderView, mainRouter, initialize) {
+], function($, _, Backbone, EventCollection, LoadbarView, HeaderView,
+    mainRouter, initialize) {
   'use strict';
 
   initialize();
@@ -524,6 +526,9 @@ require([
   };
 
   $(document).on('dblclick mousedown', '.no-select', false);
+
+  window.events = new EventCollection();
+  window.events.start();
 
   var headerView = new HeaderView();
   $('body').prepend(headerView.render().el);

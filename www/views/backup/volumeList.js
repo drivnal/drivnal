@@ -19,6 +19,7 @@ define([
       this.collection = new VolumeCollection();
       this.listenTo(this.collection, 'add', this.add);
       this.listenTo(this.collection, 'reset', this.onReset);
+      this.listenTo(window.events, 'volumes_updated', this.update);
       this.views = [];
       this.newVolumeView = null;
     },

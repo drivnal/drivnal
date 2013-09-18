@@ -15,6 +15,8 @@ define([
     viewClass: TaskView,
     title: 'Tasks',
     removeTitle: 'Remove Selected Tasks',
+    eventType: 'tasks_updated',
+    notifications: true,
     onLogView: function(taskId) {
       var model = new TextLogModel({
         id: taskId,

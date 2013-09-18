@@ -12,20 +12,10 @@ define([
     },
     url: function() {
       var url = '/event';
-      if (this.getVolume()) {
-        url += '/' + this.getVolume();
-      }
       if (this.lastEventTime) {
         url += '/' + this.lastEventTime;
       }
       return url;
-    },
-    setVolume: function(volume) {
-      this.lastEventTime = 0;
-      this.volume = volume;
-    },
-    getVolume: function() {
-      return this.volume;
     },
     callFetch: function(uuid) {
       this.fetch({
@@ -45,13 +35,14 @@ define([
             }
             this.processedEvents.push(model.get('id'));
 
-            if (model.get('time') > this.lastEventTime) {
+            if (!this.lastEventTime ||
+                model.get('time') > this.lastEventTime) {
               this.lastEventTime = model.get('time');
             }
 
             // Ignore callback for time events
-            if (this.callback && model.get('type') !== 'time') {
-              this.callback(model.get('type'));
+            if (model.get('type') !== 'time') {
+              this.trigger(model.get('type'), model.get('volume_id'));
             }
           }
 
@@ -67,14 +58,12 @@ define([
         }.bind(this)
       });
     },
-    start: function(callback) {
+    start: function() {
       this.currentLoop = new Date().getTime();
-      this.callback = callback;
       this.callFetch(this.currentLoop);
     },
     stop: function() {
       this.currentLoop = null;
-      this.callback = null;
     }
   });
 

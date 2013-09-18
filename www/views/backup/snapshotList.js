@@ -17,6 +17,7 @@ define([
     viewClass: SnapshotView,
     title: 'Snapshots',
     removeTitle: 'Delete Selected Snapshots',
+    eventType: 'snapshots_updated',
     selectable: true,
     defaultOpen: true,
     onLogView: function(snapshotId) {

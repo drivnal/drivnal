@@ -18,7 +18,8 @@ define([
     events: {
       'click .select-header .select': 'globalSelect'
     },
-    initialize: function() {
+    initialize: function(options) {
+      options || (options = {});
       this.views = [];
       this.selected = [];
       this.collection = new ObjectCollection();
@@ -26,14 +27,21 @@ define([
       this.pathList = new ObjectPathListView();
       this.addView(this.pathList);
       this.listenTo(this.pathList, 'changePath', this.onChangePath);
+      this.listenTo(window.events, 'origin_updated', function(volume) {
+        if (this.origin || volume !== this.collection.getVolume()) {
+          return;
+        }
+        this.update();
+      }.bind(this));
+
+      if (options.originView) {
+        this.origin = options.originView;
+      }
     },
     render: function() {
       this.$el.html(this.template());
       this.$el.prepend(this.pathList.render().el);
       return this;
-    },
-    initSnapshot: function(presentView) {
-      this.origin = presentView;
     },
     update: function() {
       var snapshot;

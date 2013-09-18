@@ -13,7 +13,7 @@ class Event(DatabaseObject):
     str_columns = ['volume_id', 'type']
     int_columns = ['time']
     cached_columns = ['volume_id', 'type', 'time']
-    required_columns = ['volume_id', 'type', 'time']
+    required_columns = ['type', 'time']
 
     def __init__(self, id=None, volume_id=None, type=None):
         DatabaseObject.__init__(self)
@@ -52,22 +52,15 @@ class Event(DatabaseObject):
                 continue
 
     @staticmethod
-    def get_events(volume=None, last_time=0):
+    def get_events(last_time=0):
         events = []
         events_dict = {}
         events_time = []
         cur_time = int(time.time() * 1000)
 
-        if volume:
-            volume_id = volume.id
-            logger.debug('Getting events for volume. %r' % {
-                'volume_id': volume_id,
-            })
-        else:
-            volume_id = None
-            logger.debug('Getting global events. %r' % {
-                'volume_id': volume_id,
-            })
+        logger.debug('Getting global events. %r' % {
+            'last_time': last_time,
+        })
 
         events_query = Event.db.get(Event.column_family)
         for event_id in events_query:
@@ -80,9 +73,6 @@ class Event(DatabaseObject):
             event['time'] = int(event['time'])
 
             if event['time'] <= last_time:
-                continue
-
-            if event['volume_id'] and event['volume_id'] != volume_id:
                 continue
 
             # Prevent events with the same time from breaking sorted list,

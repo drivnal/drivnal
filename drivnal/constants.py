@@ -22,6 +22,7 @@ MOVE_VOLUME = 'move_volume'
 VOLUMES_UPDATED = 'volumes_updated'
 SNAPSHOTS_UPDATED = 'snapshots_updated'
 TASKS_UPDATED = 'tasks_updated'
+ORIGIN_UPDATED = 'origin_updated'
 
 SNAPSHOT_DIR = 'snapshots'
 LOG_DIR = 'logs'
