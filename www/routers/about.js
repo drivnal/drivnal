@@ -16,11 +16,12 @@ define([
       $('header .nav li').removeClass('active');
       $('header .about').addClass('active');
 
-      if (this.data.view) {
-        this.data.view.destroy();
-      }
+      var curView = this.data.view;
       this.data.view = new AboutView();
       $(this.data.element).fadeOut(400, function() {
+        if (curView) {
+          curView = curView.destroy();
+        }
         $(this.data.element).html(this.data.view.render().el);
         $(this.data.element).fadeIn(400);
       }.bind(this));
