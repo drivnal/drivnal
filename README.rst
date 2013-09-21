@@ -1,5 +1,5 @@
-Drivnal: Simple snapshot backups
-================================
+Drivnal: Simple snapshot backups (Alpha)
+========================================
 
 .. image:: https://pypip.in/v/drivnal/badge.png
     :target: https://crate.io/packages/drivnal
