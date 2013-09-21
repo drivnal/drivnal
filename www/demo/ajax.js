@@ -483,7 +483,7 @@ define([
       }
       else {
         count += 1;
-        if (count > (5 / 0.3)) {
+        if (count > (30 / 0.3)) {
           request.success([]);
         }
         else {
