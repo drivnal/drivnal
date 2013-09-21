@@ -134,9 +134,7 @@ define([], function() {
     ]
   };
 
-  var events = {
-    '8c567322429008ac4b718b8bde034935': []
-  };
+  var events = [];
 
   return {
     volumes: volumes,

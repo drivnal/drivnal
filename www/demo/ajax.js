@@ -48,7 +48,6 @@ define([
       };
       demoData.snapshots[volumeId] = [];
       demoData.tasks[volumeId] = [];
-      demoData.events[volumeId] = [];
     }
     volume = demoData.volumes[volumeId];
 
@@ -109,12 +108,13 @@ define([
 
     demoData.tasks[volumeId].unshift(task);
 
-    demoData.events[volumeId].push({
+    demoData.events.push({
       id: uuid(),
+      volume_id: volumeId,
       type: 'tasks_updated',
       time: Math.round(new Date().getTime() / 1000)
     });
-    demoData.events[volumeId].push({
+    demoData.events.push({
       id: uuid(),
       type: 'volumes_updated',
       time: Math.round(new Date().getTime() / 1000)
@@ -139,18 +139,20 @@ define([
       demoData.volumes[volumeId].snapshot_pending = false;
       task.state = 'complete';
 
-      demoData.events[volumeId].push({
+      demoData.events.push({
         id: uuid(),
         type: 'volumes_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
-      demoData.events[volumeId].push({
+      demoData.events.push({
         id: uuid(),
+        volume_id: volumeId,
         type: 'tasks_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
-      demoData.events[volumeId].push({
+      demoData.events.push({
         id: uuid(),
+        volume_id: volumeId,
         type: 'snapshots_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
@@ -172,8 +174,9 @@ define([
       }
     }
 
-    demoData.events[volumeId].push({
+    demoData.events.push({
       id: uuid(),
+      volume_id: volumeId,
       type: 'snapshots_updated',
       time: Math.round(new Date().getTime() / 1000)
     });
@@ -364,8 +367,9 @@ define([
       if (task && task.state !== 'aborting') {
         task.state = 'aborting';
 
-        demoData.events[volumeId].push({
+        demoData.events.push({
           id: uuid(),
+          volume_id: volumeId,
           type: 'tasks_updated',
           time: Math.round(new Date().getTime() / 1000)
         });
@@ -373,8 +377,9 @@ define([
         setTimeout(function() {
           task.state = 'aborted';
 
-          demoData.events[volumeId].push({
+          demoData.events.push({
             id: uuid(),
+            volume_id: volumeId,
             type: 'tasks_updated',
             time: Math.round(new Date().getTime() / 1000)
           });
@@ -382,7 +387,7 @@ define([
           if (task.type === 'create_snapshot') {
             demoData.volumes[volumeId].snapshot_pending = false;
 
-            demoData.events[volumeId].push({
+            demoData.events.push({
               id: uuid(),
               type: 'volumes_updated',
               time: Math.round(new Date().getTime() / 1000)
@@ -408,8 +413,9 @@ define([
       }
     }
 
-    demoData.events[volumeId].push({
+    demoData.events.push({
       id: uuid(),
+      volume_id: volumeId,
       type: 'tasks_updated',
       time: Math.round(new Date().getTime() / 1000)
     });
@@ -430,8 +436,9 @@ define([
 
     demoData.tasks[volumeId].unshift(task);
 
-    demoData.events[volumeId].push({
+    demoData.events.push({
       id: uuid(),
+      volume_id: volumeId,
       type: 'tasks_updated',
       time: Math.round(new Date().getTime() / 1000)
     });
@@ -443,8 +450,9 @@ define([
 
       task.state = 'complete';
 
-      demoData.events[volumeId].push({
+      demoData.events.push({
         id: uuid(),
+        volume_id: volumeId,
         type: 'tasks_updated',
         time: Math.round(new Date().getTime() / 1000)
       });
@@ -456,14 +464,14 @@ define([
   };
   routes['POST+restore'] = restorePost;
 
-  var checkEvents = function(request, volumeId, lastEvent, count) {
+  var checkEvents = function(request, lastEvent, count) {
     setTimeout(function() {
       var i;
       var event;
       var events = [];
 
-      for (i = 0; i < demoData.events[volumeId].length; i++) {
-        event = demoData.events[volumeId][i];
+      for (i = 0; i < demoData.events.length; i++) {
+        event = demoData.events[i];
         if (event.time <= lastEvent) {
           continue;
         }
@@ -479,13 +487,13 @@ define([
           request.success([]);
         }
         else {
-          checkEvents(request, volumeId, lastEvent, count);
+          checkEvents(request, lastEvent, count);
         }
       }
     }, 300);
   };
 
-  var eventGet = function(request, volumeId, lastEvent) {
+  var eventGet = function(request, lastEvent) {
     lastEvent = parseInt(lastEvent, 10);
     if (!lastEvent) {
       request.success([{
@@ -496,7 +504,7 @@ define([
       return;
     }
 
-    checkEvents(request, volumeId, lastEvent, 0);
+    checkEvents(request, lastEvent, 0);
   };
   routes['GET+event'] = eventGet;
 
