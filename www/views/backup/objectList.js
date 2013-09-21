@@ -19,7 +19,7 @@ define([
       'click .select-header .select': 'globalSelect'
     },
     initialize: function(options) {
-      options || (options = {});
+      options = options || {};
       this.views = [];
       this.selected = [];
       this.collection = new ObjectCollection();
