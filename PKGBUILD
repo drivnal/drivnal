@@ -1,7 +1,7 @@
 # Maintainer: Zachary Huff <zach.huff.386@gmail.com>
 
 pkgname=drivnal
-pkgver=0.1.19
+pkgver=0.1.20
 pkgrel=1
 pkgdesc="Linux backup utility with web interface"
 arch=("any")
