@@ -10,8 +10,10 @@ define([
   'use strict';
   var VolumeSliderView = VolumeSettingView.extend({
     template: _.template(volumeSliderTemplate),
-    events: {
-      'mousewheel .slider-box': 'onSliderScroll'
+    events: function() {
+      return _.extend(VolumeSliderView.__super__.events, {
+        'mousewheel .slider-box': 'onSliderScroll'
+      });
     },
     render: function() {
       this.$el.html(this.template({

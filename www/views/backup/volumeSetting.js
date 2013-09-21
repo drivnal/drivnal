@@ -8,19 +8,13 @@ define([
   'use strict';
   var VolumeSettingView = Backbone.View.extend({
     template: _.template(volumeSettingTemplate),
-    events: {},
-    defaultEvents: {
+    events: {
       'change input': 'onInputChange',
       'focusin input': 'onInputFocusIn',
       'focusout input': 'onInputFocusOut'
     },
     initialize: function(options) {
-      $.extend(this.events, this.defaultEvents);
       this.value = options.value;
-      this.postInitialize(options);
-    },
-    postInitialize: function() {
-      // TODO _.wrap()
     },
     render: function() {
       this.$el.html(this.template({

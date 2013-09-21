@@ -14,13 +14,15 @@ define([
     title: 'Email Address for Alerts',
     icon: 'icon-envelope',
     required: false,
-    events: {
-      'keyup input': 'triggerChange',
-      'change input': 'triggerChange',
-      'paste input': 'triggerChange',
-      'cut input': 'triggerChange',
-      'click .send-test-email': 'setSendTest',
-      'click .email-ssl': 'setEmailSSL'
+    events: function() {
+      return _.extend(VolumeSettingEmailView.__super__.events, {
+        'keyup input': 'triggerChange',
+        'change input': 'triggerChange',
+        'paste input': 'triggerChange',
+        'cut input': 'triggerChange',
+        'click .send-test-email': 'setSendTest',
+        'click .email-ssl': 'setEmailSSL'
+      });
     },
     triggerChange: function() {
       this.trigger('change', this.getValue());
