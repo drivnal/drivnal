@@ -1,5 +1,5 @@
 __title__ = 'drivnal'
-__version__ = '0.1.20'
+__version__ = '0.1.21'
 __author__ = 'Zachary Huff'
 __license__ = 'AGPL'
 __copyright__ = 'Copyright 2013 Zachary Huff'
