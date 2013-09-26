@@ -1,4 +1,5 @@
-__title__ = 'drivnal'
+from constants import *
+__title__ = APP_NAME
 __version__ = '0.1.21'
 __author__ = 'Zachary Huff'
 __license__ = 'AGPL'
