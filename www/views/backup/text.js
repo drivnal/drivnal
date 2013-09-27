@@ -137,6 +137,7 @@ define([
         this.editor = Ace.edit(this.$('.editor')[0]);
         this.editor.setTheme(theme);
         this.editor.setReadOnly(true);
+        this.editor.setPrintMarginColumn(80);
         this.editor.getSession().setMode(
           'ace/mode/' + this.model.get('syntax'));
       }
