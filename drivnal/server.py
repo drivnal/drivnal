@@ -2,6 +2,7 @@ import os
 import logging
 import signal
 import time
+import flask
 from constants import *
 from database import Database
 from config import Config
@@ -23,7 +24,6 @@ class Server(Config):
         self.interrupt = False
 
     def _setup_app(self):
-        import flask
         self.app = flask.Flask(APP_NAME)
 
         global logger
