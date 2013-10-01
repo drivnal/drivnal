@@ -20,6 +20,15 @@ def drivnal_daemon():
                 with open(options.pidfile, 'w') as pid_file:
                     pid_file.write('%s' % pid)
             sys.exit(0)
+    else:
+        print '#########################################'
+        print '#        __     _                   __  #'
+        print '#   ____/ /____(_)   ______  ____ _/ /  #'
+        print '#  / __  / ___/ / | / / __ \\/ __ `/ /   #'
+        print '# / /_/ / /  / /| |/ / / / / /_/ / /    #'
+        print '# \\__,_/_/  /_/ |___/_/ /_/\\__,_/_/     #'
+        print '#                                       #'
+        print '#########################################'
 
     if options.conf:
         conf_path = options.conf
