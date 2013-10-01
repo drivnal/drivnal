@@ -5,6 +5,7 @@ import drivnal.utils as utils
 from drivnal import server
 import time
 import uuid
+import flask
 
 @server.app.route('/event', methods=['GET'])
 @server.app.route('/event/<int:last_event>', methods=['GET'])
