@@ -1,6 +1,5 @@
 include COPYING LICENSE NOTICE README.rst server.py test_drivnal.py vagrantfile
 graft data
-graft tests
 graft tools
 exclude tools/private_key.asc
 graft www
