@@ -16,11 +16,17 @@ tar xfz $VERSION.tar.gz
 cd drivnal-$VERSION
 
 debuild -S
-sed -i -e 's/0ubuntu1/0ubuntu2/g' debian/changelog
+sed -i -e 's/0ubuntu1/0ubuntu1~quantal/g' debian/changelog
+debuild -S
+sed -i -e 's/0ubuntu1~quantal/0ubuntu1~raring/g' debian/changelog
+debuild -S
+sed -i -e 's/0ubuntu1~raring/0ubuntu1~saucy/g' debian/changelog
 debuild -S
 
 cd ..
 
 echo '\n\nRUN COMMANDS BELOW TO UPLOAD:'
 echo 'sudo dput ppa:drivnal/ppa/ubuntu/precise ../build/debian/drivnal_'$VERSION'-0ubuntu1_source.changes'
-echo 'sudo dput ppa:drivnal/ppa/ubuntu/raring ../build/debian/drivnal_'$VERSION'-0ubuntu2_source.changes'
+echo 'sudo dput ppa:drivnal/ppa/ubuntu/quantal ../build/debian/drivnal_'$VERSION'-0ubuntu1~quantal_source.changes'
+echo 'sudo dput ppa:drivnal/ppa/ubuntu/raring ../build/debian/drivnal_'$VERSION'-0ubuntu1~raring_source.changes'
+echo 'sudo dput ppa:drivnal/ppa/ubuntu/saucy ../build/debian/drivnal_'$VERSION'-0ubuntu1~saucy_source.changes'
