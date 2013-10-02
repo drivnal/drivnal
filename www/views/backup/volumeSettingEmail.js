@@ -15,14 +15,14 @@ define([
     icon: 'icon-envelope',
     required: false,
     events: function() {
-      return _.extend(VolumeSettingEmailView.__super__.events, {
+      return _.extend({
         'keyup input': 'triggerChange',
         'change input': 'triggerChange',
         'paste input': 'triggerChange',
         'cut input': 'triggerChange',
         'click .send-test-email': 'setSendTest',
         'click .email-ssl': 'setEmailSSL'
-      });
+      }, VolumeSettingEmailView.__super__.events);
     },
     triggerChange: function() {
       this.trigger('change', this.getValue());

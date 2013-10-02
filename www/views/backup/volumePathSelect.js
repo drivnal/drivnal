@@ -13,12 +13,12 @@ define([
   var VolumePathSelectView = VolumeSettingView.extend({
     template: _.template(volumePathSelectTemplate),
     events: function() {
-      return _.extend(VolumePathSelectView.__super__.events, {
+      return _.extend({
         'click .open-path-select': 'onClickPathSelect',
         'click .path-remove': 'triggerRemove',
         'mouseover .right-icon, .right-icon-two': 'addIconWhite',
         'mouseout .right-icon, .right-icon-two': 'removeIconWhite'
-      });
+      }, VolumePathSelectView.__super__.events);
     },
     initialize: function(options) {
       VolumePathSelectView.__super__.initialize.call(this, options);
