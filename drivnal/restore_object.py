@@ -38,4 +38,5 @@ class RestoreObject(ExecTask):
                         'snapshot_id': snapshot_id,
                     })
 
+    def post_run(self):
         Event(volume_id=self.volume_id, type=ORIGIN_UPDATED)

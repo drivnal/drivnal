@@ -38,4 +38,6 @@ class RemoveSnapshot(ExecTask):
 
         args = ['rm', '-rf', self.snapshot.path]
         self._exec(args)
+
+    def post_run(self):
         Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
