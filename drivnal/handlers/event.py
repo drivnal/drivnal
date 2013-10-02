@@ -10,7 +10,7 @@ import flask
 @server.app.route('/event', methods=['GET'])
 @server.app.route('/event/<int:last_event>', methods=['GET'])
 def event_get(last_event=None):
-    if app_server.interrupt:
+    if server.interrupt:
         return flask.abort(503)
 
     if not last_event:
