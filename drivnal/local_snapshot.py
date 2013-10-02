@@ -22,7 +22,7 @@ class LocalSnapshot(CoreSnapshot):
                 'volume_id': self.volume.id,
                 'snapshot_id': self.id,
             })
-            os.mkdir(snapshots_path)
+            os.makedirs(snapshots_path)
 
         logs_path = os.path.dirname(self.log_path)
         if not os.path.isdir(logs_path):
@@ -30,7 +30,7 @@ class LocalSnapshot(CoreSnapshot):
                 'volume_id': self.volume.id,
                 'snapshot_id': self.id,
             })
-            os.mkdir(logs_path)
+            os.makedirs(logs_path)
 
         if last_snapshot:
             return ['--link-dest=%s' % last_snapshot.path]

@@ -42,7 +42,7 @@ class Client:
         logger.debug('Adding volume.')
 
         if not os.path.isdir(path):
-            os.mkdir(path)
+            os.makedirs(path)
         volume = LocalVolume(self, path, create=True)
 
         logger.debug('Adding volume path to database. %r' % {
