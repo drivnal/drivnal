@@ -141,6 +141,10 @@ class Task(DatabaseObject):
             if self.state == PENDING:
                 self.state = FAILED
                 self.thread = None
+            self.post_run()
+
+    def post_run(self):
+        pass
 
     def start(self, *args, **kwargs):
         self.volume_id = self.volume_id

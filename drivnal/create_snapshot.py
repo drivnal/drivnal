@@ -178,5 +178,6 @@ class CreateSnapshot(ExecTask):
             raise SnapshotError
 
         self.state = COMPLETE
+
+    def post_run(self):
         Event(type=VOLUMES_UPDATED)
-        Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
