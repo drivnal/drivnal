@@ -181,3 +181,4 @@ class CreateSnapshot(ExecTask):
 
     def post_run(self):
         Event(type=VOLUMES_UPDATED)
+        Event(volume_id=self.volume_id, type=SNAPSHOTS_UPDATED)
