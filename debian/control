@@ -12,7 +12,7 @@ X-Python-Version: >= 2.7
 #Vcs-Browser: https://github.com/drivnal/drivnal
 
 Package: drivnal
-Architecture: any
+Architecture: all
 Depends: python-flask,
          python-cherrypy3,
          rsync,
