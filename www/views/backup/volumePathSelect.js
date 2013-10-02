@@ -82,6 +82,9 @@ define([
         complete: function() {
           this.updateSize();
           this.trigger('remove');
+          if (this.last) {
+            this.trigger('newView');
+          }
           this.destroy();
         }.bind(this)
       });
