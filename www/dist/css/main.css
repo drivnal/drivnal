@@ -5249,6 +5249,16 @@ body {
   background-color: #313233;
   text-shadow: none;
 }
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #8f8f8f;
+}
+::-webkit-scrollbar-track {
+  background-color: #d1d1d1;
+}
 textarea,
 input[type="text"],
 input[type="password"],
