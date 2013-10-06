@@ -12,7 +12,7 @@ logger = None
 class Server(Config):
     bool_options = ['debug', 'log_debug', 'scheduler']
     int_options = ['port']
-    path_options = ['log_path', 'db_path', 'www_path']
+    path_options = ['log_path', 'db_path', 'data_path', 'www_path']
     str_options = ['bind_addr']
 
     def __init__(self):
@@ -31,6 +31,9 @@ class Server(Config):
 
     def _setup_conf(self):
         self.set_path(self.conf_path)
+        data_path = self.data_path or DEFAULT_DATA_PATH
+        if not os.path.isdir(data_path):
+            os.makedirs(data_path)
 
     def _setup_log(self):
         if self.log_debug:
