@@ -27,7 +27,6 @@ if not os.path.exists('build'):
 
 data_files = [
     ('/etc', ['data/etc/drivnal.conf']),
-    ('/var/lib/drivnal', ['data/var/drivnal.db']),
     ('/var/log', ['data/var/log/drivnal.log']),
     ('/usr/share/drivnal/www', ['www/dist/favicon.ico']),
     ('/usr/share/drivnal/www', ['www/dist/index.html']),
