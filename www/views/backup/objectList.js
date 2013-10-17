@@ -16,6 +16,8 @@ define([
     className: 'object-list  no-select',
     template: _.template(objectListTemplate),
     events: {
+      'mouseover .close-error': 'addIconWhite',
+      'mouseout .close-error': 'removeIconWhite',
       'click .select-header .select': 'globalSelect'
     },
     initialize: function(options) {
@@ -103,6 +105,12 @@ define([
       }
       this.selected = [];
       this.$('.select-header .select').removeClass('selected');
+    },
+    addIconWhite: function(evt) {
+      this.$(evt.target).addClass('icon-white');
+    },
+    removeIconWhite: function(evt) {
+      this.$(evt.target).removeClass('icon-white');
     },
     onReset: function(collection) {
       var i;
