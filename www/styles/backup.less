@@ -538,6 +538,25 @@
   margin-top: 20px;
 }
 
+.backup .object-list-box .error {
+  background-color: rgba(255, 0, 0, 0.79);
+  color: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  margin-left: 14px;
+  position: absolute;
+  padding: 10px 20px;
+  background-image: @background2-uri;
+  .width-calc(~'38% - 80px');
+  min-width: @object-list-error-min-width;
+  display: none;
+}
+
+.backup .object-list-box .close-error {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
 .backup .object-list table {
   width: 100%;
 }
