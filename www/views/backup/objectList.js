@@ -312,6 +312,9 @@ define([
       });
       this.addView(textView);
       textView.model.fetch({
+        error: function() {
+          this.setError('Failed to load text file, server error occurred.');
+        }.bind(this),
         success: function() {
           this.$el.parent().prepend(textView.render().el);
           this.updateSize();
