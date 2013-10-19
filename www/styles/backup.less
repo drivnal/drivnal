@@ -539,7 +539,7 @@
 }
 
 .backup .object-list-box .error {
-  background-color: rgba(255, 0, 0, 0.79);
+  background-color: rgba(255, 0, 0, 0.8);
   color: @lighter-fg;
   border: 1px solid rgba(0, 0, 0, 0.5);
   margin-left: 14px;
@@ -549,6 +549,11 @@
   .width-calc(~'38% - 80px');
   min-width: @object-list-error-min-width;
   display: none;
+  .transition(background-color, 175ms);
+}
+
+.backup .object-list-box .error.flash {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .backup .object-list-box .close-error {

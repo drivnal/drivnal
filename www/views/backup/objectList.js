@@ -18,6 +18,7 @@ define([
     events: {
       'mouseover .close-error': 'addIconWhite',
       'mouseout .close-error': 'removeIconWhite',
+      'click .close-error': 'clearError',
       'click .select-header .select': 'globalSelect'
     },
     initialize: function(options) {
@@ -111,6 +112,27 @@ define([
     },
     removeIconWhite: function(evt) {
       this.$(evt.target).removeClass('icon-white');
+    },
+    setError: function(message) {
+      this.$('.error .error-msg').text(message);
+      if (this.$('.error').is(':visible')) {
+        this.$('.error').addClass('flash');
+        setTimeout(function() {
+          this.$('.error').removeClass('flash');
+          setTimeout(function() {
+            this.$('.error').addClass('flash');
+            setTimeout(function() {
+              this.$('.error').removeClass('flash');
+            }.bind(this), 175);
+          }.bind(this), 175);
+        }.bind(this), 175);
+      }
+      else {
+        this.$('.error').slideDown(250);
+      }
+    },
+    clearError: function() {
+      this.$('.error').slideUp(250);
     },
     onReset: function(collection) {
       var i;
