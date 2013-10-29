@@ -5891,6 +5891,33 @@ button:focus {
   height: 100%;
   margin-top: 20px;
 }
+.backup .object-list-box .error {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  margin-left: 14px;
+  position: absolute;
+  padding: 10px 20px;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QQMAC0FjWISSQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAG0lEQVQI12NggAAdBgTQYcAnyIBDUIeBekYBAJguAhGhctrHAAAAAElFTkSuQmCC');
+  width: -webkit-calc(38% - 80px);
+  width: -moz-calc(38% - 80px);
+  width: -o-calc(38% - 80px);
+  width: calc(38% - 80px);
+  min-width: 378px;
+  display: none;
+  -webkit-transition: background-color 175ms;
+  -moz-transition: background-color 175ms;
+  -o-transition: background-color 175ms;
+  transition: background-color 175ms;
+}
+.backup .object-list-box .error.flash {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.backup .object-list-box .close-error {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
 .backup .object-list table {
   width: 100%;
 }
