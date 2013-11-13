@@ -101,7 +101,11 @@ class Server(Config):
             (self.bind_addr, self.port), self.app)
         try:
             server.start()
-        except (KeyboardInterrupt, SystemExit), exc:
+        except KeyboardInterrupt, SystemExit:
+            pass
+        except:
+            logger.exception('Server error occurred')
+        finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self.interrupt = True
             self._stop_scheduler()
@@ -119,6 +123,10 @@ class Server(Config):
 
         try:
             self.app.run(host=self.bind_addr, port=self.port, threaded=True)
+        except KeyboardInterrupt, SystemExit:
+            pass
+        except:
+            logger.exception('Server error occurred')
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self.interrupt = True
