@@ -105,6 +105,7 @@ class Server(Config):
             pass
         except:
             logger.exception('Server error occurred')
+            raise
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self.interrupt = True
@@ -127,6 +128,7 @@ class Server(Config):
             pass
         except:
             logger.exception('Server error occurred')
+            raise
         finally:
             signal.signal(signal.SIGINT, signal.SIG_IGN)
             self.interrupt = True
