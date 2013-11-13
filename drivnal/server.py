@@ -64,8 +64,10 @@ class Server(Config):
         self.app_db = Database(self.db_path or DEFAULT_DB_PATH)
 
     def _close_db(self):
-        self.mem_db.close()
-        self.app_db.close()
+        if self.mem_db:
+            self.mem_db.close()
+        if self.app_db:
+            self.app_db.close()
 
     def _setup_handlers(self):
         import handlers
@@ -158,13 +160,13 @@ class Server(Config):
             self._scheduler.stop()
 
     def run_scheduler(self):
-        self._setup_conf()
-        self._setup_log()
-        self._setup_db()
-
-        self._start_scheduler()
-
         try:
+            self._setup_conf()
+            self._setup_log()
+            self._setup_db()
+
+            self._start_scheduler()
+
             while True:
                 time.sleep(1)
         finally:
@@ -172,10 +174,18 @@ class Server(Config):
             self._close_db()
 
     def run_server(self):
-        self._setup_all()
-        self._run_server()
+        try:
+            self._setup_all()
+            self._run_server()
+        finally:
+            self._stop_scheduler()
+            self._close_db()
 
     def run_all(self):
-        self._setup_all()
-        self._start_scheduler()
-        self._run_server()
+        try:
+            self._setup_all()
+            self._start_scheduler()
+            self._run_server()
+        finally:
+            self._stop_scheduler()
+            self._close_db()
