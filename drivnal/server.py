@@ -101,7 +101,7 @@ class Server(Config):
             (self.bind_addr, self.port), self.app)
         try:
             server.start()
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
             pass
         except:
             logger.exception('Server error occurred')
@@ -123,7 +123,7 @@ class Server(Config):
 
         try:
             self.app.run(host=self.bind_addr, port=self.port, threaded=True)
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
             pass
         except:
             logger.exception('Server error occurred')
