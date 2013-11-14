@@ -66,7 +66,7 @@ class MoveVolume(ExecTask):
                 rsync_destination_path += os.sep
 
             args = ['rsync', '--archive', '--hard-links', '--acls',
-                '--quiet', '--xattrs',  '--progress', '--super',
+                '--quiet', '--xattrs',  '--progress', '--stats', '--super',
                 '--log-file-format=%o \"%f\" %l', '--log-file=%s' % log_path,
                 rsync_source_path, rsync_destination_path]
 

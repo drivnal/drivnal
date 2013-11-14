@@ -109,8 +109,8 @@ class CreateSnapshot(ExecTask):
 
         Event(type=VOLUMES_UPDATED)
 
-        args = ['rsync', '--archive', '--delete', '--hard-links',
-            '--acls', '--quiet', '--xattrs',  '--progress', '--super',
+        args = ['rsync', '--archive', '--delete', '--hard-links', '--acls',
+            '--quiet', '--xattrs',  '--progress', '--stats', '--super',
             '--log-file-format=%o \"%f\" %l', '--log-file=%s' % self.log_path]
 
         if bandwidth_limit:

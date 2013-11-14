@@ -22,7 +22,7 @@ class RestoreObject(ExecTask):
 
         for obj in objects:
             args = ['rsync', '--archive', '--hard-links', '--acls',
-                '--quiet', '--xattrs',  '--progress', '--super',
+                '--quiet', '--xattrs',  '--progress', '--stats', '--super',
                 '--log-file-format=%o \"%f\" %l',
                 '--log-file=%s' % self.log_path,
                 obj.path, destination_path]
