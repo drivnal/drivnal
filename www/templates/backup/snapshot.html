@@ -7,10 +7,10 @@
     <i class="icon icon-stop no-select"></i>
   </div>
   <div class="info">
-    Sent: <%= sent %><br>
-    Received: <%= received %><br>
-    Speed: <%= speed %><br>
-    Runtime: <%= runtime %><br>
+    Sent: <%= sent || 'Unknown' %><br>
+    Received: <%= received || 'Unknown' %><br>
+    Speed: <%= speed || 'Unknown' %><br>
+    Runtime: <%= runtime || 'Unknown' %><br>
     ID: <%= id %>
     <% if (state === 'warning') { %>
       <br>
