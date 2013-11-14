@@ -2,7 +2,7 @@ import flask
 import json
 
 def format_bytes(bytes):
-    bytes = float(bytes)
+    bytes = float(bytes.replace(',', ''))
     if bytes < 1024:
         return '%.2f bytes' % bytes
     elif bytes < 1048576:
