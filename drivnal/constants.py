@@ -57,9 +57,12 @@ DEFAULT_ROOT_EXCLUDES = [
 
 DIR_MIME_TYPE = 'inode/directory'
 
+RSYNC_IGNORE_EXIT_CODES = [
+    24, # Partial transfer from vanished files
+]
+
 RSYNC_WARN_EXIT_CODES = [
     23, # Partial transfer from error
-    24, # Partial transfer from vanished files
 ]
 
 MIN_UNITS = ['m', 'min', 'minute']

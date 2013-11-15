@@ -151,7 +151,8 @@ class CreateSnapshot(ExecTask):
         if return_code is None:
             return
 
-        if return_code != 0 and return_code not in RSYNC_WARN_EXIT_CODES:
+        if return_code != 0 and return_code not in RSYNC_IGNORE_EXIT_CODES + \
+                RSYNC_WARN_EXIT_CODES:
             self.snapshot.set_state(FAILED)
             logger.error('Snapshot failed, command ' + \
                 'returned non-zero exit status. %r' % {
@@ -164,7 +165,7 @@ class CreateSnapshot(ExecTask):
             raise SnapshotError
 
         try:
-            if return_code == 0:
+            if return_code == 0 or return_code in RSYNC_IGNORE_EXIT_CODES:
                 self.snapshot.set_state(COMPLETE)
             else:
                 self.snapshot.set_state(WARNING)
