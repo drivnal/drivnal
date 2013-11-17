@@ -50,8 +50,6 @@ DEFAULT_ROOT_EXCLUDES = [
     '/sys/*',
     '/tmp/*',
     '/run/*',
-    '/mnt/*',
-    '/media/*',
     '/lost+found',
 ]
 
