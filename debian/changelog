@@ -1,5 +1,5 @@
-drivnal (0.1.25-0ubuntu1) unstable; urgency=low
+drivnal (0.10.1-0ubuntu1) unstable; urgency=low
 
-  * Alpha release for testing only
+  * Initial beta release
 
- -- Zachary Huff <zach.huff.386@gmail.com>  Sat, 17 Aug 2013 18:40:15 -0400
+ -- Zachary Huff <zach.huff.386@gmail.com>  Mon, 18 Nov 2013 20:09:15 -0400
