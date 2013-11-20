@@ -167,12 +167,15 @@ class Config:
             if not merge:
                 raise
 
-    def commit(self):
+    def commit(self, chmod_mode=None):
         logger.debug('Committing config.')
         if not self._loaded:
             self.load(True)
 
         with open(self._conf_path, 'w') as config:
+            if chmod_mode:
+                os.chmod(self._conf_path, chmod_mode)
+
             for name in self.all_options:
                 if name not in self.__dict__:
                     continue
