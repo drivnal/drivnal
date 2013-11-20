@@ -182,7 +182,7 @@ class CoreVolume(Config):
         return task
 
     def commit(self):
-        Config.commit(self)
+        Config.commit(self, 0600)
         Event(type=VOLUMES_UPDATED)
 
         if self.orig_path != self.path:
