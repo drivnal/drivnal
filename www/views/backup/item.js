@@ -93,7 +93,7 @@ define([
     },
     onClick: function(evt) {
       if ($(evt.target).hasClass('view-log')) {
-        this.trigger('viewLog', this.model.get('id'));
+        this.onLogView();
       }
       else if ($(evt.target).hasClass('toggle-info')) {
         this.toggleInfo();
@@ -128,6 +128,8 @@ define([
       }
     },
     onCancel: function() {
+    },
+    onLogView: function() {
     },
     openInfo: function(noAnimate) {
       this.infoOpen = true;
