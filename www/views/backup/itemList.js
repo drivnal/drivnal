@@ -81,7 +81,7 @@ define([
         error: function() {
           this.notification = false;
           this.collection.reset();
-          // TODO Show error message
+          this.showError('Server error occurred');
         }.bind(this)
       });
     },
