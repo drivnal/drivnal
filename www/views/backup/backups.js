@@ -69,25 +69,25 @@ define([
     },
     updateSize: function() {
       var innerHeight = $(window).height();
-      var listHeight = innerHeight - this.volumes.$el.outerHeight() - 186;
+      var listHeight = innerHeight - this.volumes.$el.outerHeight() - 156;
       var objectWidth = this.past.$('.object-list-box').width() - 200;
 
       if (this.snapshots.isItems()) {
-        if (this.snapshots.isRemove()) {
-          listHeight -= this.snapshots.$('.remove-selected').outerHeight();
-        }
-        if (this.snapshots.isError()) {
-          listHeight -= this.snapshots.$('.error').outerHeight();
-        }
+        this.snapshots.$('.item-list-box').children().not(
+          '.item-list').each(function() {
+            if ($(this).is(':visible')) {
+              listHeight -= $(this).outerHeight();
+            }
+          });
         this.snapshots.$('.item-list').height(listHeight);
       }
       else {
-        if (this.tasks.isRemove()) {
-          listHeight -= this.tasks.$('.remove-selected').outerHeight();
-        }
-        if (this.tasks.isError()) {
-          listHeight -= this.tasks.$('.error').outerHeight();
-        }
+        this.tasks.$('.item-list-box').children().not(
+          '.item-list').each(function() {
+            if ($(this).is(':visible')) {
+              listHeight -= $(this).outerHeight();
+            }
+          });
         this.tasks.$('.item-list').height(listHeight);
       }
 
