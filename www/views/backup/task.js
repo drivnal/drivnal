@@ -40,6 +40,7 @@ define([
       this.addView(textView);
       textView.model.fetch({
         error: function() {
+          this.trigger('error', 'Failed to open task log');
           this.$('.view-log').removeClass('icon-time');
           this.$('.view-log').addClass('icon-list-alt');
         }.bind(this),
