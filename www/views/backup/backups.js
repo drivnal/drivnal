@@ -76,14 +76,18 @@ define([
         if (this.snapshots.isRemove()) {
           listHeight -= this.snapshots.$('.remove-selected').outerHeight();
         }
-
+        if (this.snapshots.isError()) {
+          listHeight -= this.snapshots.$('.error').outerHeight();
+        }
         this.snapshots.$('.item-list').height(listHeight);
       }
       else {
         if (this.tasks.isRemove()) {
           listHeight -= this.tasks.$('.remove-selected').outerHeight();
         }
-
+        if (this.tasks.isError()) {
+          listHeight -= this.tasks.$('.error').outerHeight();
+        }
         this.tasks.$('.item-list').height(listHeight);
       }
 

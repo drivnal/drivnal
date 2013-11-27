@@ -20,7 +20,10 @@ define([
     events: {},
     defaultEvents: {
       'click .list-title': 'onClickTitle',
-      'click .remove-selected': 'onRemoveSelected'
+      'click .remove-selected': 'onRemoveSelected',
+      'click .close-error': 'hideError',
+      'mouseover .close-error': 'addIconWhite',
+      'mouseout .close-error': 'removeIconWhite'
     },
     initialize: function() {
       $.extend(this.events, this.defaultEvents);
@@ -82,6 +85,34 @@ define([
         }.bind(this)
       });
     },
+    addIconWhite: function(evt) {
+      this.$(evt.target).addClass('icon-white');
+    },
+    removeIconWhite: function(evt) {
+      this.$(evt.target).removeClass('icon-white');
+    },
+    showError: function(error) {
+      this.$('.error span').text(error);
+      this.$('.error').slideDown({
+        duration: 100,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    hideError: function(error) {
+      this.$('.error').slideUp({
+        duration: 100,
+        step: (this.updateSize).bind(this),
+        complete: function() {
+          this.updateSize();
+        }.bind(this)
+      });
+    },
+    isError: function() {
+      return this.$('.error').is(':visible');
+    },
     showItems: function(complete) {
       if (this.isItems()) {
         return;
@@ -104,6 +135,7 @@ define([
       }
 
       this.$('.item-list-box').addClass('closed');
+      this.hideError();
       this.resetRemove();
       this.updateSize();
       this.$('.item-list').slideUp(300, function() {
@@ -251,6 +283,7 @@ define([
         this.views.splice(i, 0, modelView);
         this.listenTo(modelView, 'select', this.onSelect);
         this.listenTo(modelView, 'remove', this.onRemove);
+        this.listenTo(modelView, 'error', this.showError);
         this.listenTo(modelView, 'updateSize', this.updateSize);
         modelView.render().$el.hide();
 
