@@ -101,7 +101,7 @@ define([
         }.bind(this)
       });
     },
-    hideError: function(error) {
+    hideError: function() {
       this.$('.error').slideUp({
         duration: 100,
         step: (this.updateSize).bind(this),
