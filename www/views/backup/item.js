@@ -2,8 +2,9 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'views/backup/textLog',
   'text!templates/backup/item.html'
-], function($, _, Backbone, itemTemplate) {
+], function($, _, Backbone, TextLogView, itemTemplate) {
   'use strict';
   var ItemView = Backbone.View.extend({
     tagName: 'li',
@@ -160,6 +161,29 @@ define([
       else {
         this.openInfo();
       }
+    },
+    openLog: function(model) {
+      this.$('.view-log').removeClass('icon-list-alt');
+      this.$('.view-log').addClass('icon-time');
+
+      var textView = new TextLogView({
+        model: model
+      });
+      this.addView(textView);
+      textView.model.fetch({
+        error: function() {
+          this.trigger('error', 'Failed to open log file');
+          this.$('.view-log').removeClass('icon-time');
+          this.$('.view-log').addClass('icon-list-alt');
+        }.bind(this),
+        success: function() {
+          this.$('.view-log').removeClass('icon-time');
+          this.$('.view-log').addClass('icon-list-alt');
+          this.$el.parent().parent().parent().parent().parent().prepend(
+            textView.render().el);
+          this.trigger('updateSize');
+        }.bind(this)
+      });
     }
   });
 
