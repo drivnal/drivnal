@@ -117,10 +117,13 @@ define([
     className: 'text-viewer-box',
     type: null,
     events: {
-      'mouseover .change-theme, .close-viewer': 'addIconWhite',
-      'mouseout .change-theme, .close-viewer': 'removeIconWhite',
+      'mouseover .change-theme, .close-viewer, .refresh-viewer':
+        'addIconWhite',
+      'mouseout .change-theme, .close-viewer, .refresh-viewer':
+        'removeIconWhite',
       'click .change-theme': 'onChangeTheme',
-      'click .close-viewer': 'onClickClose'
+      'click .close-viewer': 'onClickClose',
+      'click .refresh-viewer': 'onClickRefresh'
     },
     template: _.template(textTemplate),
     render: function() {
@@ -144,6 +147,17 @@ define([
 
       this.$el.fadeIn(400);
       return this;
+    },
+    update: function() {
+      if (this.$('.editor').length) {
+        this.editor.getSession().setMode(
+          'ace/mode/' + this.model.get('syntax'));
+        this.editor.setValue(this.model.get('data'));
+        this.editor.clearSelection();
+      }
+      else {
+        this.$('.plaintext pre').text(this.model.get('data'));
+      }
     },
     addIconWhite: function(evt) {
       this.$(evt.target).addClass('icon-white');
@@ -169,6 +183,16 @@ define([
       this.$el.fadeOut(400, function() {
         this.destroy();
       }.bind(this));
+    },
+    onClickRefresh: function() {
+      this.model.fetch({
+        error: function() {
+          // TODO
+        }.bind(this),
+        success: function() {
+          this.update();
+        }.bind(this)
+      });
     }
   });
 
