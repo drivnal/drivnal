@@ -2,14 +2,10 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'googleAnalytics',
   'ace'
-], function($, _, Backbone, GoogleAnalytics, Ace) {
+], function($, _, Backbone, Ace) {
   'use strict';
   var initialize = function() {
-    GoogleAnalytics.push(['_setAccount', 'UA-20492194-11']);
-    //GoogleAnalytics.push(['_setDomainName', 'production.drivnal.com']);
-
     Ace.config.setModuleUrl('ace/mode/coffee_worker', 'js/worker-coffee.js');
     Ace.config.setModuleUrl('ace/mode/css_worker', 'js/worker-css.js');
     Ace.config.setModuleUrl('ace/mode/javascript_worker',

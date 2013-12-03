@@ -163,7 +163,6 @@ module.exports = function(grunt) {
             backbone: 'vendor/backbone/backbone.min',
             bootstrap: 'vendor/bootstrap/bootstrap.min',
             d3: 'vendor/d3/d3.min',
-            googleAnalytics: 'vendor/googleAnalytics/googleAnalytics.min',
             jquery: 'vendor/jquery/jquery.min',
             jqueryUi: 'vendor/jqueryUi/jqueryUi.min',
             less: 'vendor/less/less.min',
@@ -276,7 +275,6 @@ module.exports = function(grunt) {
             backbone: 'vendor/backbone/backbone.min',
             bootstrap: 'vendor/bootstrap/bootstrap.min',
             d3: 'vendor/d3/d3.min',
-            googleAnalytics: 'vendor/googleAnalytics/googleAnalytics.min',
             jquery: 'vendor/jquery/jquery.min',
             jqueryUi: 'vendor/jqueryUi/jqueryUi.min',
             less: 'vendor/less/less.min',
@@ -389,7 +387,6 @@ module.exports = function(grunt) {
             backbone: 'vendor/backbone/backbone.min',
             bootstrap: 'vendor/bootstrap/bootstrap.min',
             d3: 'vendor/d3/d3.min',
-            googleAnalytics: 'vendor/googleAnalytics/googleAnalytics.min',
             jquery: 'vendor/jquery/jquery.min',
             jqueryUi: 'vendor/jqueryUi/jqueryUi.min',
             less: 'vendor/less/less.min',
@@ -447,9 +444,6 @@ module.exports = function(grunt) {
         'https://raw.github.com/mbostock/d3/master/d3.js',
       'vendor/d3/d3.min.js':
         'https://raw.github.com/mbostock/d3/master/d3.min.js',
-
-      'vendor/googleAnalytics/googleAnalytics.min.js':
-        'https://www.google-analytics.com/ga.js',
 
       'vendor/jquery/jquery.js':
         'http://code.jquery.com/jquery.js',
