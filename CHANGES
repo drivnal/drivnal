@@ -1,6 +1,12 @@
 Drivnal Changelog
 =================
 
+Version 0.10.2
+--------------
+
+Add reload button to text and log file viewer
+Fix bug with volume conf permissions
+
 Version 0.10.1
 --------------
 
