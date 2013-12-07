@@ -8,6 +8,7 @@ import time
 import logging
 import threading
 import traceback
+import os
 
 logger = logging.getLogger(APP_NAME)
 
@@ -40,6 +41,24 @@ class Scheduler:
                 logger.exception('Scheduler failed to clean database.')
 
     def _create_snapshot(self, volume):
+        ignore_procs = [x.lower() for x in volume.ignore_procs]
+        for pid in [x for x in os.listdir(PROC_DIR) if x.isdigit()]:
+            pid_comm_path = os.path.join(PROC_DIR, pid, PROC_COMM_FILENAME)
+            try:
+                pid_comm = open(pid_comm_path, 'r').read().strip().lower()
+            except IOError:
+                logger.exception('Failed to read process comm file. %r' % {
+                    'file_path': pid_comm_path,
+                    'volume_id': volume.id,
+                })
+                continue
+            if pid_comm in ignore_procs:
+                logger.debug('Ignore process is running, skipping ' + \
+                    'scheduled snapshot. %r' % {
+                        'volume_id': volume.id,
+                    })
+                return
+
         try:
             volume.create_snapshot()
         except SnapshotAlreadyRunning:

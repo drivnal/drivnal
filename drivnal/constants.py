@@ -39,6 +39,9 @@ MATCH_BOTH = 'match_both'
 MATCH_PREFIX = 'match_prefix'
 MATCH_SUFFIX = 'match_suffix'
 
+PROC_DIR = '/proc'
+PROC_COMM_FILENAME = 'comm'
+
 DEFAULT_MAX_PRUNE = 0.8
 DEFAULT_DATA_PATH = '/var/lib/drivnal'
 DEFAULT_DB_PATH = '/var/lib/drivnal/drivnal.db'
