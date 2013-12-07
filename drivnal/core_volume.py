@@ -23,7 +23,7 @@ class CoreVolume(Config):
     path_options = ['excludes', 'source_path']
     str_options = ['id', 'name', 'schedule', 'email', 'email_host',
         'email_user', 'email_pass']
-    list_options = ['excludes']
+    list_options = ['excludes', 'ignore_proc']
     SnapshotClass = CoreSnapshot
 
     def __init__(self, client, path, create=False):
