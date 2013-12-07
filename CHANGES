@@ -6,6 +6,8 @@ Version 0.10.2
 
 Add reload button to text and log file viewer
 Fix bug with volume conf permissions
+Add ignore_procs to volume conf to ignore a scheduled snapshot if the process
+    comm name is running
 
 Version 0.10.1
 --------------
