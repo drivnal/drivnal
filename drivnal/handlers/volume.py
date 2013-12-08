@@ -13,7 +13,7 @@ def _get_volume_object(volume):
         'path': volume.path,
         'source_path': volume.source_path,
         'percent_used': volume.get_space_used(),
-        'excludes': volume.excludes or [],
+        'excludes': volume.excludes,
         'schedule': volume.schedule or 0,
         'min_free_space': volume.min_free_space or 0,
         'snapshot_limit': volume.snapshot_limit,
