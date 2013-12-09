@@ -19,6 +19,7 @@ def _get_volume_object(volume):
         'snapshot_limit': volume.snapshot_limit,
         'bandwidth_limit': volume.bandwidth_limit or 0,
         'snapshot_pending': volume.snapshot_pending(),
+        'ignore_procs': volume.ignore_procs,
         'email': volume.email,
         'email_host': volume.email_host,
         'email_user': volume.email_user,
@@ -46,21 +47,6 @@ def volume_get(volume_id=None):
 def volume_put_post(volume_id=None):
     client = Client()
 
-    name = flask.request.json['name'].encode()
-    source_path = flask.request.json['source_path'].encode()
-    path = flask.request.json['path'].encode()
-    excludes = flask.request.json['excludes']
-    schedule = flask.request.json['schedule']
-    min_free_space = flask.request.json['min_free_space']
-    snapshot_limit = flask.request.json['snapshot_limit']
-    bandwidth_limit = flask.request.json['bandwidth_limit']
-    email = flask.request.json['email']
-    email_host = flask.request.json['email_host']
-    email_user = flask.request.json['email_user']
-    email_pass = flask.request.json['email_pass']
-    email_ssl = flask.request.json['email_ssl']
-    email_send_test = flask.request.json['email_send_test']
-
     if volume_id:
         volume = client.get_volume(volume_id)
     else:
@@ -68,26 +54,42 @@ def volume_put_post(volume_id=None):
         if volume.source_path:
             return utils.jsonify({})
 
-    volume.name = name
-    volume.source_path = os.path.normpath(source_path)
-    volume.path = os.path.normpath(path)
-    volume.excludes = excludes
-    for i, exclude in enumerate(volume.excludes):
-        volume.excludes[i] = os.path.normpath(exclude)
-    volume.schedule = schedule
-    volume.min_free_space = min_free_space
-    volume.snapshot_limit = snapshot_limit
-    volume.bandwidth_limit = bandwidth_limit
+    if 'name' in flask.request.json:
+        volume.name = flask.request.json['name']
+    if 'source_path' in flask.request.json:
+        volume.source_path = os.path.normpath(
+            flask.request.json['source_path'])
+    if 'path' in flask.request.json:
+        volume.path = os.path.normpath(flask.request.json['path'])
+    if 'excludes' in flask.request.json:
+        volume.excludes = flask.request.json['excludes']
+        for i, exclude in enumerate(volume.excludes):
+            volume.excludes[i] = os.path.normpath(exclude)
 
-    volume.email = email
-    volume.email_host = email_host
-    volume.email_user = email_user
-    volume.email_pass = email_pass
-    volume.email_ssl = email_ssl
+    if 'schedule' in flask.request.json:
+        volume.schedule = flask.request.json['schedule']
+    if 'min_free_space' in flask.request.json:
+        volume.min_free_space = flask.request.json['min_free_space']
+    if 'snapshot_limit' in flask.request.json:
+        volume.snapshot_limit = flask.request.json['snapshot_limit']
+    if 'bandwidth_limit' in flask.request.json:
+        volume.bandwidth_limit = flask.request.json['bandwidth_limit']
+
+    if 'email' in flask.request.json:
+        volume.email = flask.request.json['email']
+    if 'email_host' in flask.request.json:
+        volume.email_host = flask.request.json['email_host']
+    if 'email_user' in flask.request.json:
+        volume.email_user = flask.request.json['email_user']
+    if 'email_pass' in flask.request.json:
+        volume.email_pass = flask.request.json['email_pass']
+    if 'email_ssl' in flask.request.json:
+        volume.email_ssl = flask.request.json['email_ssl']
 
     volume.commit()
 
-    if email_send_test:
+    if 'email_send_test' in flask.request.json and \
+            flask.request.json['email_send_test']:
         msg = Messenger(volume)
         msg.send('Test notification.')
 
