@@ -28,8 +28,6 @@ vagrant will not modify the host system. When developing with vagrant the root
 directory will automatically sync to the guest system at ``/vagrant`` and the
 port 6500 will be forwarded to allow access to the webapp on host system. The
 vagrant setup will also setup collectd to monitor performance of guest system.
-Vagrant ``stress`` vm is used for stress testing performance with eight backup
-volumes.
 
 Development Setup
 -----------------
@@ -48,8 +46,8 @@ Vagrant Setup
 
     $ git clone https://github.com/drivnal/drivnal.git
     $ cd drivnal
-    $ vagrant up testing
-    $ vagrant ssh testing
+    $ vagrant up
+    $ vagrant ssh
     $ sudo drivnal
     # Open http://localhost:6500/
     # Open http://localhost:8080/collectd
