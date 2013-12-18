@@ -32,10 +32,10 @@ class Messenger:
         self.smtp_pass = volume.email_pass
         self.smtp_ssl = volume.email_ssl
 
-    def _send(self, message):
+    def _send(self, message, retry=False):
         if not self.email:
             return
-        message = 'From %s\r\nTo: %s\r\nSubject:%s\r\n\r\n%s' % (
+        full_message = 'From %s\r\nTo: %s\r\nSubject:%s\r\n\r\n%s' % (
             SMTP_FROM_ADDR, self.email, SMTP_SUBJECT, message)
 
         host = self.smtp_host or None
@@ -50,7 +50,7 @@ class Messenger:
             'smtp_ssl': self.smtp_ssl,
             'smtp_user': username,
             'smtp_pass': password,
-            'message': message,
+            'message': full_message,
         })
 
         try:
@@ -61,21 +61,27 @@ class Messenger:
 
             if username or password:
                 server.login(username, password)
-            server.sendmail(SMTP_FROM_ADDR, [self.email], message)
+            server.sendmail(SMTP_FROM_ADDR, [self.email], full_message)
             server.quit()
         except:
-            logger.exception('Failed to send email. %r' % {
-                'volume_id': self.volume_id,
-                'smtp_host': host,
-                'smtp_port': port,
-                'smtp_ssl': self.smtp_ssl,
-                'smtp_user': username,
-                'smtp_pass': password,
-                'message': message,
-            })
+            if retry:
+                logger.debug('Retrying smtp message...')
+                time.sleep(3)
+                self._send(message)
+            else:
+                logger.exception('Failed to send email. %r' % {
+                    'volume_id': self.volume_id,
+                    'smtp_host': host,
+                    'smtp_port': port,
+                    'smtp_ssl': self.smtp_ssl,
+                    'smtp_user': username,
+                    'smtp_pass': password,
+                    'message': full_message,
+                })
 
     def send(self, message):
         if self._thread:
             self._thread.join()
-        self._thread = threading.Thread(target=self._send, args=(message,))
+        self._thread = threading.Thread(target=self._send,
+            args=(message, True))
         self._thread.start()
