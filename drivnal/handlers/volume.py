@@ -50,7 +50,8 @@ def volume_put_post(volume_id=None):
     if volume_id:
         volume = client.get_volume(volume_id)
     else:
-        volume = client.add_volume(os.path.normpath(path))
+        volume = client.add_volume(os.path.normpath(
+            flask.request.json['path']))
         if volume.source_path:
             return utils.jsonify({})
 
