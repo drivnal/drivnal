@@ -66,7 +66,7 @@ class Messenger:
         except:
             if retry:
                 logger.debug('Retrying smtp message...')
-                time.sleep(3)
+                time.sleep(SMTP_RETRY_DELAY)
                 self._send(message)
             else:
                 logger.exception('Failed to send email. %r' % {

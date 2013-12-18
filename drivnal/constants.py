@@ -31,6 +31,7 @@ TASK_DB_MAX = 100
 MAX_TEXT_SIZE = 20971520
 
 SMTP_TIMEOUT = 30
+SMTP_RETRY_DELAY = 5
 SMTP_FROM_ADDR = 'notify@drivnal.com'
 SMTP_SUBJECT = 'Drivnal Notification'
 
