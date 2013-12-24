@@ -82,6 +82,9 @@ setup(
     entry_points={
         'console_scripts': ['drivnal = drivnal.__main__:drivnal_daemon'],
     },
+    platforms=[
+        'Linux',
+    ],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
