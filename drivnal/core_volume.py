@@ -17,13 +17,13 @@ import logging
 logger = logging.getLogger(APP_NAME)
 
 class CoreVolume(Config):
-    bool_options = ['email_ssl']
-    int_options = ['snapshot_limit', 'bandwidth_limit']
-    float_options = ['min_free_space', 'max_prune']
-    path_options = ['excludes', 'source_path']
-    str_options = ['id', 'name', 'schedule', 'email', 'email_host',
-        'email_user', 'email_pass', 'ignore_procs']
-    list_options = ['excludes', 'ignore_procs']
+    bool_options = {'email_ssl'}
+    int_options = {'snapshot_limit', 'bandwidth_limit'}
+    float_options = {'min_free_space', 'max_prune'}
+    path_options = {'excludes', 'source_path'}
+    str_options = {'id', 'name', 'schedule', 'email', 'email_host',
+        'email_user', 'email_pass', 'ignore_procs'}
+    list_options = {'excludes', 'ignore_procs'}
     SnapshotClass = CoreSnapshot
 
     def __init__(self, client, path, create=False):
@@ -79,7 +79,7 @@ class CoreVolume(Config):
         snapshots = []
         for name in self._snapshot_names:
             snapshot = self.SnapshotClass(self, name)
-            if snapshot.state in [REMOVING, WARNING, COMPLETE]:
+            if snapshot.state in {REMOVING, WARNING, COMPLETE}:
                 snapshots.append(snapshot)
         return snapshots
 
@@ -94,7 +94,7 @@ class CoreVolume(Config):
     def get_last_snapshot(self):
         for name in reversed(self._snapshot_names):
             snapshot = self.SnapshotClass(self, name)
-            if snapshot.state in [WARNING, COMPLETE]:
+            if snapshot.state in {WARNING, COMPLETE}:
                 return snapshot
 
     def create_snapshot(self):

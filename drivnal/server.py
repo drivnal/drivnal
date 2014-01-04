@@ -9,10 +9,10 @@ from config import Config
 logger = None
 
 class Server(Config):
-    bool_options = ['debug', 'log_debug', 'scheduler']
-    int_options = ['port']
-    path_options = ['log_path', 'db_path', 'data_path', 'www_path']
-    str_options = ['bind_addr']
+    bool_options = {'debug', 'log_debug', 'scheduler'}
+    int_options = {'port'}
+    path_options = {'log_path', 'db_path', 'data_path', 'www_path'}
+    str_options = {'bind_addr'}
 
     def __init__(self):
         Config.__init__(self)

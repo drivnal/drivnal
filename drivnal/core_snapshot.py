@@ -34,7 +34,7 @@ class CoreSnapshot(Bucket):
             self.state = PENDING
 
     def __getattr__(self, name):
-        if name in ['runtime', 'sent', 'received', 'speed']:
+        if name in {'runtime', 'sent', 'received', 'speed'}:
             self.parse_log_file()
         elif name == 'path':
             return self._get_path()

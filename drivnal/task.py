@@ -12,10 +12,10 @@ _task_threads = {}
 
 class Task(DatabaseObject):
     column_family = 'tasks'
-    str_columns = ['volume_id', 'type', 'state', 'log_path']
-    int_columns = ['time', 'snapshot_id']
-    cached_columns = ['volume_id', 'type', 'time', 'snapshot_id']
-    required_columns = ['volume_id', 'type', 'state', 'time']
+    str_columns = {'volume_id', 'type', 'state', 'log_path'}
+    int_columns = {'time', 'snapshot_id'}
+    cached_columns = {'volume_id', 'type', 'time', 'snapshot_id'}
+    required_columns = {'volume_id', 'type', 'state', 'time'}
 
     def __init__(self, id=None, volume=None, snapshot=None):
         DatabaseObject.__init__(self)
@@ -160,7 +160,7 @@ class Task(DatabaseObject):
         self.thread.join()
 
     def update(self):
-        if self.state not in [PENDING, ABORTING]:
+        if self.state not in {PENDING, ABORTING}:
             return
 
         if not self.thread or not self.thread.is_alive():

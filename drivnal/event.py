@@ -10,10 +10,10 @@ logger = logging.getLogger(APP_NAME)
 class Event(DatabaseObject):
     db = server.mem_db
     column_family = 'events'
-    str_columns = ['volume_id', 'type']
-    int_columns = ['time']
-    cached_columns = ['volume_id', 'type', 'time']
-    required_columns = ['type', 'time']
+    str_columns = {'volume_id', 'type'}
+    int_columns = {'time'}
+    cached_columns = {'volume_id', 'type', 'time'}
+    required_columns = {'type', 'time'}
 
     def __init__(self, id=None, volume_id=None, type=None):
         DatabaseObject.__init__(self)
