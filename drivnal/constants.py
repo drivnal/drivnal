@@ -1,6 +1,7 @@
 APP_NAME = 'drivnal'
 APP_NAME_FORMATED = 'Drivnal'
 CONF_FILENAME = '%s.conf' % APP_NAME
+CONF_TEMP_EXT = '.tmp'
 
 SAVED = 'saved'
 UNSAVED = 'unsaved'
