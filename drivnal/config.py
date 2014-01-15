@@ -36,7 +36,10 @@ class Config:
             if not self._loaded:
                 self.load()
             if name not in self.__dict__:
-                return [] if name in self.list_options else None
+                if name in self.list_options:
+                    self.__dict__[name] = []
+                else:
+                    return
         elif name not in self.__dict__:
             raise AttributeError('Config instance has no attribute %r' % name)
         return self.__dict__[name]
