@@ -25,6 +25,7 @@ class CoreVolume(Config):
         'email_user', 'email_pass', 'ignore_procs'}
     list_options = {'excludes', 'ignore_procs'}
     SnapshotClass = CoreSnapshot
+    chmod_mode = 0600
 
     def __init__(self, client, path, create=False):
         try:
@@ -182,7 +183,7 @@ class CoreVolume(Config):
         return task
 
     def commit(self):
-        Config.commit(self, 0600)
+        Config.commit(self)
         Event(type=VOLUMES_UPDATED)
 
         if self.orig_path != self.path:
